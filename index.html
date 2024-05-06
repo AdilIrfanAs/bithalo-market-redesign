@@ -21,6 +21,16 @@
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <title t-id="1">BitBay Decentralized Markets</title>
     <style>
+          ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+          }
+          ::-webkit-scrollbar-thumb {
+            background: #263886;
+          }
+          * {
+            box-sizing: border-box;
+          }
         .swal2-popup {
           background-color: #ededed; /* Background color */
           color: #000000; /* Text color */
@@ -77,57 +87,55 @@
         #selectedFlag {
           width: 30px;
           height: 30px;
-          margin-right: 5px;
+          margin-right: 15px;
         }
-        .container {
+        .container.site-container {
             display: flex;
             flex-direction: row;
-            height: 100vh;            
+            height: calc(100vh - 140px);            
         }
         .sidebar {
-            width: 75px;
-            background: transparent;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 10px;
-            padding-bottom: 30px;
-        }
-        .sidebar-background {
-          position: absolute;
-          width: 75px;
-          height: 100%;
-          padding-top: 10px;
-          padding-bottom: 30px;
-          background-image: url('./purple-gradient.png');
-          z-index: -1;
+          background-image: url(sidebar-bg.png);
+          background-size: 100% 100%;
+          padding: 30px 25px;
+          width: 115px;
         }
         .sidebar button {
-            width: 50px;
-            height: 50px;
-            font-size: 10px;
-            margin-top: 10px;
-            margin-bottom: 20px;
+            background-color: transparent;
+            padding: 0;
+            width: 65px;
+            height: 65px;
+            margin: 0;
+            margin-bottom: 40px;
             border: none;
-            border-radius: 5px;
-            background-color: #d5d4e2;
+            color: white;
+            font-size: 14px;
+            font-weight: normal;
             cursor: pointer;
+        }
+        .sidebar .sidebar-icons {
+            background-color: #7066E0;
+            width: 100%;
+            height: 100%;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            text-align: center;
+            justify-content: center;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 8px;
         }
-        .sidebar button:hover {
-            box-shadow: 0 0 10px #7c7c7c;
-            background-color: rgba(255, 255, 255, 0.85);
+        .sidebar button.active .sidebar-icons {
+            background-color: #fff;
         }
-        .sidebar button img {
-            margin-top: 10px;
-            width: 20px;
-            height: 20px;
+        .sidebar button svg {
+            width: 100%;
+            height: 100%;
         }
-        .sidebar button span {
-            line-height: 1; /* Set line-height to 1 to avoid vertical shifting */
+        .sidebar button svg path {
+          fill: white;
+        }
+        .sidebar button.active svg path, .sidebar button.active svg path g {
+          fill: #7066E0;
         }
         .main {            
             flex: 1;
@@ -142,7 +150,7 @@
           display: none;
         }
         .header {
-            height: 50px;
+            height: 90px;
             background-color: #322c62;
             color: white;
             font-family: 'Open Sans', sans-serif;
@@ -152,25 +160,32 @@
             align-items: center;
             padding: 0 20px;
             box-shadow: 0 2px 5px #7d71c3;
+            position: relative;
         }
         .header2 {
-            height: 50px;
-            background-color: #f2f2f2;
+            height: 80px;
+            background-image: url("tabs-bg.png");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
             display: flex;
             flex-direction: row;
             align-items: center;
             padding: 0 20px;
-            box-shadow: 0 2px 5px #ccc;
+            margin-bottom: 18px;
+            justify-content: space-between;
         }
         .header2 a {
-            text-decoration: none; /* Remove underlining */
-            color: #333; /* Change link color */
-            margin-right: 10px; /* Add some spacing between links */
-            font-size: 8.5px;
+          font-size: 16px;
+          color: white;
+          font-weight: bold;
+          text-decoration: none;
+        }
+        .header2 a:not(:last-child) {
+          margin-right: 80px;
         }
         /* Change link color on hover */
         .header2 a:hover {
-            color: #007bff; /* Change link color on hover */            
+            color: #00a7f0;
         }
         .header h1 {
             font-size: 12px;
@@ -188,10 +203,6 @@
           body .main.account * {
               font-size: 13px;
           }
-          .header2 a {
-            font-size: 11px;
-            margin-right: 20px;
-          }
           .connectionstatus {
             font-size: 8.5px;
             display: block;
@@ -202,7 +213,7 @@
           .tabcontent {
             font-size: 13px;
           }
-          .sidebar-background {
+          /* .sidebar-background {
             position: absolute;
             width: 100px;
             height: 100%;
@@ -210,8 +221,8 @@
             padding-bottom: 30px;
             background-image: url('./purple-gradient.png');
             z-index: -1;
-          }
-          .sidebar {
+          } */
+          /* .sidebar {
               width: 100px;
               background-color: transparent;
               display: flex;
@@ -237,16 +248,12 @@
               margin-top: 15px;
               width: 30px;
               height: 30px;
-          }
+          } */
         }
         @media screen and (min-width: 800px) {
           .header h1 {
             font-size: 20px; /* Adjust the font size for larger screens */
             font-weight: 600;
-          }
-          .header2 a {
-            font-size: 14px;
-            margin-right: 30px;
           }
           .connectionstatus {
             font-size: 12px;
@@ -269,8 +276,18 @@
         }
         .connect button {
             background-color: #4caf50;
+            border: 2px solid #4caf50;
             color: #fff;
             margin-right: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 0 12px;
+            height: 42px;
+            min-width: 150px;
+        }
+        .connect button:hover {
+            color: #4caf50;
+            background-color: transparent;
         }
         .footer {
             position: fixed;
@@ -296,7 +313,7 @@
             min-height: calc(100% - 75); /* Subtract footer height */
             max-height: calc(100% - 75); /* Subtract footer height */
             overflow-y: auto; /* Enable vertical scrolling if content overflows */
-            margin-bottom: 100px;
+            width: calc(100% - 115px);
         }
         .main.offers {
             min-height: calc(100% - 75); /* Subtract footer height */
@@ -352,7 +369,6 @@
           display: inline-block;
           border: 1px solid #3d0064;
           padding: 5px 5px;
-          margin-bottom: 5px;
           border-radius: 4px; /* Make it square */
           background-color: #3498db; /* Set default background color */
           color: #ffffff; /* Set default text color */
@@ -368,7 +384,6 @@
           display: inline-block;
           border: 1px solid #3d0064;
           padding: 5px 5px;
-          margin-bottom: 5px;
           border-radius: 4px; /* Make it square */
           background-color: #ebebeb; /* Set default background color */
           color: #000000; /* Set default text color */
@@ -380,20 +395,872 @@
           background-color: #003357; /* Invert background color on hover */
           color: #dcdcdc; /* Invert text color on hover */
         }
+        /* my css */
+        .logo {
+            width: 60px;
+            height: 60px;
+            display: block;
+        }
+        .logo img {
+          width: 100%;
+          height: 100%;
+        }
+        h2 {
+          font-size: 24px;
+          color: #322C62;
+          font-weight: bold;
+          margin-top: 0;
+        }
+
+        .popup-image {
+          display: block;
+          margin: 0 auto;
+          max-width: 200px;
+          max-height: 200px;
+          object-fit: contain;
+          margin-bottom: 10px;
+        }
+
+        .popup-details p {
+          margin: 5px 0;
+        }
+
+        .button-container {
+          display: flex;
+          justify-content: center;
+          margin-top: 20px;
+        }
+
+        .button-container button {
+          margin: 0 10px;
+          padding: 10px;
+          border-radius: 5px;
+          /* border: none; */
+          cursor: pointer;
+        }
+
+        .button-container button:hover {
+          background-color: #F5F5F5;
+        }
+
+        .popup-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.4);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .popup {
+          position: relative;
+          background-color: white;
+          padding: 30px;
+          max-width: calc(600px - 30px);
+          width: 100%;
+          border-radius: 6px;  
+        }
+        .popup .close-button {
+          font-size: 38px;
+          color: #263886;
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          font-size: 28px;
+          font-weight: bold;
+          cursor: pointer;
+        }
+
+        .vertical-spacer {
+          display: inline-block;
+          height: 2px;
+        }
+        /*  */
+        .modal-header h2 {
+          margin-bottom: 25px;
+        }
+        .form-contract-modal, .offer-popup-wrapper {
+            max-height: calc(580px - 113px);
+            overflow-y: auto;
+            padding-right: 12px;
+        }
+        .offer-popup-wrapper {
+          padding-bottom: 15px;
+        }
+        .form-contract-modal label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #322C62;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .form-contract-modal select, .form-contract-modal input, .form-contract-modal textarea {
+            background: #FCFCFC 0% 0% no-repeat padding-box;
+            border: 1px solid #C3C3C3;
+            border-radius: 5px;
+            box-shadow: unset;
+            outline: none;
+            height: 42px;
+            padding: 12px;
+            width: 100%;
+        }
+        .input-buttons {
+          height: 42px;
+        }
+        .form-contract-modal .input-wrapper {
+            width: 50%;
+            margin-bottom: 15px;
+        }
+        .form-contract-modal .input-wrapper.content-margin {
+          margin-bottom: 0;
+        }
+        .form-contract-modal .input-wrapper:not(:last-child) {
+          padding-right: 15px;
+        }
+        .input-wrapper-area {
+            display: flex;
+            justify-content: space-between;
+        }
+        .input-wrapper-content {
+          margin-bottom: 15px;
+        }
+        .input-checkboxes {
+            display: flex;
+            align-items: center;
+        }
+        .input-checkboxes {
+          position: relative;
+        }
+        .input-checkboxes input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        .input-checkboxes label {
+            margin-bottom: 0;
+            margin-left: 40px;
+        }
+        .input-checkboxes .checkmark {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 25px;
+          width: 25px;
+          background-color: transparent;
+          border-radius: 3px;
+          border: 2px solid #0D2F80;
+          cursor: pointer;
+      }
+      .input-checkboxes .checkmark:before {
+          content: "";
+          position: absolute;
+          background-color: #fff;
+          height: 15px;
+          width: 15px;
+          z-index: 0;
+          top: -5px;
+          right: -5px;
+      }
+      .input-checkboxes .checkmark:after {
+          content: "";
+          position: absolute;
+          display: none;
+          right: 1px;
+          top: -6px;
+          width: 7px;
+          height: 17px;
+          border: 2px solid #0D2F80;
+          border-width: 0 3px 3px 0;
+          -webkit-transform: rotate(45deg);
+          -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+      }
+      .input-checkboxes input:checked ~ .checkmark:after {
+          display: block;
+      }
+      .checkbox-tick-wrapper input:checked ~ .checkmark {
+          background-color: transparent;
+          border: 2px solid #0D2F80;
+      }
+      .btn-filled, .btn-gray {
+        background-color: #7066E0;
+        border-radius: 4px;
+        color: white;
+        border: 2px solid #7066E0;
+        height: 42px;
+        min-width: 100px;
+        padding: 0 12px;
+        cursor: pointer;
+        transition: all ease-in-out 0.6s;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .btn-filled:hover {
+        background-color: transparent;
+        color: #7066E0;
+      }
+      .btn-gray {
+        background-color: #858585;
+        border: 2px solid #858585;
+      }
+      .btn-gray:hover {
+        background-color: transparent;
+        color: #858585;
+      }
+      .dashboard-content-wrapper h2 {
+        margin-bottom: 15px;
+      }
+      .dashboard-content-wrapper .square-button, .header-search-area .square-button2 {
+          background-color: #322C62;
+          border: 1px solid #322C62;
+          padding: 10px 15px;
+          border-radius: 6px;
+          transition: all ease-in-out 0.6s;
+          font-weight: bold;
+          color: white;
+      }
+      .dashboard-content-wrapper .square-button {
+          margin-bottom: 12px;
+      }
+      .dashboard-content-wrapper .square-button:hover {
+          background-color: transparent;
+          color: #322C62;
+      }
+      .header-search-wrapper {
+        display: flex;
+        align-items: center;
+      }
+      .header-search-area {
+          position: relative;
+          border-radius: 4px;
+          overflow: hidden;
+          width: 250px;
+          border: 1px solid #322c62;
+          margin-right: 10px;
+      }
+      .header-search-area input {
+          padding: 10px;
+          border: none;
+          color: black;
+          font-size: 14px;
+          outline: none;
+          box-shadow: unset ;
+      }
+      .header-search-area .square-button2 {
+        border-radius: 0px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transition: all ease-in-out 0.3s;
+      }
+      .header-search-area .square-button2:hover {
+        transform: scale(1.09);
+      }
+      .header-search-wrapper #favorites-button {
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+        }
+      .header-search-wrapper #star-symbol {
+          color: #322c62;
+          padding: 0;
+          margin: 0;
+          font-size: 30px;
+          display: inline-block;
+          line-height: 20px;
+      }
+      .header-search-wrapper #favorites-text {
+          color: #322c62;
+      }
+      .dashboard-content-wrapper .search {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+      }
+      .dashboard-content-wrapper .pagination {
+          display: flex;
+          align-items: center;
+      }
+      .dashboard-content-wrapper .pagination .square-button2 {
+          border-radius: 6px;
+          background-color: #E3E3E3;
+          border: none;
+          padding: 9px 10px;
+          margin: 0;
+          margin-right: 10px;
+      }
+      .dashboard-content-wrapper .pagination select, .header #languageSelect {
+          background-color: #E3E3E3;
+          color: #322C62;
+          border: none;
+          padding: 12px;
+          font-size: 14px;
+          font-weight: bold;
+          outline: none;
+          border-radius: 6px;
+      }
+      .dashboard-content-wrapper .listings-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+          grid-gap: 20px;
+          background-color: #F1F1F1;
+          padding: 25px;
+      }
+      .dashboard-content-wrapper .listing-grid-item {
+          border: none;
+          text-align: center;
+          position: relative;
+          margin-bottom: 20px;
+          cursor: pointer;
+      }
+      .dashboard-content-wrapper .listing-image {
+          width: 100%;
+          height: 184px;
+          border-radius: 4px;
+          overflow: hidden;
+      }
+      .dashboard-content-wrapper .listing-image img {
+        width: 100%;
+        height: 100%;
+      }
+      .dashboard-content-wrapper .listing-details {
+          margin-top: -20px;
+      }
+      .dashboard-content-wrapper .token {
+          background-color: #23232B;
+          color: white;
+          font-size: 16px;
+          font-weight: bold;
+          padding: 6px 15px;
+          border-radius: 4px;
+          margin-bottom: 12px;
+          display: inline-flex;
+          align-items: center;
+      }
+      .dashboard-content-wrapper .token .token-ethereum-icon {
+          width: 15px;
+          margin: 0 8px;
+      }
+      .dashboard-content-wrapper .amount {
+          background-color: #7066E0;
+          border-radius: 4px;
+          padding: 6px 16px;
+          color: white;
+          font-size: 14px;
+          font-weight: bold;
+          position: absolute;
+          top: 10px;
+          right: 10px;
+      }
+      .dashboard-content-wrapper .message {
+          font-size: 16px;
+          color: #322C62;
+          font-weight: 500;
+      }
+      .header-list-area {
+        display: flex;
+        align-items: center;
+      }
+      .sidebar-toggle {
+        display: none;
+      }
+      .connect-mobile-icon {
+        display: none;
+      }
+      .header .dark-light-content {
+        background-color: #2799C0;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+      }
+      .header .dark-light-content {
+        background-color: #2799C0;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+      }
+      .day-night-icon, .day-night-icon img {
+        width: 100%;
+        height: 100%;
+      }
+      .header-lang-view {
+        display: flex;
+        align-items: center;
+      }
+      .offer-popup .favorites-button2, .offer-popup .favorites-button3 {
+          background-color: #ECEFF8;
+          color: #322C62;
+          width: 35px;
+          height: 35px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 8px;
+        }
+        .offer-popup .favorites-button2 {
+          margin-right: 6px;
+        }
+        .fav-icons-wrapper {
+          display: flex;
+          align-items: center;
+        }
+        .offer-popup .arrows-container {
+          margin-bottom: 30px;
+        }
+        .offer-popup-wrapper p, .offers-list-box div {
+          margin-bottom: 10px;
+          font-size: 14px;
+          white-space: nowrap !important;
+        }
+        .offer-popup-wrapper p bdo {
+          width: 34%;
+          display: inline-block;
+          font-weight: bold;
+        }
+        .offers-categories .offers-tab-container button {
+          background-color: #E3E3E3;
+          border-radius: 6px;
+          color: #322C62;
+          min-width: 186px;
+          height: 40px;
+          border: none;
+          font-size: 14px;
+          font-weight: bold;
+          margin-right: 12px;
+        }
+        .offers-categories .offers-header {
+            font-size: 18px;
+            color: #322C62;
+            font-weight: bold;
+            margin-bottom: 15px;
+          }
+        .offers-list-box {
+            margin: 0;
+            padding: 25px 40px;
+            background-color: #ECEFF8;
+            margin-bottom: 20px;
+          }
+        .offers-list-box div bdo {
+            font-weight: bold;
+            font-size: 16px;
+            color: #111112;
+            width: 25%;
+            display: inline-block;
+          }
+      @media screen and (max-width: 1600px) {
+        .header {
+          height: 80px;
+        }
+        .header h1 {
+          font-size: 18px;
+        }
+        .sidebar {
+            padding: 25px;
+            width: 110px;
+        }
+        .sidebar button {
+            width: 60px;
+            height: 60px;
+        }
+        .container.site-container {
+            height: calc(100vh - 130px);
+        }
+        .main.markets {
+          width: calc(100% - 110px);
+        }
+        .header2 {
+            height: 75px;
+        }
+        .header2 a:not(:last-child) {
+          margin-right: 70px;
+        }
+        .dashboard-content-wrapper .token, .dashboard-content-wrapper .message {
+          font-size: 15px;
+        }
+      }
+      @media screen and (max-width: 1199px) {
+        .header {
+            height: 75px;
+        }
+        .logo {
+          width: 55px;
+          height: 55px;
+        }
+        .header h1 {
+          font-size: 17px;
+        }
+        .sidebar {
+            padding: 20px;
+            width: 105px;
+        }
+        .sidebar button {
+          width: 100%;
+          height: 60px;
+        }
+        .container.site-container {
+            height: calc(100vh - 125px);
+        }
+        .main.markets {
+            width: calc(100% - 105px);
+        }
+        .header2 {
+          height: 70px;
+        }
+        .header2 a:not(:last-child) {
+          margin-right: 60px;
+        }
+        .offers-list-box div bdo {
+          width: 30%;
+        }
+      }
+      @media screen and (max-width: 991px) {
+        .logo {
+          width: 50px;
+          height: 50px;
+        }
+        .header {
+          justify-content: space-between;
+        }
+        .header h1, .connectionstatus  {
+          display: none;
+        }
+        .sidebar {
+            padding: 18px;
+            width: 95px;
+        }
+        .header2 {
+          height: 60px;
+        }
+        .header2 a {
+          font-size: 15px;
+        }
+        .header2 a:not(:last-child) {
+          margin-right: 40px;
+        }
+        .offers-list-box {
+          overflow-x: auto;
+        }
+        .offers-list-box div {
+          white-space: nowrap;
+        }
+        .offers-list-box div bdo {
+          width: 40%;
+        }
+      }
+      @media screen and (max-width: 767px) {
+        h2 {
+          font-size: 22px;
+        }
+        .popup {
+          padding: 25px;
+          max-width: calc(540px - 25px);
+        }
+        .modal-header h2 {
+            margin-bottom: 20px;
+        }
+        .form-contract-modal, .offer-popup-wrapper {
+            max-height: calc(540px - 95px);
+        }
+        .form-contract-modal label {
+            font-size: 13px;
+        }
+        .input-checkboxes .checkmark {
+            height: 20px;
+            width: 20px;
+        }
+        .input-checkboxes .checkmark:after {
+            top: -4px;
+            width: 5px;
+            height: 12px;
+        }
+        .main.markets {
+          width: 100%;
+        }
+        .sidebar {
+          position: fixed;
+          height: 100%;
+          z-index: 1;
+          transition: transform 0.3s ease;
+          transform: translateX(-100%);
+        }
+        .sidebar-toggle {
+          width: 35px;
+          height: 35px;
+          padding: 6px;
+          background-color: white;
+          border-radius: 4px;
+          margin-right: 8px;
+          margin-top: 5px;
+          display: block;
+        }
+        .sidebar.active {
+          transform: translateX(0);
+        }
+        .mobile-toggle-header {
+          display: flex;
+          align-items: center;
+        }
+        .header .connect {
+          display: none;
+        }
+        .connect-mobile-icon {
+          display: block;
+          width: 35px;
+        }
+        .header2 a:not(:last-child) {
+          margin-right: 30px;
+        }
+        .dashboard-content-wrapper .search {
+          display: block;
+        }
+        .header-search-wrapper {
+          margin-bottom: 20px;
+        }
+        .header-search-area {
+          width: 100%;
+        }
+        .header-search-area input {
+          padding-right: 90px;
+          font-size: 12px;
+          width: 100%;
+        }
+        .offers-list-box {
+          padding: 20px 25px;
+        }
+        .offers-list-box div bdo {
+          width: 45%;
+          font-size: 14px;
+        }
+      }
+      @media screen and (max-width: 575px) {
+        .popup {
+            max-width: 90%;
+        }
+        .input-wrapper-area {
+            display: block;
+        }
+        .form-contract-modal .input-wrapper {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .form-contract-modal .input-wrapper:not(:last-child) {
+            padding-right: 0;
+        }
+        .form-contract-modal .input-wrapper.content-margin {
+            margin-bottom: 15px;
+        }
+        .btn-filled {
+          height: 40px;
+          min-width: 90px;
+          padding: 0 10px;
+          font-size: 15px;
+          margin-top: 10px;
+        }
+        .header-list {
+          display: flex;
+          overflow-x: auto;
+          white-space: nowrap;
+          padding-bottom: 6px;
+        }
+        .header-list::-webkit-scrollbar {
+          height: 4px;
+        }
+        .header-list::-webkit-scrollbar-thumb {
+          background: white;
+        }
+        .container.site-container {
+          height: calc(100vh - 180px);
+        }
+        .offer-popup-wrapper p bdo {
+          width: 75%;
+        }
+        .offer-popup-wrapper .button-container {
+          display: block;
+          text-align: center;
+        }
+        .offer-popup-wrapper .button-container .btn-filled {
+          margin-bottom: 6px;
+        }
+        .offers-list-box {
+          padding: 15px 20px;
+        }
+        .offers-list-box div bdo {
+          width: 80%;
+          font-size: 14px;
+        }
+        .offers-categories .offers-tab-container button {
+          min-width: 125px;
+          height: 38px;
+          font-size: 13px;
+          margin-right: 6px;
+        }
+      }
+      @media screen and (max-width: 400px) {
+        .header {
+            height: 130px;
+            padding: 12px 18px;
+            align-items: start;
+        }
+        .logo {
+            width: 45px;
+            height: 45px;
+            margin-top: -7px;
+        }
+        .header-lang-view {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            bottom: 12px;
+            right: 0;
+        }
+        .mobile-toggle-header {
+            display: flex;
+            align-items: self-start;
+        }
+        .sidebar-toggle {
+            margin-top: 0;
+        }
+      }
+
+        /* Dark/Light theme styles */
+        :root {
+        --background-color: #fff;
+        --text-color: #000;
+        --header-bg-color: #322c62;
+        --button-bg-color: #d5d4e2;
+        --button-text-color: #000;
+        }
+
+        [data-theme="dark"] {
+            --background-color: #322C62;
+            --text-color: #fff;
+            --header-bg-color: #1a1a2e;
+            --button-bg-color: #4e4e50;
+            --button-text-color: #fff;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .header {
+            background-color: var(--header-bg-color);
+        }
+
+        /* .sidebar button {
+            background-color: var(--button-bg-color);
+            color: var(--button-text-color);
+        }  */
+        /* End Dark/Light theme styles
+
+        /* Loader-Modal Style */
+        .loader-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 0; /* Minimize the modal's size */
+          height: 0; /* Minimize the modal's size */
+          overflow: visible; /* Allow the child elements to be shown */
+          display: none; /* Initially hidden */
+          z-index: 1500;
+          }
+        .loader-content {
+            background: var(--background-color);
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-minimized {
+          display: none; /* Initially hidden */
+          position: fixed;
+          bottom: 10px;
+          right: 10px;
+          background: var(--button-bg-color);
+          color: var(--button-text-color);
+          padding: 5px 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          z-index: 1600;
+      }
+        /* End: Loader-Modal Style */
+
+        /* dark theme css */
+        .dark-theme h2, .dark-theme .dashboard-content-wrapper .message  {
+          color: white;
+        }
+        .dark-theme .dashboard-content-wrapper .square-button, .dark-theme .header-search-area {
+          border: 1px solid white;
+        }
+        .dark-theme .dashboard-content-wrapper .square-button:hover {
+          background-color: white;
+          color: #322C62;
+        }
+        .dark-theme .dashboard-content-wrapper .listings-grid {
+          background-color: #1F1B3E;
+        }
+        .dark-theme .dashboard-content-wrapper .token {
+          background-color: #7066E0;
+        }
     </style>
 </head>
 <body>
+
     <div class="header">
-        <img src="bitbay.png" alt="Logo" height="20px" width="20px">
+        <div class="mobile-toggle-header">
+          <div class="sidebar-toggle" onclick="toggleSidebar()">
+            <img src="sidebar-toggle.svg" alt="sidebar toggle"/>
+          </div>
+          <a href="#" class="logo">
+            <img src="bitbay.png" alt="Logo">
+          </a>
+        </div>
         <h1 t-id="2">BitBay Decentralized Markets</h1>&nbsp
-        <img id="selectedFlag" src="default.png" alt="Selected Flag">
-        <select id="languageSelect" style="margin-right: 15px; font-size: 10px; width: 100px;">
-          <option value="default" disabled selected>Default</option>
-        </select>
-        <div class="connect">
+        <div class="header-list-area">
+          <div class="header-lang-view">
+            <img id="selectedFlag" src="default.png" alt="Selected Flag">
+            <select id="languageSelect" style="margin-right: 15px; width: 100px;">
+              <option value="default" disabled selected>Default</option>
+            </select>
+            <button id="theme-toggle" class="theme-toggle dark-light-content">
+            </button>
+          </div>
+          <div class="connect">
             <button t-id="3" onclick="login(1)">Connect Metamask</button>
             <div id="connectionstatus" class="connectionstatus" t-id="4">Not connected</div>
-        </div>
+          </div>
+          <div class="connect-mobile-icon" t-id="3" onclick="login(1)">
+            <img src="mobile-wallet-icon.svg" alt="wallet icon"/>
+          </div>
+        </div>  
     </div>
     <div class="footer">
         <a href="https://bitbay.market" target="_blank"><img src="bitbay.png" text="BitBay"></a>
@@ -401,103 +1268,173 @@
         <a href="https://medium.com/bitbay-blog" target="_blank"><img src="./medium-1.png" alt="Medium"></a>
         <a href="https://github.com/bitbaymarket" target="_blank"><img src="./github-1.png" alt="Github"></a>
     </div>
-    <div class="container">
+
+    <div class="container site-container">
+      <!-- Loader-Modal -->
+      <div id="loader-modal" class="loader-modal" style="display: none;">
+        <div id="loader-content" class="loader-content">
+            <div class="loader"></div>
+            <p id="loader-text">Waiting for confirmation...</p>
+            <button onclick="minimizeLoader()">Minimize</button>
+        </div>
+        <div id="loader-minimized" class="loader-minimized" style="display: none;" onclick="maximizeLoader()">
+            Transaction in progress...
+        </div>
+      </div>
+      <!-- End: Loader-Modal -->
       <div class="sidebar-background">
       </div>
-      <div class="sidebar">
-          <button onclick="showMain('markets')" id="marketsButton"><img src="markets.png" alt="Markets" style="display: block;"><span class="text" t-id="5">Markets</span></button>
-          <button onclick="showMain('offers')" id="offersButton"><img src="ethalo.png" alt="Offers" style="display: block;"><span class="text" t-id="6">Offers</span></button>
-          <button onclick="showMain('contracts')" id="contractsButton"><img src="contracts.png" alt="Contracts" style="display: block;"><span class="text" t-id="7">Contracts</span></button>
-          <button onclick="showMain('account')" id="accountButton"><img src="account.png" alt="Account" style="display: block;"><span class="text" t-id="8">Account</span></button>
-          <button onclick="showMain('about')" id="aboutButton"><img src="about.png" alt="About" style="display: block;"><span class="text" t-id="9">About</span></button>
+      <div class="sidebar" id="sidebar">
+          <button onclick="showMain('markets')" id="marketsButton"><div class="sidebar-icons">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35.832" height="37.417" viewBox="0 0 35.832 37.417">
+            <g id="market-store-svgrepo-com" transform="translate(-10.265)">
+              <path id="Path_14579" data-name="Path 14579" d="M44.305,204.739h-.759v-18.7h0a4.463,4.463,0,0,1-2.551-.817,4.437,4.437,0,0,1-2.569.817,4.376,4.376,0,0,1-.569-.046V199.9a1.438,1.438,0,0,1-1.438,1.438H31.251V197.4l1.822,3.04a1.149,1.149,0,1,0,1.971-1.181l-3.662-6.112a1.136,1.136,0,0,0-1.05-.543c-.028,0-4.243,0-4.268,0a1.139,1.139,0,0,0-1.066.545l-3.662,6.112a1.149,1.149,0,1,0,1.971,1.181l1.833-3.06v3.959H19.961a1.438,1.438,0,0,1-1.438-1.438V185.992a4.375,4.375,0,0,1-.569.046,4.516,4.516,0,0,1-.877-.087,4.438,4.438,0,0,1-1.693-.73,4.461,4.461,0,0,1-2.551.817h0v18.7h-.759a1.8,1.8,0,0,0,0,3.6H44.305a1.8,1.8,0,1,0,0-3.6Z" transform="translate(-0.009 -170.921)"/>
+              <path id="Path_14580" data-name="Path 14580" d="M213.708,197.226a2.763,2.763,0,1,0,2.394,2.739A2.584,2.584,0,0,0,213.708,197.226Z" transform="translate(-185.528 -182)"/>
+              <path id="Path_14581" data-name="Path 14581" d="M12.092,13.09a2.559,2.559,0,0,0,3.185-1.72l.135-.45a2.552,2.552,0,0,0,5.042.217l.062-.313a2.555,2.555,0,0,0,2.292,2.36c.086.008.172.012.257.012a2.559,2.559,0,0,0,2.543-2.306l.019-.19a2.554,2.554,0,0,0,5.106,0l.019.19A2.56,2.56,0,0,0,33.3,13.2c.085,0,.171,0,.257-.012a2.554,2.554,0,0,0,2.292-2.36l.062.313a2.552,2.552,0,0,0,5.042-.217l.135.45A2.56,2.56,0,0,0,43.535,13.2a2.587,2.587,0,0,0,.734-.107,2.56,2.56,0,0,0,1.72-3.185l-2.31-7.731A3.045,3.045,0,0,0,40.761,0H15.6a3.045,3.045,0,0,0-2.918,2.174l-2.31,7.731A2.56,2.56,0,0,0,12.092,13.09Z" transform="translate(0)"/>
+            </g>
+          </svg>
+          </div><span class="text" t-id="5">Markets</span></button>
+          <button onclick="showMain('offers')" id="offersButton"><div class="sidebar-icons">
+            <svg xmlns="http://www.w3.org/2000/svg" width="23.142" height="37.417" viewBox="0 0 23.142 37.417">
+              <path id="ethereum-svgrepo-com" d="M17.589,28.014,6.1,21.236,17.582,37.417,29.074,21.236,17.582,28.014ZM17.76,0,6.279,19.055l11.481,6.79,11.485-6.783Z" transform="translate(-6.104)" fill="#fff"/>
+            </svg>            
+          </div><span class="text" t-id="6">Offers</span></button>
+          <button onclick="showMain('contracts')" id="contractsButton"><div class="sidebar-icons">
+            <svg xmlns="http://www.w3.org/2000/svg" width="34.776" height="38.145" viewBox="0 0 34.776 38.145">
+              <g id="contract-svgrepo-com" transform="translate(-22.612)">
+                <path id="Path_14582" data-name="Path 14582" d="M39.157,15.551V6.865l-9.99,9.99h8.685C38.791,16.855,39.157,16.49,39.157,15.551Z" transform="translate(-6.067 -6.354)" fill="#fff"/>
+                <path id="Path_14583" data-name="Path 14583" d="M420.089,147.856l-2.305-2.305a1.028,1.028,0,0,0-1.453,0l-1.495,1.495L418.6,150.8l1.494-1.5A1.027,1.027,0,0,0,420.089,147.856Z" transform="translate(-363.002 -134.429)" fill="#fff"/>
+                <path id="Path_14584" data-name="Path 14584" d="M35.277,34.069a.933.933,0,0,1-1.133-1.133l2.162-8.511L48.111,12.617l.946-.946,2.093-2.093.317-.316a3.671,3.671,0,0,1,.357-.294V1.69A1.693,1.693,0,0,0,50.133,0H35.021V10.36a2.076,2.076,0,0,1-2.072,2.074H22.612V36.454A1.693,1.693,0,0,0,24.3,38.145h25.83a1.693,1.693,0,0,0,1.691-1.691V23.865L43.787,31.9Z" fill="#fff"/>
+                <path id="Path_14585" data-name="Path 14585" d="M222.35,190.992l-1.281,5.04,5.04-1.282,12.472-12.473-3.758-3.759Zm2.357.854-.854-.854,10.867-10.867.855.855Z" transform="translate(-183.671 -165.218)" fill="#fff"/>
+              </g>
+            </svg>            
+          </div><span class="text" t-id="7">Contracts</span></button>
+          <button onclick="showMain('account')" id="accountButton"><div class="sidebar-icons">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35.664" height="35.664" viewBox="0 0 35.664 35.664">
+              <path id="account-svgrepo-com" d="M19.832,2A17.832,17.832,0,1,0,37.664,19.832,17.838,17.838,0,0,0,19.832,2Zm0,5.35a5.35,5.35,0,1,1-5.35,5.35A5.342,5.342,0,0,1,19.832,7.35Zm0,25.321a12.84,12.84,0,0,1-10.7-5.742c.053-3.549,7.133-5.492,10.7-5.492,3.549,0,10.646,1.944,10.7,5.492A12.84,12.84,0,0,1,19.832,32.671Z" transform="translate(-2 -2)" fill="#fff"/>
+            </svg>            
+          </div><span class="text" t-id="8">Account</span></button>
+          <button onclick="showMain('about')" id="aboutButton"><div class="sidebar-icons">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35">
+              <g id="Page-1" transform="translate(-42.667 -42.667)">
+                <g id="drop" transform="translate(42.667 42.667)">
+                  <path id="Shape" d="M17.5,0A17.5,17.5,0,1,1,0,17.5,17.5,17.5,0,0,1,17.5,0Zm1.754,15.75h-3.5v10.5h3.5ZM17.518,8.312a2.117,2.117,0,0,0-2.2,2.163,2.188,2.188,0,1,0,4.375.024A2.115,2.115,0,0,0,17.518,8.312Z" transform="translate(0 0)" fill="#fff" fill-rule="evenodd"/>
+                </g>
+              </g>
+            </svg>            
+          </div><span class="text" t-id="9">About</span></button>
       </div>
-    <div class="main markets">
-        <div class="header2">
-            <a href="#" t-id="10" onclick="changeSearchText('goods')">Goods</a>
-            <a href="#" t-id="11" onclick="changeSearchText('services')">Services</a>
-            <a href="#" t-id="12" onclick="changeSearchText('barter')">Barter</a>
-            <a href="#" t-id="13" onclick="changeSearchText('p2p-trading')">P2P Trading</a>
-            <a href="#" t-id="14" onclick="changeSearchText('commodities')">Commodities</a>
-        </div>
-        <h2 t-id="15">Markets</h2>
-        <div class="top-bar">
-            <button onclick="createContract()" class="square-button" t-id="16">Create Contract/Offer</button>
-            <div class="search">
-                <img src="search.png" height="20px" width="20px" alt="Search">
-                <input type="text" id="searchText" placeholder="Search" onkeyup="searchListings(this.value)">
-                <button onclick="searchListings(getElementById('searchText').value, 1)" t-id="17">Search</button>
-                &nbsp&nbsp<button id="favorites-button" onclick="searchFavorites()" style="background: transparent; border-style: none;"><span id="star-symbol" style="font-size: 20px;">&bigstar;</span><span id="favorites-text"></span></button>
-                <div id="loadingStatus"></div>
-                <div class="pagination">
-                    <br>
-                    <button onclick="previousPage()" t-id="18">Previous</button>
-                    <button onclick="nextPage()" t-id="19">Next</button>
-                    <select id="SortBy">
-                      <option value="default" t-id="20">Sort: Default</option>
-                      <option value="price-low" t-id="21">Sort: Best price</option>
-                      <option value="price-high" t-id="22">Sort: High price</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="listings">
-            <!-- populated by JavaScript -->
-        </div>
-    </div>
-    <div class="main offers">
-        <h2 t-id="23">Offers</h2>
-        <div id="myoffers" class="myoffers"></div>
-    </div>
-    <div class="main contracts">
-        <h2 t-id="24">Contracts</h2>
-        <div id="mycontracts" class="mycontracts"></div>
-    </div>
-    <div class="main account">
-        <h2 t-id="25" style="font-size: 16px">Account</h2>
-        <p id="account" t-id="26">Please connect metamask</p>
-        <button onclick="deposit()" t-id="27">Deposit tokens</button>
-        <button onclick="withdraw()" t-id="28">Withdraw tokens</button><br><br>
-        <label for="myContactInfo" t-id="29">Contact Information(email/signal/telegram):</label><br>
-        <input id="myContactInfo"></input><br><br>
-        <label for="myPassword" t-id="44">Password(for encryption):</label><br>
-        <input id="myPasswordInput" type="password"></input><br><br>
-        <button onclick="registerData()" t-id="30">Register information to my address(contact/encryption/optional)</button><br>
-        <div id="publicemail"></div><br><br>
-        <label for="clearCompleted" t-id="31">Automatically clear completed contracts</label>
-        <input id="clearCompleted" type="checkbox"></input><br><br>
-        <label for="emailClient" t-id="50">Attempt to notify prospects through default email client(when applicable)</label>
-        <input id="emailClient" type="checkbox" checked></input><br><br>
-        <button onclick="RefreshContracts()" t-id="32">Refresh/restore previously cleared contracts</button><br><br>
-        <label for="offerExpiration" t-id="33">Private offers expire: </label>
-        <select id="offerExpiration">
-          <option value="two-weeks" t-id="35">Two weeks</option>
-          <option value="one-month" t-id="36">One month</option>
-          <option value="never" t-id="34">Never</option>
-        </select>
-        <br><br>
-        <button onclick="backupLocalStorage()" t-id="37">Backup cached site/user data</button>
-        <button onclick="loadLocalStorage()" t-id="38">Load site/user data from file</button><br><br>
-        <select id="connectMethod">
-          <option value="0" t-id="39">Use default IPFS Pinata Gateway</option>
-        </select>
-        <br><br>
-        <button onclick="setCustodian()" t-id="51">Set cosigner</button><br><br>
-        <button onclick="cosign()" t-id="52">Cosign</button><br><br>
-        <br><br>
-        <h2 t-id="45" style="font-size: 16px">Earn</h2>
-        <p id="affiliateInfo" t-id="46">Not connected</p>
-        <button onclick="copyAffiliateLink()" t-id="47">Copy affiliate link</button><br><br>
-        <button onclick="changeAffiliate()" t-id="48">Change my affiliate</button><br><br>
-        <button onclick="setCustomFee()" t-id="49">Set custom referral fee</button><br><br>
-    </div>
-    <div class="main about" style="background-image: src('./bitbay-dynamic-peg-hero.png');"> <!-- ss-container tag can be used for custom scrollers but it's not totally cross platform -->
-        <div id="abount-container" style="width: 100%; max-width: 900px; border: 1px solid #3d0064; padding: 10px; margin-right: 15px; margin-bottom: 25px; align-items: center; display: block; margin-left: auto; margin-right: auto;">
-        <h2 t-id="40" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;">About</h2>
-        <p t-id="41" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;">Welcome to the world of unbreakable contracts. These are two party escrow(double deposit) contracts that cannot be broken and require no 3rd party arbiters. Both users place a customizable deposit along with a payment into a joint account. If the deal goes well they both sign off on it. If one party tries to defraud the other the deal will eventually expire and blow up making it so that nobody wins and theft is profitless. This forces the users to be honest and follow through with their agreements since they either win together or they lose together.</p><br><a href="https://www.youtube.com/watch?v=fge5inFWlkc"><img src="two-party-escrow.jpg" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;"></a><p t-id="42" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;">The markets themselves run on top of Solidity chains such as Ethereum and Polygon. Offers can range from goods, services, barter and p2p trading. Since this webpage is fully open source and runs on the client side, the user can also download this code from github and run it locally for even greater security. This protocol which was pioneered by BitHalo back in 2014 predated Ethereum and was the worlds first smart contracts. This is a web based interface for fully decentralized markets.</p><br><p t-id="43" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;">For selling goods, users will definitely want to consider a drop shipping service or a service that provides discount shipping to compete with the shipping rates typically found in major companies. To do this, you should sign up for a 3rd party shipping account which should allow you to save up to 75% in shipping in some cases. Sellers may also charge buyers for shipping while in escrow and buyers should be careful to make sure the amount doesn't exceed the deposits or that they buy the shipping label themselves. Users should try to keep in communication with each other through the escrow process and it's recommended to have a backup of your keys so both parties are protected during escrow. Although these markets could be moderated through AI(such as webgpt) and community driven moderation, users are entirely responsible for the risks of what they post and for their own escrows. With that in mind, it's strongly recommended to not post content that is illegal in the country you reside. For deals that involve cash users should do their own due dilligence and their own 'know your customer' if needed. It's in everyones best interest to use double deposit escrow to get rid of deception in the world of international commerce and services. It is an advantage when users administrate contracts themselves because arbiters are unable to know the truth of a deal ruling unfairly and can collude causing great losses and they also incur a greater cost. Users are forced to work with each other to achieve a desirable outcome. Users are also the ones who host the offers using IPFS. So it's good practice to run your own IPFS node to archive the markets. It's recommended that you register your contact information to the blockchain. This makes it guaranteed that counter-parties in the contract know how to contact you for any questions about the negotiations. The code may be run locally and can also be audited by visiting the github page where the code and website are hosted. This system is ownerless and entirely free to use. However, there is a setting that can be activated for affiliates/referrals which can range from 0-1%. In order to encourage users to engage with affiliates, the fee is burned if it is not paid to an affiliate. This helps market the system by giving users a way to earn. A user of the markets is automatically an affiliate if they complete 10 deals. That allows them to use the markets for free if they choose to(as they can be their own affiliate) and it allows them to send users to the website through an affiliate link. Visiting through a link registers the affiliate to that account when a deal is accepted and let's them benefit from that referral. Also, some sellers may offer a more attractive referral fee which should allow affiliates to net more by mutual consent. For more information on how BitBay works you may visit: </p><a href="https://bitbay.market" target="_blank" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;">https://bitbay.market</a>
-        <div id="abount-container">
-    </div>
-</div>
+      <div class="main markets dashboard-content-wrapper">
+          <div class="header2">
+              <div class="header-list">
+                <a href="#" t-id="10" onclick="changeSearchText('goods')">Goods</a>
+                <a href="#" t-id="11" onclick="changeSearchText('services')">Services</a>
+                <a href="#" t-id="12" onclick="changeSearchText('barter')">Barter</a>
+                <a href="#" t-id="13" onclick="changeSearchText('p2p-trading')">P2P Trading</a>
+                <a href="#" t-id="14" onclick="changeSearchText('commodities')">Commodities</a>
+              </div>  
+          </div>
+          <h2 t-id="15">MARKETS</h2>
+          <div class="top-bar">
+              <button onclick="createContract()" class="square-button" t-id="16">Create Contract/Offer</button>
+              <div class="search">
+                  <!-- <img src="search.png" height="20px" width="20px" alt="Search"> -->
+                  <!-- <input type="text" id="searchText" placeholder="Search" onkeyup="searchListings(this.value)">
+                  <button onclick="searchListings(getElementById('searchText').value, 1)" t-id="17">Search</button> -->
+                  <div class="header-search-wrapper">
+                    <div class="header-search-area">
+                      <input type="text" id="searchText" placeholder="Search" onkeyup="searchListings(this.value)">
+                      <button onclick="searchListings(getElementById('searchText').value, 1)" t-id="17">Search</button>
+                    </div>  
+                    <button id="favorites-button" onclick="searchFavorites()"><span id="star-symbol">&bigstar;</span><span id="favorites-text"></span></button>
+                  </div>
+                  <div id="loadingStatus"></div>
+                  <div class="pagination">
+                    <button disabled onclick="previousPage()" t-id="18">
+                      <div class="prev-next-icon">
+                          <img src="previous-icon.svg" alt="previous-icon"/>
+                      </div>
+                  </button>
+                  <span id="paginationNumbers"></span> <!-- Container for page numbers -->
+                  <button onclick="nextPage()" t-id="19">
+                      <div class="prev-next-icon">
+                          <img src="next-icon.svg" alt="next-icon"/>
+                      </div>
+                  </button>
+                      <select id="SortBy">
+                        <option value="default" t-id="20">Sort: Default</option>
+                        <option value="price-low" t-id="21">Sort: Best price</option>
+                        <option value="price-high" t-id="22">Sort: High price</option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+          <div class="listings">
+              <!-- populated by JavaScript -->
+          </div>
+      </div>
+      <div class="main offers offers-categories">
+          <h2 t-id="23">OFFERS</h2>
+          <div id="myoffers" class="myoffers"></div>
+      </div>
+      <div class="main contracts">
+          <h2 t-id="24">Contracts</h2>
+          <div id="mycontracts" class="mycontracts"></div>
+      </div>
+      <div class="main account">
+          <h2 t-id="25" style="font-size: 16px">Account</h2>
+          <p id="account" t-id="26">Please connect metamask</p>
+          <button onclick="deposit()" t-id="27">Deposit tokens</button>
+          <button onclick="withdraw()" t-id="28">Withdraw tokens</button><br><br>
+          <label for="myContactInfo" t-id="29">Contact Information(email/signal/telegram):</label><br>
+          <input id="myContactInfo"></input><br><br>
+          <label for="myPassword" t-id="44">Password(for encryption):</label><br>
+          <input id="myPasswordInput" type="password"></input><br><br>
+          <button onclick="registerData()" t-id="30">Register information to my address(contact/encryption/optional)</button><br>
+          <div id="publicemail"></div><br><br>
+          <label for="clearCompleted" t-id="31">Automatically clear completed contracts</label>
+          <input id="clearCompleted" type="checkbox"></input><br><br>
+          <label for="emailClient" t-id="50">Attempt to notify prospects through default email client(when applicable)</label>
+          <input id="emailClient" type="checkbox" checked></input><br><br>
+          <button onclick="RefreshContracts()" t-id="32">Refresh/restore previously cleared contracts</button><br><br>
+          <label for="offerExpiration" t-id="33">Private offers expire: </label>
+          <select id="offerExpiration">
+            <option value="two-weeks" t-id="35">Two weeks</option>
+            <option value="one-month" t-id="36">One month</option>
+            <option value="never" t-id="34">Never</option>
+          </select>
+          <br><br>
+          <button onclick="backupLocalStorage()" t-id="37">Backup cached site/user data</button>
+          <button onclick="loadLocalStorage()" t-id="38">Load site/user data from file</button><br><br>
+          <select id="connectMethod">
+            <option value="0" t-id="39">Use default IPFS Pinata Gateway</option>
+          </select>
+          <br><br>
+          <button onclick="setCustodian()" t-id="51">Set cosigner</button><br><br>
+          <button onclick="cosign()" t-id="52">Cosign</button><br><br>
+          <br><br>
+          <h2 t-id="45" style="font-size: 16px">Earn</h2>
+          <p id="affiliateInfo" t-id="46">Not connected</p>
+          <button onclick="copyAffiliateLink()" t-id="47">Copy affiliate link</button><br><br>
+          <button onclick="changeAffiliate()" t-id="48">Change my affiliate</button><br><br>
+          <button onclick="setCustomFee()" t-id="49">Set custom referral fee</button><br><br>
+      </div>
+      <div class="main about" style="background-image: src('./bitbay-dynamic-peg-hero.png');"> <!-- ss-container tag can be used for custom scrollers but it's not totally cross platform -->
+          <div id="abount-container" style="width: 100%; max-width: 900px; border: 1px solid #3d0064; padding: 10px; margin-right: 15px; margin-bottom: 25px; align-items: center; display: block; margin-left: auto; margin-right: auto;">
+          <h2 t-id="40" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;">About</h2>
+          <p t-id="41" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;">Welcome to the world of unbreakable contracts. These are two party escrow(double deposit) contracts that cannot be broken and require no 3rd party arbiters. Both users place a customizable deposit along with a payment into a joint account. If the deal goes well they both sign off on it. If one party tries to defraud the other the deal will eventually expire and blow up making it so that nobody wins and theft is profitless. This forces the users to be honest and follow through with their agreements since they either win together or they lose together.</p><br/><a href="https://www.youtube.com/watch?v=fge5inFWlkc"><img src="two-party-escrow.jpg" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;"/></a><p t-id="42" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;">The markets themselves run on top of Solidity chains such as Ethereum and Polygon. Offers can range from goods, services, barter and p2p trading. Since this webpage is fully open source and runs on the client side, the user can also download this code from github and run it locally for even greater security. This protocol which was pioneered by BitHalo back in 2014 predated Ethereum and was the worlds first smart contracts. This is a web based interface for fully decentralized markets.</p><br/><p t-id="43" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;">For selling goods, users will definitely want to consider a drop shipping service or a service that provides discount shipping to compete with the shipping rates typically found in major companies. To do this, you should sign up for a 3rd party shipping account which should allow you to save up to 75% in shipping in some cases. Sellers may also charge buyers for shipping while in escrow and buyers should be careful to make sure the amount doesn't exceed the deposits or that they buy the shipping label themselves. Users should try to keep in communication with each other through the escrow process and it's recommended to have a backup of your keys so both parties are protected during escrow. Although these markets could be moderated through AI(such as webgpt) and community driven moderation, users are entirely responsible for the risks of what they post and for their own escrows. With that in mind, it's strongly recommended to not post content that is illegal in the country you reside. For deals that involve cash users should do their own due dilligence and their own 'know your customer' if needed. It's in everyones best interest to use double deposit escrow to get rid of deception in the world of international commerce and services. It is an advantage when users administrate contracts themselves because arbiters are unable to know the truth of a deal ruling unfairly and can collude causing great losses and they also incur a greater cost. Users are forced to work with each other to achieve a desirable outcome. Users are also the ones who host the offers using IPFS. So it's good practice to run your own IPFS node to archive the markets. It's recommended that you register your contact information to the blockchain. This makes it guaranteed that counter-parties in the contract know how to contact you for any questions about the negotiations. The code may be run locally and can also be audited by visiting the github page where the code and website are hosted. This system is ownerless and entirely free to use. However, there is a setting that can be activated for affiliates/referrals which can range from 0-1%. In order to encourage users to engage with affiliates, the fee is burned if it is not paid to an affiliate. This helps market the system by giving users a way to earn. A user of the markets is automatically an affiliate if they complete 10 deals. That allows them to use the markets for free if they choose to(as they can be their own affiliate) and it allows them to send users to the website through an affiliate link. Visiting through a link registers the affiliate to that account when a deal is accepted and let's them benefit from that referral. Also, some sellers may offer a more attractive referral fee which should allow affiliates to net more by mutual consent. For more information on how BitBay works you may visit: </p><a href="https://bitbay.market" target="_blank" style="width: 100%; max-width: 900px; align-items: center; display: block; margin-left: auto; margin-right: auto;">https://bitbay.market</a>
+          </div>
+          <div id="abount-container">
+          </div>
+      </div>
+   </div>
 <script>
+    // my js
+    function toggleSidebar() {
+      let sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+    // end js
     document.querySelectorAll('button').forEach(button => {
       if (!button.classList.length && !button.closest('.sidebar')) {
         button.classList.add('square-button2');
@@ -529,6 +1466,7 @@
         translateDocument(languageSelect.options[languageSelect.selectedIndex].value);
         await loadUser();
         await populateListings();
+        await updatePaginationControls();
     });
 
     function translateThis(mytext) {
@@ -618,6 +1556,41 @@
         };
       });
     };
+
+    // Loder-Modal Methods
+    function showLoader() {
+        const loaderModal = document.getElementById('loader-modal');
+        loaderModal.style.display = 'flex';
+        loaderModal.style.width = '100%'; // Full screen width
+        loaderModal.style.height = '100%'; // Full screen height
+        loaderModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Enable background fading
+        document.getElementById('loader-content').style.display = 'block';
+        document.getElementById('loader-minimized').style.display = 'none';
+    }
+
+    function hideLoader() {
+        document.getElementById('loader-modal').style.display = 'none';
+    }
+
+    function minimizeLoader() {
+        const loaderModal = document.getElementById('loader-modal');
+        loaderModal.style.backgroundColor = 'transparent'; // Remove background fading
+        loaderModal.style.width = '0'; // Minimize modal size
+        loaderModal.style.height = '0'; // Minimize modal size
+        document.getElementById('loader-content').style.display = 'none';
+        document.getElementById('loader-minimized').style.display = 'block';
+    }
+
+    function maximizeLoader() {
+        const loaderModal = document.getElementById('loader-modal');
+        loaderModal.style.width = '100%'; // Restore full screen width
+        loaderModal.style.height = '100%'; // Restore full screen height
+        loaderModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Re-enable background fading
+        document.getElementById('loader-content').style.display = 'block';
+        document.getElementById('loader-minimized').style.display = 'none';
+    }
+
+    /* End: Loder-Modal Methods */
 
     // Function to open the IndexedDB database
     async function openDatabase() {
@@ -768,6 +1741,7 @@
     //web3[2] = new Web3("https://api-goerli.etherscan.io/");
     var isConnected = false;
     var showOrder = false;
+        var body = document.body;
     var notifyFavorites = localStorage.getItem(myaccounts + DDEaddy + ":notifyFavorites");
     if(!notifyFavorites) {
       notifyFavorites = "0";
@@ -1124,11 +2098,12 @@
 
     document.getElementById('favorites-button').addEventListener('mouseover', function() {
       document.getElementById('favorites-text').innerHTML = translateThis('Favorites');
-      document.getElementById('favorites-text').style.color = 'black';
+      document.getElementById('favorites-text').style.color = '#322C62';
     });
 
     document.getElementById('favorites-button').addEventListener('mouseout', function() {
-      document.getElementById('favorites-text').innerHTML = '';
+      document.getElementById('favorites-text').innerHTML = 'Favorites';
+      document.getElementById('favorites-text').style.color = '#322C62';
     });
 
     myContactInfo.addEventListener('blur', async function(event) {
@@ -1424,18 +2399,24 @@
               return;
           }
           try {
+            showLoader();
             await DDEcontract.methods.authorizeCustodian(result.value, true).send({"from":myaccounts,...gasOptions[gasSetting]});
+            hideLoader();
             Swal.fire(translateThis("Cosigner designation successful. Now you will be asked to authorize the cosigner for contract clearance."));
           } catch (e) {
             console.log(e);
+            hideLoader()
             await showError(e);
             return;
           }
           try {
+            showLoader();
             await DDEcontract.methods.authorizeContract(result.value, "0x", true).send({"from":myaccounts,...gasOptions[gasSetting]});
+            hideLoader();
             Swal.fire(translateThis("Success!"));
           } catch (e) {
             console.log(e);
+            hideLoader();
             await showError(e);
             return;
           }
@@ -1638,10 +2619,13 @@
         return;
       }
       try {
+        showLoader();
           await DDEcontract.methods.adduserdata(JSON.stringify(myuserdata)).send({"from":myaccounts,...gasOptions[gasSetting]});
+          hideLoader();
           await Swal.fire(translateThis("Data added!"));
         } catch (error) {          
           console.error(error);
+          hideLoader();
           await showError(error);
       }
     }
@@ -1728,11 +2712,14 @@
           reputation = JSON.parse(DOMPurify.sanitize(JSON.stringify(await DDEcontract.methods.getCompleted(affiliate).call())));
           if(reputation[2] >= 10) {
             try {
+              showLoader();
               await DDEcontract.methods.changeAffiliate(affiliate).send({"from":myaccounts,...gasOptions[gasSetting]});
+              hideLoader()
               Swal.fire(translateThis("Success!"));
               referral = affiliate;
             } catch (e) {
               console.log(e);
+              hideLoader()
               await showError(e);
               return;
             }
@@ -1762,10 +2749,13 @@
         if (result.isConfirmed) {
           var value = parseInt(result.value) * parseInt(100);
           try {
+            showLoader();
             await DDEcontract.methods.changeCustomFee(value).send({"from":myaccounts,...gasOptions[gasSetting]});
+            hideLoader();
             Swal.fire(translateThis("Success!"));
           } catch (e) {
             console.log(e);
+            hideLoader();
             await showError(e);
           }
         }
@@ -2279,6 +3269,7 @@
                         }
                     });
                     await populateListings();
+                    await updatePaginationControls();
                 } catch (e) {
                     console.log("Error loading offer: ",e);
                 }
@@ -2289,6 +3280,7 @@
         }
     }
 
+    
     function sortByHits() {
       marketOffers['results'].sort((hashA, hashB) => {
         const hitsA = marketOffers[hashA]['searchTerms'].length;
@@ -2432,6 +3424,7 @@
     lastNotified = 0;
     async function populateOffers() {
       var list = document.createElement("ul");
+      list.classList.add('offers-list-box')
       var readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages")) || {};
       var notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":notifications")) || {};
       var mylen = 0;
@@ -2503,7 +3496,7 @@
         }
       }
       if(notify == 1) {
-        document.getElementById("offersButton").style.backgroundColor = "silver";
+        document.getElementById("offersButton").style.backgroundColor = "";
       }
       localStorage.setItem(myaccounts + DDEaddy + ":notifications", JSON.stringify(notifications));
       notify = 0;
@@ -2617,14 +3610,14 @@
       sentOffersHeader.classList.add("offers-header");
       sentOffersHeader.textContent = translateThis("Sent Offers");
       //offersContainer.appendChild(sentOffersHeader);
-      list.setAttribute("style", "border: 1px solid black; padding: 1rem; margin-bottom: 1rem; cursor: pointer; background-color: #f8f8f8;");
+      list.setAttribute("style", "");
       //offersContainer.appendChild(list);
 
       const receivedOffersHeader = document.createElement("div");
       receivedOffersHeader.classList.add("offers-header");
       receivedOffersHeader.textContent = translateThis("Received Offers");
       //offersContainer.appendChild(receivedOffersHeader);
-      list2.setAttribute("style", "border: 1px solid black; padding: 1rem; margin-bottom: 1rem; cursor: pointer; background-color: #f8f8f8;");
+      list2.setAttribute("style", "");
       //offersContainer.appendChild(list2);
 
       const sentContainer = document.createElement("div");
@@ -2652,6 +3645,7 @@
       offersContainer.appendChild(tabContainer);
 
       var list3 = document.createElement("ul");
+      list3.classList.add('offers-list-box');
       readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages3")) || {};
       try {
         mylen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, 2).call());
@@ -2673,6 +3667,7 @@
             }
           }
           const li3 = document.createElement("listElement");
+
           const counterpartyAddress3 = offerData3.sender === myaccounts ? offerData3.recipient : offerData3.sender;
           const counterpartyLabel3 = counterpartyAddress3;
           const svgString3 = jdenticon.toSvg(offerHash3, 25);
@@ -2795,7 +3790,7 @@
       escrowOffersHeader.classList.add("escrow-header");
       escrowOffersHeader.textContent = translateThis("Active contracts");
       escrowContainer.appendChild(escrowOffersHeader);
-      list3.setAttribute("style", "border: 1px solid black; padding: 1rem; margin-bottom: 1rem; cursor: pointer; background-color: #f8f8f8;");
+      list3.setAttribute("style", "");
       escrowContainer.appendChild(list3);
     }
     function openTab(evt, tabName) {
@@ -2817,16 +3812,28 @@
     }
 
     function showMain(menu) {
-        // hide all main divs
-        var mains = document.querySelectorAll('.main');
-        for (var i = 0; i < mains.length; i++) {
-            mains[i].classList.remove('show');
-        }
-
-        // show the main div for the selected menu
-        var main = document.querySelector('.main.' + menu);
-        main.classList.add('show');
+    // hide all main divs
+    var mains = document.querySelectorAll('.main');
+    for (var i = 0; i < mains.length; i++) {
+        mains[i].classList.remove('show');
     }
+
+    // show the main div for the selected menu
+    var main = document.querySelector('.main.' + menu);
+    main.classList.add('show');
+
+    // Remove active class from all sidebar buttons
+    var buttons = document.querySelectorAll('.sidebar button');
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('active');
+    }
+
+    // Add active class to the clicked button
+    var activeButton = document.getElementById(menu + 'Button');
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+}
     //**************MARKETS TAB//**************
     // global variables for pagination
     var currentPage = 1;
@@ -2867,12 +3874,14 @@
             if (shown == listingsPerPage) {
                 break;
             }
-            if (!marketOffers.hasOwnProperty(marketOffers.indices[i])) {
-                continue;
-            }
-            if (parseInt(marketOffers.indices[i]) >= parseInt(currentMarketsLength)) {
-                continue;
-            }
+    if (!marketOffers.hasOwnProperty(marketOffers.indices[i])) {
+        continue;
+    }
+    var offer = marketOffers[marketOffers.indices[i]];
+    if (!offer) {
+        console.log("Invalid offer data at index:", i);
+        continue;
+    }
             if (searchText !== "") {
                 if (i < marketOffers.results.length) {
                     offer = marketOffers[marketOffers.results[i]];
@@ -2933,7 +3942,7 @@
             gridItem.innerHTML = `
                 <div class="listing-image">${tempimg}</div>
                 <div class="listing-details">
-                    <div class="token">` + '<bdo class="theText">' + translateThis("Currency:") + '</bdo>'  + ` ${tokennames[offer.token]}</div>
+                    <div class="token">` + '<bdo class="theText">' + translateThis("Currency") + '</bdo>' + '<div class="token-ethereum-icon"><img src="ethereum-icon.svg" alt"ethereum-icon"/></div>'  + ` ${tokennames[offer.token]}</div>
                     <div class="amount">` + '<bdo class="theText">' + translateThis("Amount:") + '</bdo>'  + ` ${displayDecimals(offer.token, offer.amount)}</div>
                     <div class="message">` + '<bdo class="theText">' + translateThis("Details:") + '</bdo>' + ` ${offer.message.slice(0, 20) + (offer.message.length > 20 ? "..." : "")}</div>
                 </div>
@@ -2949,28 +3958,10 @@
             gridContainer.appendChild(gridItem);
             shown++;
         }
-
         listingsDiv.appendChild(gridContainer);
-
         // Inject CSS styles into a style tag
         var style = document.createElement('style');
         style.textContent = `
-            .listings-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-                grid-gap: 20px;
-            }
-
-            .listing-grid-item {
-                border: 1px solid #ccc;
-                text-align: center;
-                background-color: white;
-            }
-
-            .listing-image img {
-                max-width: 200px;
-                height: auto;
-            }
         `;
         document.head.appendChild(style);
     }
@@ -3021,28 +4012,80 @@
       document.getElementById("loadingStatus").innerHTML = "";
     }
 
-    // function for showing the next page of listings
-    async function nextPage() {
-        if (currentPage < Math.ceil(marketOffers.indices.length / listingsPerPage)) {
-            currentPage++;
-            await populateListings();
-        } else {
-            document.getElementById("loadingStatus").innerHTML = translateThis("Loading...");
-            await loadMarkets(marketOffers.indices.length, marketOffers.indices.length + 50);
-            document.getElementById("loadingStatus").innerHTML = ""
-            currentPage++;
-            await populateListings();
+
+    function updatePaginationControls() {
+    var totalItems = marketOffers.indices.length; // Total items in the marketOffers
+    var totalPages = Math.ceil(totalItems / listingsPerPage); // Calculate total pages
+    var prevButton = document.querySelector('[onclick="previousPage()"]');
+    var nextButton = document.querySelector('[onclick="nextPage()"]');
+    var paginationNumbers = document.getElementById('paginationNumbers'); // Ensure this element exists in HTML
+
+    // Clear existing page numbers
+    paginationNumbers.innerHTML = '';
+
+    // Create page numbers dynamically
+    for (let i = 1; i <= totalPages; i++) {
+        let pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.className = 'page-number';
+        pageButton.onclick = function() { goToPage(i); };
+        if (i === currentPage) {
+            pageButton.classList.add('active'); // Highlight the current page
         }
+        paginationNumbers.appendChild(pageButton);
     }
 
-    // function for showing the previous page of listings
-    async function previousPage() {
-        if (currentPage > 1) {
-            currentPage--;
-            await populateListings();
-        }
-    }
+    // Disable or enable buttons based on the current page
+    prevButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage === totalPages;
+}
+    function goToPage(pageNumber) {
+    currentPage = pageNumber;
     populateListings();
+    updatePaginationControls(); // Update controls whenever page changes
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        populateListings();
+        updatePaginationControls();
+    }
+}
+
+function nextPage() {
+    var totalItems = marketOffers.indices.length;
+    var totalPages = Math.ceil(totalItems / listingsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        populateListings();
+        updatePaginationControls();
+    }
+}
+
+    // function for showing the next page of listings
+    // async function nextPage() {
+    //     if (currentPage < Math.ceil(marketOffers.indices.length / listingsPerPage)) {
+    //         currentPage++;
+    //         await populateListings();
+    //     } else {
+    //         document.getElementById("loadingStatus").innerHTML = translateThis("Loading...");
+    //         await loadMarkets(marketOffers.indices.length, marketOffers.indices.length + 50);
+    //         document.getElementById("loadingStatus").innerHTML = ""
+    //         currentPage++;
+    //         await populateListings();
+    //     }
+    // }
+
+    // // function for showing the previous page of listings
+    // async function previousPage() {
+    //     if (currentPage > 1) {
+    //         currentPage--;
+    //         await populateListings();
+    //     }
+    // }
+    populateListings();
+    updatePaginationControls();
 
     // Function to show the details popup for a listing
     async function showListing(listing, mode=0) {
@@ -3132,7 +4175,10 @@
       popupContainer.classList.add('popup-container');
 
       const popup = document.createElement('div');
+      const popupWrapper = document.createElement('div');
+      popupWrapper.classList.add('offer-popup-wrapper'); 
       popup.classList.add('popup');      
+      popup.classList.add('offer-popup');      
 
       const closeButton = document.createElement('span');
       closeButton.innerHTML = '&times;';
@@ -3340,16 +4386,18 @@
       const quantity = document.createElement('p');
       quantity.innerHTML = "<bdo>" + translateThis('Quantity:') + '</bdo> ' + parseInt(listing.quantity[0]);
       if(listing.sender == "0x0000000000000000000000000000000000000000" || listing.recipient == "0x0000000000000000000000000000000000000000" ) {
-        quantity.innerHTML = "<bdo>" + translateThis('Quantity:') + '</bdo> ' + parseInt(listing.quantity[0]) + "<bdo>" + translateThis('(Total)') + '</bdo> - ' + parseInt(listing.quantity[1]) + "<bdo>" + translateThis('(Maximum)') + "</bdo>";
+        quantity.innerHTML = "<bdo>" + translateThis('Quantity:') + '</bdo> ' + parseInt(listing.quantity[0]) + "" + translateThis('(Total)') + '- ' + parseInt(listing.quantity[1]) + "" + translateThis('(Maximum)') + "";
       }
       
       const timelimit = document.createElement('p');
-      timelimit.innerHTML = "<bdo>" + translateThis('Time limit:') + '</bdo> ' + Math.floor(parseInt(listing.timelimit[0]) / (60 * 60 * 24 * 7)) + ' ' + "<bdo>" + translateThis('weeks') + "</bdo>";
+      timelimit.innerHTML = "<bdo>" + translateThis('Time limit:') + '</bdo> ' + Math.floor(parseInt(listing.timelimit[0]) / (60 * 60 * 24 * 7)) + ' ' + "" + translateThis('weeks') + "";
 
       const message = document.createElement('p');
-      message.innerHTML = '<br><bdo>' + translateThis('Details:') + '</bdo><br>' + listing.message;
+      message.innerHTML = '<bdo>' + translateThis('Details:') + '</bdo>' + listing.message;
+      const message2 = document.createElement('p');
       if (typeof listing.contact !== 'undefined') {
-          message.innerHTML += '<br><br><bdo>' + translateThis('Contact information:') + '</bdo><br>' + listing.contact;
+
+          message2.innerHTML = '<bdo>' + translateThis('Contact information:') + '</bdo>' + listing.contact;
       }
       var contact2 = '';
       var datalen = 0;
@@ -3402,10 +4450,12 @@
 
       if(mode == 0 || mode == 2) {
           const acceptButton = document.createElement('button');
+          acceptButton.classList.add('btn-filled');  
           acceptButton.innerHTML = translateThis('Accept offer');
           acceptButton.onclick = () => {acceptOffer(listing); popupContainer.remove();};
 
           const counterButton = document.createElement('button');
+          counterButton.classList.add('btn-gray');  
           counterButton.innerHTML = translateThis('Counter-offer');
           counterButton.onclick = () => {counterOffer(listing); popupContainer.remove();};
 
@@ -3467,12 +4517,15 @@
                     }).then(async (result) => {
                       if (result.isConfirmed) {
                         try {
+                          showLoader()
                           await DDEcontract.methods.expireEscrow(listing.hash, theuser).send({"from":myaccounts,...gasOptions[gasSetting]});
+                          hideLoader();
                           await Swal.fire(translateThis("Transaction result registered!"));
                           popupContainer.remove();
                           returnThis=1;
                         } catch (error) {
                           console.error(error);
+                          hideLoader();
                           await showError(error);
                         }
                       }
@@ -3501,12 +4554,15 @@
                   acceptTime.id = 'acceptTime';
                   acceptTime.onclick = async function() {
                     try {
+                      showLoader();
                       await DDEcontract.methods.requestExtension(listing.hash, theuser, listing.timelimit[1]).send({"from":myaccounts,...gasOptions[gasSetting]});
+                      hideLoader();
                       await Swal.fire(translateThis("Time extended!"));
                       await loadUser();
                       popupContainer.remove();
                     } catch (error) {
                       console.error(error);
+                      hideLoader();
                       await showError(error);
                     }
                   }
@@ -3520,12 +4576,15 @@
                   acceptTime.id = 'acceptTime';
                   acceptTime.onclick = async function() {
                     try {
+                      showLoader();
                       await DDEcontract.methods.requestExtension(listing.hash, theuser, listing.timelimit[2]).send({"from":myaccounts,...gasOptions[gasSetting]});
+                      hideLoader();
                       await Swal.fire(translateThis("Time extended!"));
                       await loadUser();
                       popupContainer.remove();
                     } catch (error) {
                       console.error(error);
+                      hideLoader();
                       await showError(error);
                     }
                   }
@@ -3568,13 +4627,16 @@
                       confirmBtn.addEventListener("click", async () => {                        
                         const newtime = parseInt(listing.timelimit[0]) + parseInt(parseInt(dialog.querySelector("#new-time").value) * 24 * 60 * 60);
                         dialog.remove();
+                        showLoader();
                         await DDEcontract.methods.requestExtension(listing.hash, theuser, newtime).send({"from":myaccounts,...gasOptions[gasSetting]});
+                        hideLoader();
                         await Swal.fire(translateThis("Time extension requested!"));
                         await loadUser();
                         popupContainer.remove();
                       });
                   } catch (error) {
                     console.error(error);
+                    hideLoader();
                     await showError(error);
                   }
               }
@@ -3595,7 +4657,9 @@
                       return;
                     }
                   }
+                  showLoader();
                   await DDEcontract.methods.cancelEscrow(listing.hash, theuser).send({"from":myaccounts,...gasOptions[gasSetting]});
+                  hideLoader();
                   if(listing.status[1] == 1) {
                     await Swal.fire(translateThis("Contract cancellation request sent!"));
                   } else {
@@ -3605,6 +4669,7 @@
                   popupContainer.remove();
                 } catch (error) {
                   console.error(error);
+                  hideLoader();
                   await showError(error);
                 }
               }
@@ -3625,7 +4690,9 @@
                       return;
                     }
                   }
+                  showLoader()
                   await DDEcontract.methods.completeEscrow(listing.hash, theuser).send({"from":myaccounts,...gasOptions[gasSetting]});
+                  hideLoader();
                   if(listing.status[1] == 1) {
                     await Swal.fire(translateThis("Contract completion request sent!"));
                   } else {
@@ -3635,6 +4702,7 @@
                   popupContainer.remove();
                 } catch (error) {
                   console.error(error);
+                  hideLoader();
                   await showError(error);
                 }
               }
@@ -3668,15 +4736,16 @@
       }
       message.style.whiteSpace = 'normal';
       details.appendChild(message);
+      details.appendChild(message2);
 
       const topBar = document.createElement('div');
+      topBar.classList.add('fav-icons-wrapper');
       if(mode == 0 && (listing.sender=="0x0000000000000000000000000000000000000000" || listing.recipient=="0x0000000000000000000000000000000000000000" )) {
         const starButton = document.createElement('span');
         starButton.style.fontSize = "20px";
         starButton.innerHTML = '&star;';
         starButton.classList.add('favorites-button2');
         starButton.style.left = 10;
-        starButton.style.color = "#000000";
         if(myFavorites.includes(listing.hash)) {
           starButton.style.color = "#ed5f00";
           starButton.innerHTML = '&bigstar;';
@@ -3685,7 +4754,6 @@
           if(myFavorites.includes(listing.hash)) {
             myFavorites.splice(myFavorites.indexOf(listing.hash),1);
             starButton.innerHTML = '&star;';
-            starButton.style.color = "#000000";
           } else {
             myFavorites.push(listing.hash);
             starButton.innerHTML = '&bigstar;';
@@ -3703,11 +4771,10 @@
         topBar.appendChild(starButton);
 
         const linkButton = document.createElement('span');
-        linkButton.style.fontSize = "20px";
-        linkButton.innerHTML = '&nbsp&nbsp&#128279;';
+        linkButton.style.fontSize = "15px";
+        linkButton.innerHTML = '&#128279;';
         linkButton.classList.add('favorites-button3');
         linkButton.style.left = 50;
-        linkButton.style.color = "#000000";
         linkButton.addEventListener('mouseover', function() {
           this.style.cursor = 'pointer';
         });
@@ -3762,12 +4829,13 @@
       }
       topBar.appendChild(closeButton);
       popup.appendChild(topBar);
-      popup.appendChild(imageContainer);
+      popup.appendChild(popupWrapper);
+      popupWrapper.appendChild(imageContainer);
       details.style.whiteSpace = 'nowrap';
       details.style.marginRight = '10px'; 
       details.style.marginLeft = '10px'; 
-      popup.appendChild(details);
-      popup.appendChild(buttonContainer);
+      popupWrapper.appendChild(details);
+      popupWrapper.appendChild(buttonContainer);
       popupContainer.appendChild(popup);
 
       document.body.appendChild(popupContainer);
@@ -3776,67 +4844,7 @@
       const style = document.createElement('style');
       style.type = 'text/css';
       style.innerHTML = `
-        .popup-container {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.4);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 999;
-        }
-
-        .popup {
-          position: relative;
-          background-color: white;
-          padding: 20px;
-          max-width: 600px;
-          max-height: 90%;
-          overflow-y: auto;
-        }
-
-        .popup-image {
-          display: block;
-          margin: 0 auto;
-          max-width: 200px;
-          max-height: 200px;
-          object-fit: contain;
-          margin-bottom: 10px;
-        }
-
-        .popup-details p {
-          margin: 5px 0;
-        }
-
-        .button-container {
-          display: flex;
-          justify-content: center;
-          margin-top: 20px;
-        }
-
-        .button-container button {
-          margin: 0 10px;
-          padding: 10px;
-          border-radius: 5px;
-          border: none;
-          cursor: pointer;
-        }
-
-        .button-container button:hover {
-          background-color: #F5F5F5;
-        }
-
-        .close-button {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          font-size: 28px;
-          font-weight: bold;
-          cursor: pointer;
-        }
+        
       `;
       document.head.appendChild(style);
       //SimpleScrollbar.initEl(popup);
@@ -3917,12 +4925,15 @@
           // If the selected token is ETH, deposit WETH instead
           try {
             var value = web3.utils.toWei(amount.toString(), 'ether');
+            showLoader();
             await DDEcontract.methods.depositWETH().send({"from":myaccounts,"value":value,...gasOptions[gasSetting]});
+            hideLoader();
             await Swal.fire(translateThis("Deposit success!"));
             await loadUser();
             popupContainer.remove();
           } catch (error) {
             console.error(error);
+            hideLoader();
             await showError(error);
           }
         } else {
@@ -3934,15 +4945,18 @@
 
             if (web3.utils.toBN(allowance).lt(web3.utils.toBN(value))) {
               await Swal.fire(translateThis("Waiting for approval..."));
+              showLoader();
               await tokenContract.methods.approve(DDEaddy, web3.utils.toHex(web3.utils.toBN(2).pow(web3.utils.toBN(256)).sub(web3.utils.toBN(1)))).send({"from":myaccounts,...gasOptions[gasSetting]});
             }
 
             await DDEcontract.methods.deposit(tokenAddress, value).send({"from":myaccounts,...gasOptions[gasSetting]});
+            hideLoader();
             await Swal.fire(translateThis("Deposit success!"));
             await loadUser();
             popupContainer.remove();
           } catch (error) {
             console.error(error);
+            hideLoader();
             await showError(error);
           }
         }
@@ -3960,35 +4974,7 @@
       const style = document.createElement('style');
       style.type = 'text/css';
       style.innerHTML = `
-        .popup-container {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.4);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .popup {
-          position: relative;
-          background-color: white;
-          padding: 20px;
-          max-width: 600px;
-          max-height: 80%;
-          overflow-y: auto;
-        }
-
-        .close-button {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          font-size: 28px;
-          font-weight: bold;
-          cursor: pointer;
-        }
+        
       `;
       document.head.appendChild(style);
     }
@@ -4043,12 +5029,15 @@
           var amount = parseFloat(document.getElementById('amount-input').value);          
           var value = (new BigNumber(amount.toString()).times(new BigNumber(10).pow(decimals))).toFixed(0);
           try {
+            showLoader();
             await DDEcontract.methods.withdraw(tokenAddress, value).send({"from":myaccounts,...gasOptions[gasSetting]});
+            hideLoader();
             await Swal.fire(translateThis("Withdraw success!"));
             await loadUser();
             popupContainer.remove();
           } catch (error) {
             console.error(error);
+            hideLoader();
             await showError(error);
           }
       });
@@ -4065,35 +5054,7 @@
       const style = document.createElement('style');
       style.type = 'text/css';
       style.innerHTML = `
-        .popup-container {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.4);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .popup {
-          position: relative;
-          background-color: white;
-          padding: 20px;
-          max-width: 600px;
-          max-height: 80%;
-          overflow-y: auto;
-        }
-
-        .close-button {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          font-size: 28px;
-          font-weight: bold;
-          cursor: pointer;
-        }
+        
       `;
       document.head.appendChild(style);
     }
@@ -4137,6 +5098,7 @@
     }
 
     async function createContract(publicoffer=true, counterdata={}) {
+      // showLoader();
         // Create the popup container
         const popupContainer = document.createElement('div');
         popupContainer.classList.add('popup-container');
@@ -4156,65 +5118,122 @@
         // Create the form element
         var form = document.createElement('form');
         form.classList.add('popup-form');
-        form.innerHTML = `<div id="createContractModal" class="modal">
-          <div class="modal-content">
-            <h2>` + translateThis('Create Contract') + `</h2>
+        form.innerHTML = `<div id="createContractModal" class="modal modal-header">
+          <h2>` + translateThis('CREATE CONTRACT') + `</h2>
+          <div class="modal-content form-contract-modal">
             <form id="createContractForm">
-              <label for="contractType">` + translateThis('Contract Type') + `:</label>
-              <select id="contractType">
-                <option value="public">` + translateThis('Public Offer') + `</option>
-                <option value="private">` + translateThis('Private Offer') + `</option>
-              </select><br><span class="vertical-spacer"></span>
-              <div id="counterPartyAddressField" style="display:none;">
+              <div class="input-wrapper">
+                <label for="contractType">` + translateThis('Contract Type') + `:</label>
+                <select id="contractType">
+                  <option value="public">` + translateThis('Public Offer') + `</option>
+                  <option value="private">` + translateThis('Private Offer') + `</option>
+                </select>
+              </div>
+              <div class="input-wrapper">
+                <div id="counterPartyAddressField" style="display:none;">
                 <label for="counterPartyAddress">` + translateThis('Counter-Party Address:') + `</label>
                 <input type="text" id="counterPartyInput">
-              </div><br><span class="vertical-spacer"></span>
-              <label for="senderReceiver">` + translateThis('Sender or Receiver:') + `</label>
-              <select id="senderReceiver">
-                <option value="receiver">` + translateThis("I'm the one receiving the funds") + `</option>
-                <option value="sender">` + translateThis("I'm the one sending the funds") + `</option>                
-              </select><br><span class="vertical-spacer"></span>
-              <label for="order-quantity">` + translateThis('Quantity:') + `</label>
-              <input type="number" id="order-quantity" min="1" value="1" style="width: 75px;">
-              <label for="order-maximum">` + translateThis('Maximum:') + `</label>
-              <input type="number" id="order-maximum" min="1" value="1" style="width: 75px;"><br><span class="vertical-spacer"></span>
-              </select><br><span class="vertical-spacer"></span>
-              <label for="token">` + translateThis('Token:') + `</label>
-              <select id="token-select">
-                <!-- options added dynamically through javascript -->
-              </select><br><span class="vertical-spacer"></span>
-              <label for="amount">` + translateThis('Amount:') + `</label>
-              <input type="number" id="amount-input" min="0" step="0.00000001"><br><span class="vertical-spacer"></span>
-              <label for="depositSettings">` + translateThis('Deposit Settings:') + `</label>
-              <select id="depositSettings">
-                <option value="recommended">` + translateThis('Use recommended deposit settings') + `</option>
-                <option value="custom">` + translateThis('Custom deposits') + `</option>
-              </select><br><span class="vertical-spacer"></span>
-              <div id="senderDepositField" style="display:none;">
-                <label for="senderDeposit">` + translateThis('Sender Deposit:') + `</label>
-                <input type="number" id="sender-deposit-input" min="0" step="0.00000001">
-              </div><br><span class="vertical-spacer"></span>
-              <div id="receiverDepositField" style="display:none;">
-                <label for="receiverDeposit">` + translateThis('Receiver Deposit:') + `</label>
-                <input type="number" id="recipient-deposit-input" min="0" step="0.00000001">
-              </div><br><span class="vertical-spacer"></span>
-              <label for="timeLimit">` + translateThis('Time Limit (in weeks):') + `</label>
-              <input type="number" id="timeLimit" min="1" value="4"><br><span class="vertical-spacer"></span>
-              <p id="timeLimitWarning" style="display:none;">` + translateThis('Notice: Fast expiration times can cause users to lose funds if they lose access to their computers. The default time of one month or longer is recommended for this reason.') + `</p><br><span class="vertical-spacer"></span>
-              <label for="contractDetails">` + translateThis('Contract Details:') + `</label><br><span class="vertical-spacer"></span>
-              <textarea id="contractDetails"></textarea><br><span class="vertical-spacer"></span>
-              <label for="contractImage">` + translateThis('Contract Images:') + `</label>
-              <input type="file" id="contractImage" multiple><br><br><span class="vertical-spacer"></span>
-              <button type="button" id="changefile" style="display:none;">` + translateThis('Change Images') + `</button>
-              <label for="contactInfo">` + translateThis('Contact Information(email/chat):') + `</label><br><span class="vertical-spacer"></span>
-              <input id="contactInfo"></textarea><br><span class="vertical-spacer"></span>
-              <label for="key-words" id="key-label">` + translateThis('Search key words(optional):') + `</label>
-              <button type="button" id="key-words">` + translateThis('Add search terms') + `</button><br><span class="vertical-spacer"></span>
-              <label for="allowcounters" id="allowcounterslabel">` + translateThis('Allow counter offers') + `  </label>
-              <input type="checkbox" id="allowcounters"><br><span class="vertical-spacer"></span>
-              <label for="autoaccept" id="autoacceptlabel">` + translateThis('Automatically accept matching offers') + `  </label>
-              <input type="checkbox" id="autoaccept"><br><br><span class="vertical-spacer"></span>
-              <button type="submit">` + translateThis('Submit') + `</button>
+                </div>
+              </div>
+              <div class="input-wrapper-area">
+                <div class="input-wrapper">
+                  <label for="senderReceiver">` + translateThis('Sender or Receiver:') + `</label>
+                  <select id="senderReceiver">
+                    <option value="receiver">` + translateThis("I'm the one receiving the funds") + `</option>
+                    <option value="sender">` + translateThis("I'm the one sending the funds") + `</option>                
+                  </select>
+                </div>
+                <div class="input-wrapper">
+                  <div class="input-wrapper-area">
+                    <div class="input-wrapper content-margin">
+                      <label for="order-quantity">` + translateThis('Quantity:') + `</label>
+                      <input type="number" id="order-quantity" min="1" value="1">
+                    </div>  
+                    <div class="input-wrapper content-margin">
+                      <label for="order-maximum">` + translateThis('Maximum:') + `</label>
+                      <input type="number" id="order-maximum" min="1" value="1">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="input-wrapper-area">
+                <div class="input-wrapper">
+                  <label for="token">` + translateThis('Token:') + `</label>
+                  <select id="token-select">
+                    <!-- options added dynamically through javascript -->
+                  </select>
+                </div>
+                <div class="input-wrapper">
+                  <div class="input-wrapper-area">
+                    <div class="input-wrapper content-margin">
+                      <label for="amount">` + translateThis('Amount:') + `</label>
+                      <input type="number" id="amount-input" min="0" step="0.00000001">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="input-wrapper-content">
+                <label for="depositSettings">` + translateThis('Deposit Settings:') + `</label>
+                <select id="depositSettings">
+                  <option value="recommended">` + translateThis('Use recommended deposit settings') + `</option>
+                  <option value="custom">` + translateThis('Custom deposits') + `</option>
+                </select>
+              </div>
+              <div class="input-wrapper-area">
+                <div class="input-wrapper">
+                  <div id="senderDepositField" style="display:none;">
+                  <label for="senderDeposit">` + translateThis('Sender Deposit:') + `</label>
+                  <input type="number" id="sender-deposit-input" min="0" step="0.00000001">
+                  </div>
+                </div>
+                <div class="input-wrapper">
+                  <div id="receiverDepositField" style="display:none;">
+                    <label for="receiverDeposit">` + translateThis('Receiver Deposit:') + `</label>
+                    <input type="number" id="recipient-deposit-input" min="0" step="0.00000001">
+                  </div>
+                </div>
+              </div>
+              <div class="input-wrapper">
+                <label for="timeLimit">` + translateThis('Time Limit (in weeks):') + `</label>
+                <input type="number" id="timeLimit" min="1" value="4">
+                <p id="timeLimitWarning" style="display:none;">` + translateThis('Notice: Fast expiration times can cause users to lose funds if they lose access to their computers. The default time of one month or longer is recommended for this reason.') + `</p>
+              </div>  
+              <div class="input-wrapper-area">
+                <div class="input-wrapper">
+                  <label for="contractDetails">` + translateThis('Contract Details:') + `</label>
+                  <textarea id="contractDetails"></textarea>
+                </div>
+                <div class="input-wrapper">
+                    <label for="contractImage">` + translateThis('Contract Images:') + `</label>
+                    <input type="file" id="contractImage" multiple>
+                    <button type="button" id="changefile" style="display:none;">` + translateThis('Change Images') + `</button>
+                </div>
+              </div>
+              <div class="input-wrapper-area">
+                <div class="input-wrapper">
+                  <label for="contactInfo">` + translateThis('Contact Information(email/chat):') + `</label>
+                  <textarea id="contactInfo"></textarea>
+                </div>
+                <div class="input-wrapper">
+                  <label for="key-words" id="key-label">` + translateThis('Search key words(optional):') + `</label>
+                  <button class="input-buttons" type="button" id="key-words">` + translateThis('Add search terms') + `</button>
+                </div>
+              </div>
+              <div class="input-wrapper-area">
+                <div class="input-wrapper input-checkboxes"> 
+                  <label for="allowcounters" id="allowcounterslabel">` + translateThis('Allow counter offers') + ` 
+                    <input type="checkbox" id="allowcounters" checked="checked">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div class="input-wrapper input-checkboxes">
+                  <label for="autoaccept" id="autoacceptlabel">` + translateThis('Automatically accept matching offers') + `  
+                    <input type="checkbox" id="autoaccept" checked="checked">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </div>
+              <button class="btn-filled" type="submit">` + translateThis('Submit') + `</button>
             </form>
           </div>
         </div>
@@ -4379,6 +5398,7 @@
         form.addEventListener('submit', async function(event) {
           event.preventDefault();
           // Get form values
+
           var counterPartyInput = document.getElementById("counterPartyInput").value;
           var sender = "0x0000000000000000000000000000000000000000";
           var recipient = "0x0000000000000000000000000000000000000000";
@@ -4613,6 +5633,7 @@
                 popupContainer.remove();
                 return;
               }
+              showLoader();
               // Call solidity function to create contract
               await DDEcontract.methods.createContract(
                 data.sender,
@@ -4627,6 +5648,7 @@
                 data.message,
                 myterms
               ).send({"from":myaccounts,...gasOptions[gasSetting]});
+                hideLoader();
                 await Swal.fire(translateThis("Contract creation success!"));
                 await loadUser();
                 if(emailClient.checked && sender2 != "0x0000000000000000000000000000000000000000" && recipient2 != "0x0000000000000000000000000000000000000000" && contact2 != '' && typeof contact2 === 'object' && 'mycontact' in contact2 && contact2['mycontact'].includes("@")) {
@@ -4647,7 +5669,9 @@
                   });
                 }
                 popupContainer.remove();
+                hideLoader();
               } catch (error) {
+                hideLoader();
                 console.error(error);
                 await showError(error);
           }
@@ -4665,40 +5689,7 @@
         const style = document.createElement('style');
         style.type = 'text/css';
         style.innerHTML = `
-        .popup-container {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.4);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .popup {
-          position: relative;
-          background-color: white;
-          padding: 20px;
-          max-width: 600px;
-          max-height: 80%;
-          overflow-y: auto;
-        }
-
-        .close-button {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          font-size: 28px;
-          font-weight: bold;
-          cursor: pointer;
-        }
-
-        .vertical-spacer {
-          display: inline-block;
-          height: 2px;
-        }
+        
         `;
         document.head.appendChild(style);
     }
@@ -4941,12 +5932,15 @@
                     if (!web3.utils.isAddress(referral)) {
                         referral = "0x0000000000000000000000000000000000000000";
                     }
+                    try{
+                      showLoader();
                     await DDEcontract.methods.acceptOffer(
                       mylisting.hash,
                       quantity.toString(),
                       accepttimelimit.toString(),
                       referral
                     ).send({"from":myaccounts,...gasOptions[gasSetting]});
+                      hideLoader();
                       await Swal.fire(translateThis("Contract accepted!"));
                       await loadUser();
                       if(emailClient.checked && contact2 != '' && typeof contact2 === 'object' && 'mycontact' in contact2 && contact2['mycontact'].includes("@")) {
@@ -4966,6 +5960,11 @@
                           }
                         });
                       }
+                    } catch (error) {
+                        console.error(error);
+                        hideLoader();
+                        await showError(error);
+                    }
                   });
                 }
               } else {
@@ -5007,6 +6006,7 @@
                     }
                 } catch(e) {
                     console.log(e);
+                    hideLoader();
                 }
                 //If one wants to show a grand total
                 //mylisting.amount *= quantity;
@@ -5019,12 +6019,15 @@
                 if (!web3.utils.isAddress(referral)) {
                     referral = "0x0000000000000000000000000000000000000000";
                 }
+                try{
+                  showLoader();
                 await DDEcontract.methods.acceptOffer(
                   mylisting.hash,
                   quantity.toString(),
                   accepttimelimit.toString(),
                   referral
                 ).send({"from":myaccounts,...gasOptions[gasSetting]});
+                  hideLoader();
                   await Swal.fire(translateThis("Contract accepted!"));
                   await loadUser();
                   if(emailClient.checked && contact2 != '' && typeof contact2 === 'object' && 'mycontact' in contact2 && contact2['mycontact'].includes("@")) {
@@ -5044,9 +6047,15 @@
                       }
                     });
                   }
+                } catch (error) {
+                    console.error(error);
+                    hideLoader();
+                    await showError(error);
+                }
               }
         } catch (error) {
             console.error(error);
+            hideLoader();
             await showError(error);
         }
     }
@@ -5089,37 +6098,45 @@
 
           cancelBtn.addEventListener("click", async () => {
             try {
+              showLoader();
               dialog.remove();
               await DDEcontract.methods.cancelPrivateOffer(
                 listing.hash,
                 myaccounts
               ).send({"from":myaccounts,...gasOptions[gasSetting]});
+              hideLoader();
               await Swal.fire(translateThis("Contract removed!"));
               await loadUser();
             } catch (error) {
               console.error(error);
+              hideLoader();
               await showError(error);
             }
           });
       } else {
           try {
                 if(listing.sender == "0x0000000000000000000000000000000000000000" || listing.recipient == "0x0000000000000000000000000000000000000000" ) {
+                  showLoader();
                   await DDEcontract.methods.removeMarketOffer(
                     listing.hash,
                     myaccounts
                   ).send({"from":myaccounts,...gasOptions[gasSetting]});
+                  hideLoader();
                   await Swal.fire(translateThis("Contract removed!"));
                   await loadUser();
                 } else {
+                  showLoader()
                   await DDEcontract.methods.cancelPrivateOffer(
                     listing.hash,
                     myaccounts
                   ).send({"from":myaccounts,...gasOptions[gasSetting]});
+                  hideLoader();
                   await Swal.fire(translateThis("Contract removed!"));
                   await loadUser();
                 }
             } catch (error) {
                 console.error(error);
+                hideLoader();
                 await showError(error);
             }
       }      
@@ -5172,16 +6189,19 @@
                 await Swal.fire(translateThis("Quantity can not be changed to zero!"));  
                 return;
               }
+              showLoader();
               await DDEcontract.methods.updateQuantity(
                 listing.hash,
                 [quantity.toString(), quantity1.toString()]
               ).send({"from":myaccounts,...gasOptions[gasSetting]});
+              hideLoader();
                 dialog.remove();
                 await Swal.fire(translateThis("Quantity updated!"));
                 await loadUser();
                 return;
         } catch (error) {
             console.error(error);
+            hideLoader();
             await showError(error);
         }
         dialog.remove();
@@ -5223,10 +6243,13 @@
         var data = CryptoJS.AES.encrypt(JSON.stringify(text), AESkey).toString();
         console.log(data)
         try {
+            showLoader();
             await DDEcontract.methods.adddata(data).send({"from":myaccounts,...gasOptions[gasSetting]});
+            hideLoader();
             await Swal.fire(translateThis("Data added!"));
           } catch (error) {
             console.error(error);
+            hideLoader();
             await showError(error);
         }
     }
@@ -5254,6 +6277,61 @@
                 }
         });
     }
+
+    // Auto Connect Wallet
+    window.addEventListener("load", async function() {
+    function handleEthereum() {
+        if (window.ethereum) {
+            if (window.ethereum.selectedAddress) {
+                // Automatically connect if a wallet was previously connected
+                console.log("Auto-connecting Metamask.");
+                login();
+            } else {
+                console.log("No wallet connected.");
+            }
+
+            window.ethereum.on('accountsChanged', async function (newaccounts) {
+                console.log('accountsChanges', newaccounts);
+                defaultvars();
+                await login();
+            });
+            window.ethereum.on('chainChanged', async function (thenetworkId) {
+                console.log('chainChanged', thenetworkId);
+                marketOffers = {'indices': [], 'results': []};
+                defaultvars();
+                await login();
+            });
+        } else {
+            console.log("Ethereum object not found, you should consider installing MetaMask!");
+        }
+    }
+
+    if (document.readyState === 'complete') {
+        handleEthereum();
+    } else {
+        window.addEventListener('DOMContentLoaded', handleEthereum);
+    }
+});
+ // End Auto Connect Wallet
+
+    // Dark/Light Mode  
+    document.addEventListener('DOMContentLoaded', function() {
+        const themeToggleButton = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', currentTheme);
+        themeToggleButton.innerHTML = currentTheme === 'dark' ? '<a href="#" class="day-night-icon"><img src="day-icon.png" alt="day icon"/></a>' : '<a href="#" class="day-night-icon"><img src="night-icon.svg" alt="night icon"/></a>';
+        currentTheme === 'dark' ? body.classList.add("dark-theme") : body.removeAttribute("class");
+
+        themeToggleButton.addEventListener('click', function() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggleButton.innerHTML = newTheme === 'dark' ? '<a href="#" class="day-night-icon"><img src="day-icon.png" alt="day icon"/></a>' : '<a href="#" class="day-night-icon"><img src="night-icon.svg" alt="night icon"/></a>';
+            currentTheme === 'light' ? body.classList.add("dark-theme") : body.removeAttribute("class");
+          });
+    });
+    //End Dark/Light Mode
     setInterval(loadUser, 90000);
     loadMarkets(1, 50);
     //Notes:
