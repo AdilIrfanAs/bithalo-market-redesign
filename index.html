@@ -200,9 +200,6 @@
           font-size: 10px;
         }
         @media screen and (min-width: 600px) {
-          body .main.account * {
-              font-size: 13px;
-          }
           .connectionstatus {
             font-size: 8.5px;
             display: block;
@@ -319,23 +316,20 @@
             min-height: calc(100% - 75); /* Subtract footer height */
             max-height: calc(100% - 75); /* Subtract footer height */
             overflow-y: auto; /* Enable vertical scrolling if content overflows */
-            margin-bottom: 100px;
         }
         .main.contracts {
             min-height: calc(100% - 75); /* Subtract footer height */
             max-height: calc(100% - 75); /* Subtract footer height */
             overflow-y: auto; /* Enable vertical scrolling if content overflows */
-            margin-bottom: 100px;
         }
         .main.account {
             min-height: calc(100% - 75); /* Subtract footer height */
             max-height: calc(100% - 75); /* Subtract footer height */
             overflow-y: auto; /* Enable vertical scrolling if content overflows */
-            margin-bottom: 100px;
         }
-        .main.account * {
+        /* .main.account * {
             font-size: 12px;
-        }
+        } */
         .main.about {
             min-height: calc(100% - 75); /* Subtract footer height */
             max-height: calc(100% - 75); /* Subtract footer height */
@@ -839,8 +833,9 @@
           font-size: 14px;
           font-weight: bold;
           margin-right: 12px;
+          cursor: pointer;
         }
-        .offers-categories .offers-header {
+        .offers-categories .offers-header, .offers-categories .escrow-header {
             font-size: 18px;
             color: #322C62;
             font-weight: bold;
@@ -853,12 +848,29 @@
             margin-bottom: 20px;
           }
         .offers-list-box div bdo {
-            font-weight: bold;
-            font-size: 16px;
-            color: #111112;
-            width: 25%;
-            display: inline-block;
-          }
+          font-weight: bold;
+          font-size: 16px;
+          color: #111112;
+          width: 25%;
+          display: inline-block;
+        }
+        .dashboard-content-wrapper #paginationNumbers button {
+          background-color: #e3e3e3;
+          border: none;
+          padding: 10px;
+          font-size: 16px;
+          font-weight: bold;
+          cursor: pointer;
+          margin-right: 10px;
+          border-radius: 6px;
+          width: 45px;
+          height: 45px;
+          color: #322C62;
+        }
+        .dashboard-content-wrapper #paginationNumbers button.active, .dashboard-content-wrapper #paginationNumbers button:hover {
+          background-color: #322C62;
+          color: white;
+        }
       @media screen and (max-width: 1600px) {
         .header {
           height: 80px;
@@ -1217,7 +1229,7 @@
         .dark-theme h2, .dark-theme .dashboard-content-wrapper .message  {
           color: white;
         }
-        .dark-theme .dashboard-content-wrapper .square-button, .dark-theme .header-search-area {
+        .dark-theme .dashboard-content-wrapper .square-button, .dark-theme .header-search-area, .dark-theme .dashboard-content-wrapper #paginationNumbers button.active, .dark-theme .dashboard-content-wrapper #paginationNumbers button:hover {
           border: 1px solid white;
         }
         .dark-theme .dashboard-content-wrapper .square-button:hover {
@@ -1350,7 +1362,7 @@
                   </div>
                   <div id="loadingStatus"></div>
                   <div class="pagination">
-                    <button disabled onclick="previousPage()" t-id="18">
+                    <button onclick="previousPage()" t-id="18">
                       <div class="prev-next-icon">
                           <img src="previous-icon.svg" alt="previous-icon"/>
                       </div>
@@ -1377,12 +1389,12 @@
           <h2 t-id="23">OFFERS</h2>
           <div id="myoffers" class="myoffers"></div>
       </div>
-      <div class="main contracts">
-          <h2 t-id="24">Contracts</h2>
+      <div class="main contracts offers-categories">
+          <h2 t-id="24">CONTRACTS</h2>
           <div id="mycontracts" class="mycontracts"></div>
       </div>
-      <div class="main account">
-          <h2 t-id="25" style="font-size: 16px">Account</h2>
+      <div class="main account account-details-wrapper">
+          <h2 t-id="25">ACCOUNTS</h2>
           <p id="account" t-id="26">Please connect metamask</p>
           <button onclick="deposit()" t-id="27">Deposit tokens</button>
           <button onclick="withdraw()" t-id="28">Withdraw tokens</button><br><br>
@@ -4062,33 +4074,12 @@ function nextPage() {
         updatePaginationControls();
     }
 }
-
-    // function for showing the next page of listings
-    // async function nextPage() {
-    //     if (currentPage < Math.ceil(marketOffers.indices.length / listingsPerPage)) {
-    //         currentPage++;
-    //         await populateListings();
-    //     } else {
-    //         document.getElementById("loadingStatus").innerHTML = translateThis("Loading...");
-    //         await loadMarkets(marketOffers.indices.length, marketOffers.indices.length + 50);
-    //         document.getElementById("loadingStatus").innerHTML = ""
-    //         currentPage++;
-    //         await populateListings();
-    //     }
-    // }
-
-    // // function for showing the previous page of listings
-    // async function previousPage() {
-    //     if (currentPage > 1) {
-    //         currentPage--;
-    //         await populateListings();
-    //     }
-    // }
     populateListings();
     updatePaginationControls();
 
     // Function to show the details popup for a listing
     async function showListing(listing, mode=0) {
+      console.log("Offer:", listing);
       var theuser = myaccounts;
       if(mode == 4 && listing.sender != myaccounts && listing.recipient != myaccounts) {
         theuser = listing.originalUser;
@@ -4190,11 +4181,15 @@ function nextPage() {
       const leftArrow = document.createElement('span');
       leftArrow.innerHTML = '&#10094;';
       leftArrow.classList.add('arrow', 'left-arrow');
-      leftArrow.onclick = function() { plusSlides(-1); };
+      leftArrow.onclick = function() { plusSlides(-1); this.style.color = '#ccc'; setTimeout(() => this.style.color = '', 200); };
+      leftArrow.title = 'Previous Image';
+      leftArrow.style.cursor = 'pointer'; 
       const rightArrow = document.createElement('span');
       rightArrow.innerHTML = '&#10095;';
       rightArrow.classList.add('arrow', 'right-arrow');
-      rightArrow.onclick = function() { plusSlides(1); };
+      rightArrow.onclick = function() { plusSlides(1); this.style.color = '#ccc'; setTimeout(() => this.style.color = '', 200); };
+      rightArrow.title = 'Next Image';
+      rightArrow.style.cursor = 'pointer'; 
       let slideIndex = 1;
 
       function plusSlides(n) {
@@ -4219,7 +4214,7 @@ function nextPage() {
       var myimgs = await getFile(listing.image);
       if(myimgs.length > 0) {          
           imageList.classList.add('image-list');
-          imageList.style.listStyle = 'none'; // remove the dot
+          imageList.style.listStyle = 'none';
           imageList.onclick = function() { plusSlides(1); };
           for (let i = 0; i < myimgs.length; i++) {
             const li = document.createElement('li');
@@ -4242,15 +4237,17 @@ function nextPage() {
           rightArrow.style.right = '0';
           rightArrow.style.transform = 'translateY(-50%)';
 
-          arrowsContainer.appendChild(leftArrow);
-          arrowsContainer.appendChild(rightArrow);
+          if (myimgs.length > 1) {
+              arrowsContainer.appendChild(leftArrow);
+              arrowsContainer.appendChild(rightArrow);
+          }
 
           imageContainer.appendChild(imageList);
           imageContainer.appendChild(arrowsContainer);
       }
       const details = document.createElement('div');
       details.classList.add('popup-details');
-      
+
       function copyToClipboard(mytext) {
         const tempInput = document.createElement('input');
         document.body.appendChild(tempInput);
