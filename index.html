@@ -377,7 +377,7 @@
         .square-button2 {
           display: inline-block;
           border: 1px solid #3d0064;
-          padding: 5px 5px;
+          padding: 5px 15px;
           border-radius: 4px; /* Make it square */
           background-color: #ebebeb; /* Set default background color */
           color: #000000; /* Set default text color */
@@ -385,7 +385,7 @@
           transition: background-color 0.3s, color 0.3s; /* Add transition effect */
         }
 
-        .square-button2:hover {
+        .square-button2:hover, .offers-categories .offers-tab-container button:hover, .account-form-wrapper .account-box-position button:hover {
           background-color: #003357; /* Invert background color on hover */
           color: #dcdcdc; /* Invert text color on hover */
         }
@@ -823,7 +823,7 @@
           display: inline-block;
           font-weight: bold;
         }
-        .offers-categories .offers-tab-container button {
+        .offers-categories .offers-tab-container button, .account-details-wrapper button {
           background-color: #E3E3E3;
           border-radius: 6px;
           color: #322C62;
@@ -870,6 +870,52 @@
         .dashboard-content-wrapper #paginationNumbers button.active, .dashboard-content-wrapper #paginationNumbers button:hover {
           background-color: #322C62;
           color: white;
+        }
+        .account-details-wrapper #account {
+          line-height: 20px;
+        }
+        /* account css */
+        .account-form-wrapper {
+          display: flex;
+          margin-bottom: 20px;
+        } 
+        .account-btn-wrapper {
+          margin-bottom: 25px;
+        }
+        .account-form-wrapper .account-input-box {
+          width: 25%;
+        }
+        .account-form-wrapper .account-box-position {
+          display: flex;
+          align-items: end;
+        }
+        .account-form-wrapper .account-box-position button {
+          width: 100%;
+          background-color: #ECEFF8;
+        }
+        .account-form-wrapper .account-input-box:not(:last-child) {
+          padding-right: 18px;
+        }
+        .account-form-wrapper label {
+          display: block;
+          color: #060505;
+          font-size: 16px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+        .account-form-wrapper input, .account-form-wrapper select {
+          background: #FCFCFC;
+          border: 1px solid #C3C3C3;
+          border-radius: 5px;
+          box-shadow: none;
+          outline: none;
+          width: 100%;
+          height: 40px;
+          padding: 12px;
+          font-size: 14px;
+        }
+        .account-form-wrapper .input-checkboxes label {
+          margin-bottom: 0;
         }
       @media screen and (max-width: 1600px) {
         .header {
@@ -1396,40 +1442,88 @@
       <div class="main account account-details-wrapper">
           <h2 t-id="25">ACCOUNTS</h2>
           <p id="account" t-id="26">Please connect metamask</p>
-          <button onclick="deposit()" t-id="27">Deposit tokens</button>
-          <button onclick="withdraw()" t-id="28">Withdraw tokens</button><br><br>
-          <label for="myContactInfo" t-id="29">Contact Information(email/signal/telegram):</label><br>
-          <input id="myContactInfo"></input><br><br>
-          <label for="myPassword" t-id="44">Password(for encryption):</label><br>
-          <input id="myPasswordInput" type="password"></input><br><br>
-          <button onclick="registerData()" t-id="30">Register information to my address(contact/encryption/optional)</button><br>
-          <div id="publicemail"></div><br><br>
-          <label for="clearCompleted" t-id="31">Automatically clear completed contracts</label>
-          <input id="clearCompleted" type="checkbox"></input><br><br>
-          <label for="emailClient" t-id="50">Attempt to notify prospects through default email client(when applicable)</label>
-          <input id="emailClient" type="checkbox" checked></input><br><br>
-          <button onclick="RefreshContracts()" t-id="32">Refresh/restore previously cleared contracts</button><br><br>
-          <label for="offerExpiration" t-id="33">Private offers expire: </label>
-          <select id="offerExpiration">
-            <option value="two-weeks" t-id="35">Two weeks</option>
-            <option value="one-month" t-id="36">One month</option>
-            <option value="never" t-id="34">Never</option>
-          </select>
-          <br><br>
-          <button onclick="backupLocalStorage()" t-id="37">Backup cached site/user data</button>
-          <button onclick="loadLocalStorage()" t-id="38">Load site/user data from file</button><br><br>
-          <select id="connectMethod">
-            <option value="0" t-id="39">Use default IPFS Pinata Gateway</option>
-          </select>
-          <br><br>
-          <button onclick="setCustodian()" t-id="51">Set cosigner</button><br><br>
-          <button onclick="cosign()" t-id="52">Cosign</button><br><br>
-          <br><br>
+          <div class="account-btn-wrapper">
+            <button onclick="deposit()" t-id="27">Deposit tokens</button>
+            <button onclick="withdraw()" t-id="28">Withdraw tokens</button>
+          </div>
+          <div class="account-form-wrapper">
+            <div class="account-input-box">
+              <label for="myContactInfo" t-id="29">Contact Information(email/signal/telegram):</label>
+              <input id="myContactInfo"></input>
+            </div>
+            <div class="account-input-box">
+              <label for="myPassword" t-id="44">Password(for encryption):</label>
+              <input id="myPasswordInput" type="password"></input>
+            </div>
+            <div class="account-input-box account-box-position">
+              <button onclick="registerData()" t-id="30">Register information to my address(contact/encryption/optional)</button>
+            </div>
+          </div>
+          <div id="publicemail"></div>
+          <div class="account-form-wrapper">
+            <div class="account-input-box input-checkboxes">
+              <label for="clearCompleted" t-id="31">
+                Automatically clear completed contracts
+                <input id="clearCompleted" type="checkbox" checked="checked"></input>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+            <div class="account-input-box input-checkboxes">
+              <label for="emailClient" t-id="50">
+                Attempt to notify prospects through default email client(when applicable)
+                <input id="emailClient" type="checkbox" checked></input>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+          <div class="account-form-wrapper">
+            <div class="account-input-box account-box-position">
+              <button onclick="RefreshContracts()" t-id="32">Refresh/restore previously cleared contracts</button>
+            </div>
+          </div>
+          <div class="account-form-wrapper">
+            <div class="account-input-box">
+              <label for="offerExpiration" t-id="33">Private offers expire: </label>
+              <select id="offerExpiration">
+                <option value="two-weeks" t-id="35">Two weeks</option>
+                <option value="one-month" t-id="36">One month</option>
+                <option value="never" t-id="34">Never</option>
+              </select>
+            </div>
+            <div class="account-input-box account-box-position">
+              <button onclick="backupLocalStorage()" t-id="37">Backup cached site/user data</button>
+            </div>
+            <div class="account-input-box account-box-position">
+              <button onclick="loadLocalStorage()" t-id="38">Load site/user data from file</button>
+            </div>
+          </div>
+          <div class="account-form-wrapper">
+            <div class="account-input-box">
+              <label>User Default Ipfs Pinata Gateaway</label>
+              <select id="connectMethod">
+                <option value="0" t-id="39">Use default IPFS Pinata Gateway</option>
+              </select>
+            </div>
+            <div class="account-input-box account-box-position">
+              <button onclick="setCustodian()" t-id="51">Set cosigner</button>
+            </div>
+            <div class="account-input-box account-box-position">
+              <button onclick="cosign()" t-id="52">Cosign</button>
+            </div>
+          </div>
           <h2 t-id="45" style="font-size: 16px">Earn</h2>
           <p id="affiliateInfo" t-id="46">Not connected</p>
-          <button onclick="copyAffiliateLink()" t-id="47">Copy affiliate link</button><br><br>
-          <button onclick="changeAffiliate()" t-id="48">Change my affiliate</button><br><br>
-          <button onclick="setCustomFee()" t-id="49">Set custom referral fee</button><br><br>
+          <div class="account-form-wrapper">
+            <div class="account-input-box account-box-position">
+              <button onclick="copyAffiliateLink()" t-id="47">Copy affiliate link</button>
+            </div>
+            <div class="account-input-box account-box-position">
+              <button onclick="changeAffiliate()" t-id="48">Change my affiliate</button>
+            </div>
+            <div class="account-input-box account-box-position">
+              <button onclick="setCustomFee()" t-id="49">Set custom referral fee</button>
+            </div>
+          </div>
       </div>
       <div class="main about" style="background-image: src('./bitbay-dynamic-peg-hero.png');"> <!-- ss-container tag can be used for custom scrollers but it's not totally cross platform -->
           <div id="abount-container" style="width: 100%; max-width: 900px; border: 1px solid #3d0064; padding: 10px; margin-right: 15px; margin-bottom: 25px; align-items: center; display: block; margin-left: auto; margin-right: auto;">
