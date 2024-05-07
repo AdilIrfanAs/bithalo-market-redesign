@@ -95,7 +95,7 @@
             height: calc(100vh - 140px);            
         }
         .sidebar {
-          background-image: url(sidebar-bg.png);
+          background-image: url("sidebar-bg.png");
           background-size: 100% 100%;
           padding: 30px 25px;
           width: 115px;
@@ -112,6 +112,7 @@
             font-size: 14px;
             font-weight: normal;
             cursor: pointer;
+            border-radius: 5px;
         }
         .sidebar .sidebar-icons {
             background-color: #7066E0;
@@ -198,6 +199,58 @@
         }
         .tabcontent {
           font-size: 10px;
+        }
+        .mobile-pagination-select {
+          display: none;
+        }
+        .offer-popup-wrapper .arrows-container span {
+          background-color: #322C62;
+          color: white;
+          height: 25px;
+          width: 25px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 4px;
+        }
+        .offer-popup-wrapper .arrows-container .left-arrow {
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+        .offer-popup-wrapper .arrows-container .right-arrow  {
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
+        .category-purchase-popup {
+          text-align: center;
+        }
+        .category-purchase-popup .detail-content {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+        .modal-shade-bg {
+          position: fixed;
+          min-height: 100vh;
+          background-color: #808080bd;
+          width: 100%;
+          top: 0;
+          left: 0;
+          z-index: 99;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .category-purchase-popup {
+          text-align: center;
+          background-color: white;
+          border-radius: 6px;
+          padding: 20px;
+        }
+        .account-details-wrapper {
+          overflow-x: hidden;
         }
         @media screen and (min-width: 600px) {
           .connectionstatus {
@@ -540,7 +593,8 @@
         }
         .input-checkboxes .checkmark {
           position: absolute;
-          top: 0;
+          top: 50%;
+          transform: translateY(-50%);
           left: 0;
           height: 25px;
           width: 25px;
@@ -691,7 +745,7 @@
           margin: 0;
           margin-right: 10px;
       }
-      .dashboard-content-wrapper .pagination select, .header #languageSelect {
+      .dashboard-content-wrapper .pagination select, .header #languageSelect, .mobile-pagination-select {
           background-color: #E3E3E3;
           color: #322C62;
           border: none;
@@ -703,61 +757,58 @@
       }
       .dashboard-content-wrapper .listings-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
           grid-gap: 20px;
           background-color: #F1F1F1;
           padding: 25px;
       }
       .dashboard-content-wrapper .listing-grid-item {
-          border: none;
-          text-align: center;
-          position: relative;
-          margin-bottom: 20px;
-          cursor: pointer;
+        border: none;
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+        padding: 0 12px;
+        max-width: 280px;
+        width: 100%;
+        margin: 0 auto 20px;
       }
       .dashboard-content-wrapper .listing-image {
-          width: 100%;
-          height: 184px;
-          border-radius: 4px;
-          overflow: hidden;
+        width: 100%;
+        height: 184px;
+        border-radius: 8px 8px 0 0;
+        overflow: hidden;
+        background-color: white;
+        box-shadow: 1px 1px 6px 6px #80808030;
+        padding: 10px;
+        padding-bottom: 0;
       }
       .dashboard-content-wrapper .listing-image img {
         width: 100%;
         height: 100%;
+        object-fit: contain;
+      }
+      .token-ammount-content {
+        background-color: #7066E0;
+        border-radius: 0 0 8px 8px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 15px;
+        font-size: 12px;
+        font-weight: normal;
+        margin-bottom: 10px;
       }
       .dashboard-content-wrapper .listing-details {
-          margin-top: -20px;
+        text-align: center;
       }
-      .dashboard-content-wrapper .token {
-          background-color: #23232B;
-          color: white;
-          font-size: 16px;
-          font-weight: bold;
-          padding: 6px 15px;
-          border-radius: 4px;
-          margin-bottom: 12px;
-          display: inline-flex;
-          align-items: center;
+      .token-ammount-content .token bdo, .token-ammount-content .amount bdo {
+        font-weight: bold;
       }
-      .dashboard-content-wrapper .token .token-ethereum-icon {
-          width: 15px;
-          margin: 0 8px;
-      }
-      .dashboard-content-wrapper .amount {
-          background-color: #7066E0;
-          border-radius: 4px;
-          padding: 6px 16px;
-          color: white;
-          font-size: 14px;
-          font-weight: bold;
-          position: absolute;
-          top: 10px;
-          right: 10px;
-      }
-      .dashboard-content-wrapper .message {
-          font-size: 16px;
-          color: #322C62;
-          font-weight: 500;
+      .dashboard-content-wrapper .listing-details .message {
+        color: #322C62;
+        font-size: 18px;
+        font-weight: bold;
       }
       .header-list-area {
         display: flex;
@@ -809,9 +860,11 @@
         .fav-icons-wrapper {
           display: flex;
           align-items: center;
+          margin-bottom: 10px;
         }
         .offer-popup .arrows-container {
-          margin-bottom: 30px;
+          margin-bottom: 15px;
+          height: 25px;
         }
         .offer-popup-wrapper p, .offers-list-box div {
           margin-bottom: 10px;
@@ -846,6 +899,7 @@
             padding: 25px 40px;
             background-color: #ECEFF8;
             margin-bottom: 20px;
+            cursor: pointer;
           }
         .offers-list-box div bdo {
           font-weight: bold;
@@ -892,8 +946,9 @@
         .account-form-wrapper .account-box-position button {
           width: 100%;
           background-color: #ECEFF8;
+          margin-right: 0;
         }
-        .account-form-wrapper .account-input-box:not(:last-child) {
+        .account-form-wrapper .account-input-box {
           padding-right: 18px;
         }
         .account-form-wrapper label {
@@ -903,7 +958,7 @@
           font-weight: bold;
           margin-bottom: 10px;
         }
-        .account-form-wrapper input, .account-form-wrapper select {
+        .account-form-wrapper input, .account-form-wrapper select, .category-purchase-popup input {
           background: #FCFCFC;
           border: 1px solid #C3C3C3;
           border-radius: 5px;
@@ -916,6 +971,9 @@
         }
         .account-form-wrapper .input-checkboxes label {
           margin-bottom: 0;
+        }
+        .category-purchase-popup input {
+          padding: 3px 10px;
         }
       @media screen and (max-width: 1600px) {
         .header {
@@ -944,8 +1002,19 @@
         .header2 a:not(:last-child) {
           margin-right: 70px;
         }
-        .dashboard-content-wrapper .token, .dashboard-content-wrapper .message {
-          font-size: 15px;
+        .account-form-wrapper {
+          align-items: end;
+        }
+        .checkboxes-form-wrapper {
+          margin-bottom: 30px;
+        }
+        .checkboxes-form-wrapper .account-input-box {
+          width: 30%;
+        }
+      }
+      @media screen and (max-width: 1399px) {
+        .account-form-wrapper label {
+          font-size: 14px;
         }
       }
       @media screen and (max-width: 1199px) {
@@ -982,6 +1051,12 @@
         .offers-list-box div bdo {
           width: 30%;
         }
+        .account-form-wrapper .account-input-box {
+          width: 33.33%;
+        }
+        .checkboxes-form-wrapper .account-input-box {
+          width: 40%;
+        }
       }
       @media screen and (max-width: 991px) {
         .logo {
@@ -1016,6 +1091,32 @@
         .offers-list-box div bdo {
           width: 40%;
         }
+        .dashboard-content-wrapper #paginationNumbers button {
+          padding: 8px;
+          font-size: 14px;
+          margin-right: 6px;
+          width: 40px;
+          height: 40px;
+        }
+        .dashboard-content-wrapper .pagination .square-button2 {
+          padding: 7px 8px;
+          margin-right: 6px;
+        }
+        .account-form-wrapper {
+          align-items: end;
+          flex-wrap: wrap;
+          margin-bottom: 0;
+        }
+        .account-form-wrapper .account-input-box {
+          width: 50%;
+          margin-bottom: 20px;
+        }
+        .checkboxes-form-wrapper {
+          margin-bottom: 10px;
+        }
+        .dashboard-content-wrapper .listing-details .message {
+          font-size: 16px;
+        }
       }
       @media screen and (max-width: 767px) {
         h2 {
@@ -1048,10 +1149,11 @@
         }
         .sidebar {
           position: fixed;
-          height: 100%;
+          height: calc(100% - 125px);
           z-index: 1;
           transition: transform 0.3s ease;
           transform: translateX(-100%);
+          overflow-y: auto;
         }
         .sidebar-toggle {
           width: 35px;
@@ -1100,6 +1202,12 @@
         .offers-list-box div bdo {
           width: 45%;
           font-size: 14px;
+        }
+        .account-form-wrapper .account-box-mobile, .checkboxes-form-wrapper .account-input-box {
+          width: 100%;
+        }
+        .dashboard-content-wrapper .listings-grid {
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
         }
       }
       @media screen and (max-width: 575px) {
@@ -1164,6 +1272,35 @@
           font-size: 13px;
           margin-right: 6px;
         }
+        .sidebar {
+          height: calc(100% - 180px);
+        }
+        .account-details-wrapper #account {
+          line-height: 20px;
+          word-break: break-word;
+        }
+        .account-btn-wrapper {
+          text-align: center;
+          margin-bottom: 15px;
+        }
+        .account-details-wrapper button {
+          margin-right: 0;
+          margin-bottom: 12px;
+        }
+        .account-form-wrapper .account-input-box {
+          width: 100%;
+          margin-bottom: 16px;
+          padding-right: 0;
+        }
+        .account-form-wrapper label, .account-form-wrapper .account-box-position button {
+          font-size: 13px;
+        }
+        .account-form-wrapper .account-box-position button {
+          margin-bottom: 0;
+        }
+        .dashboard-content-wrapper .listings-grid {
+          padding: 15px 10px;
+        }
       }
       @media screen and (max-width: 400px) {
         .header {
@@ -1190,6 +1327,14 @@
         .sidebar-toggle {
             margin-top: 0;
         }
+        .pagination #SortBy {
+          display: none;
+        }
+        .mobile-pagination-select {
+          display: block;
+          width: 100%;
+          margin-top: 18px;
+        }
       }
 
         /* Dark/Light theme styles */
@@ -1204,7 +1349,6 @@
         [data-theme="dark"] {
             --background-color: #322C62;
             --text-color: #fff;
-            --header-bg-color: #1a1a2e;
             --button-bg-color: #4e4e50;
             --button-text-color: #fff;
         }
@@ -1272,10 +1416,10 @@
         /* End: Loader-Modal Style */
 
         /* dark theme css */
-        .dark-theme h2, .dark-theme .dashboard-content-wrapper .message  {
+        .dark-theme h2, .dark-theme .dashboard-content-wrapper .message, .dark-theme .header-search-wrapper #star-symbol, .dark-theme .offers-categories .offers-header, .dark-theme .offers-categories .escrow-header, .dark-theme .account-form-wrapper label {
           color: white;
         }
-        .dark-theme .dashboard-content-wrapper .square-button, .dark-theme .header-search-area, .dark-theme .dashboard-content-wrapper #paginationNumbers button.active, .dark-theme .dashboard-content-wrapper #paginationNumbers button:hover {
+        .dark-theme .dashboard-content-wrapper .square-button, .dark-theme .header-search-area, .dark-theme .dashboard-content-wrapper #paginationNumbers button.active, .dark-theme .dashboard-content-wrapper #paginationNumbers button:hover, .dark-theme .offers-categories .offers-tab-container button, .dark-theme .account-details-wrapper button {
           border: 1px solid white;
         }
         .dark-theme .dashboard-content-wrapper .square-button:hover {
@@ -1287,6 +1431,18 @@
         }
         .dark-theme .dashboard-content-wrapper .token {
           background-color: #7066E0;
+        }
+        .dark-theme .offer-popup-wrapper p, .dark-theme .offers-list-box div {
+          color: black;
+        } 
+        .dark-theme .header-search-wrapper #favorites-text {
+          color: white !important;
+        }
+        .dark-theme .account-details-wrapper .input-checkboxes .checkmark:before {
+          background-color: #322c62;
+        }
+        .dark-theme .account-details-wrapper .input-checkboxes .checkmark, .dark-theme .account-details-wrapper .input-checkboxes .checkmark:after {
+          border-color: white;
         }
     </style>
 </head>
@@ -1412,19 +1568,24 @@
                       <div class="prev-next-icon">
                           <img src="previous-icon.svg" alt="previous-icon"/>
                       </div>
-                  </button>
-                  <span id="paginationNumbers"></span> <!-- Container for page numbers -->
-                  <button onclick="nextPage()" t-id="19">
-                      <div class="prev-next-icon">
-                          <img src="next-icon.svg" alt="next-icon"/>
-                      </div>
-                  </button>
-                      <select id="SortBy">
-                        <option value="default" t-id="20">Sort: Default</option>
-                        <option value="price-low" t-id="21">Sort: Best price</option>
-                        <option value="price-high" t-id="22">Sort: High price</option>
-                      </select>
+                    </button>
+                    <span id="paginationNumbers"></span> <!-- Container for page numbers -->
+                    <button onclick="nextPage()" t-id="19">
+                        <div class="prev-next-icon">
+                            <img src="next-icon.svg" alt="next-icon"/>
+                        </div>
+                    </button>
+                    <select id="SortBy">
+                      <option value="default" t-id="20">Sort: Default</option>
+                      <option value="price-low" t-id="21">Sort: Best price</option>
+                      <option value="price-high" t-id="22">Sort: High price</option>
+                    </select>
                   </div>
+                    <select id="SortBy" class="mobile-pagination-select">
+                      <option value="default" t-id="20">Sort: Default</option>
+                      <option value="price-low" t-id="21">Sort: Best price</option>
+                      <option value="price-high" t-id="22">Sort: High price</option>
+                    </select>
               </div>
           </div>
           <div class="listings">
@@ -1455,12 +1616,12 @@
               <label for="myPassword" t-id="44">Password(for encryption):</label>
               <input id="myPasswordInput" type="password"></input>
             </div>
-            <div class="account-input-box account-box-position">
+            <div class="account-input-box account-box-position account-box-mobile">
               <button onclick="registerData()" t-id="30">Register information to my address(contact/encryption/optional)</button>
             </div>
           </div>
           <div id="publicemail"></div>
-          <div class="account-form-wrapper">
+          <div class="account-form-wrapper checkboxes-form-wrapper">
             <div class="account-input-box input-checkboxes">
               <label for="clearCompleted" t-id="31">
                 Automatically clear completed contracts
@@ -1477,7 +1638,7 @@
             </div>
           </div>
           <div class="account-form-wrapper">
-            <div class="account-input-box account-box-position">
+            <div class="account-input-box account-box-position account-box-mobile">
               <button onclick="RefreshContracts()" t-id="32">Refresh/restore previously cleared contracts</button>
             </div>
           </div>
@@ -2198,7 +2359,7 @@
       if(myFavorites.length > 0) {
         document.getElementById("star-symbol").style.color = "#ed5f00";
       } else {
-        document.getElementById("star-symbol").style.color = "#000000";
+        document.getElementById("star-symbol").style.color = "";
       }
     }
 
@@ -3530,7 +3691,7 @@
     lastNotified = 0;
     async function populateOffers() {
       var list = document.createElement("ul");
-      list.classList.add('offers-list-box')
+      list.classList.add('offers-list-box');
       var readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages")) || {};
       var notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":notifications")) || {};
       var mylen = 0;
@@ -3608,6 +3769,7 @@
       notify = 0;
       notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":notifications2")) || {};
       var list2 = document.createElement("ul");
+      list2.classList.add("offers-list-box");
       readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages2")) || {};
       try {
         mylen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, 1).call());
@@ -4048,8 +4210,10 @@
             gridItem.innerHTML = `
                 <div class="listing-image">${tempimg}</div>
                 <div class="listing-details">
-                    <div class="token">` + '<bdo class="theText">' + translateThis("Currency") + '</bdo>' + '<div class="token-ethereum-icon"><img src="ethereum-icon.svg" alt"ethereum-icon"/></div>'  + ` ${tokennames[offer.token]}</div>
-                    <div class="amount">` + '<bdo class="theText">' + translateThis("Amount:") + '</bdo>'  + ` ${displayDecimals(offer.token, offer.amount)}</div>
+                    <div class="token-ammount-content">
+                      <div class="token">` + '<bdo class="theText">' + translateThis("Currency") + '</bdo>' + ` ${tokennames[offer.token]}</div>
+                      <div class="amount">` + '<bdo class="theText">' + translateThis("Amount:") + '</bdo>'  + ` ${displayDecimals(offer.token, offer.amount)}</div>
+                    </div>
                     <div class="message">` + '<bdo class="theText">' + translateThis("Details:") + '</bdo>' + ` ${offer.message.slice(0, 20) + (offer.message.length > 20 ? "..." : "")}</div>
                 </div>
             `;
@@ -4321,15 +4485,6 @@ function nextPage() {
           
           arrowsContainer.classList.add('arrows-container');
           arrowsContainer.style.position = 'relative';
-          leftArrow.style.position = 'absolute';
-          leftArrow.style.top = '50%';
-          leftArrow.style.left = '0';
-          leftArrow.style.transform = 'translateY(-50%)';
-
-          rightArrow.style.position = 'absolute';
-          rightArrow.style.top = '50%';
-          rightArrow.style.right = '0';
-          rightArrow.style.transform = 'translateY(-50%)';
 
           if (myimgs.length > 1) {
               arrowsContainer.appendChild(leftArrow);
@@ -5939,24 +6094,17 @@ function nextPage() {
                 }
                 if(listing.status[0]==0 || listing.status[1]==0) {
                   const dialog = document.createElement("div");
+                  dialog.classList.add("modal-shade-bg")
                   dialog.innerHTML = `
-                    <div>` + translateThis('Please enter the quantity you wish to purchase:') + `<br></div>
-                      <input id="new-quantity" type="number" min="1"></input><br><br>
-                    <div>
-                      <button id="confirm-btn">` + translateThis('Confirm') + `</button>&nbsp;&nbsp;
-                      <button id="cancel-btn">` + translateThis('Cancel') + `</button>
+                    <div class="category-purchase-popup">
+                      <div class="detail-content">` + translateThis('Please enter the quantity you wish to purchase:') + `<br></div>
+                        <input id="new-quantity" type="number" min="1"></input><br><br>
+                      <div>
+                        <button id="confirm-btn" class="btn-filled">` + translateThis('Confirm') + `</button>&nbsp;&nbsp;
+                        <button id="cancel-btn" class="btn-gray">` + translateThis('Cancel') + `</button>
+                      </div>
                     </div>
                   `;
-                  dialog.style.display = "block";
-                  dialog.style.position = "fixed";
-                  dialog.style.zIndex = 999;
-                  dialog.style.backgroundColor = "white";
-                  dialog.style.padding = "20px";
-                  dialog.style.borderRadius = "10px";
-                  dialog.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.3)";
-                  dialog.style.top = "50%";
-                  dialog.style.left = "50%";
-                  dialog.style.transform = "translate(-50%, -50%)";
 
                   document.body.appendChild(dialog);
 
