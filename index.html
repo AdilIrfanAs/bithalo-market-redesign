@@ -2012,14 +2012,6 @@ body {
   color: #322c62;
 }
 
-#loadingIndicator {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-}
 </style>
 </head>
 <body>
@@ -2061,12 +2053,6 @@ body {
   </div>
 
   <div class="container site-container">
-    <!-- Loading Indicator -->
-    <div id="loadingIndicator"
-      style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
-      <img src="loading.gif" alt="Loading..." />
-    </div>
-    <!-- Loader-Modal -->
     <div id="loader-modal" class="loader-modal" style="display: none;">
       <div id="loader-content" class="loader-content">
         <div class="loader"></div>
@@ -2556,20 +2542,6 @@ body {
       document.getElementById('loader-content').style.display = 'block';
       document.getElementById('loader-minimized').style.display = 'none';
     }
-
-    /* End: Loder-Modal Methods */
-
-    // Loading gif
-    function showLoadingIndicator() {
-      // document.getElementById('loadingIndicator').style.display = 'block';
-      document.getElementById('loadingIndicator').style.display = 'none';
-
-    }
-
-    function hideLoadingIndicator() {
-      document.getElementById('loadingIndicator').style.display = 'none';
-    }
-    // End Loading gif
 
     // Function to open the IndexedDB database
     async function openDatabase() {
