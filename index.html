@@ -115,7 +115,7 @@ body {
   border-radius: 5px;
 }
 .sidebar .sidebar-icons {
-  background-color: #7066E0;
+  background-color: #e3e3e3;
   width: 100%;
   height: 100%;
   display: flex;
@@ -133,7 +133,7 @@ body {
   height: 100%;
 }
 .sidebar button svg path {
-  fill: white;
+  fill: #322c62;
 }
         .sidebar button.active svg path, .sidebar button.active svg path g {
   fill: #7066E0;
@@ -1060,7 +1060,7 @@ h2 {
 
 .faq-accordion .accordionItemHeading {
   cursor: pointer;
-  margin-bottom: 12px;
+  margin-bottom: 12px 25px 12px 12px;
   padding: 12px;
   color: #060505;
   font-size: 16px;
@@ -1307,6 +1307,12 @@ h2 {
 }
 .withdraw-button {
   margin-top: 20px;
+}
+.faq-accordion .accordionWrapper {
+  overflow: hidden;
+  max-height: 540px;
+  overflow-y: auto;
+  padding-right: 20px;
 }
 @media screen and (max-width: 1600px) {
   .header {
@@ -2185,7 +2191,7 @@ body {
       <div class="account-form-wrapper">
         <div class="account-input-box width-28">
           <label for="myContactInfo" t-id="29">Contact Information (email/signal/telegram):</label>
-          <input id="myContactInfo" onblur="validateContactInfo()" oninput="validateContactInfo()">
+          <input id="myContactInfo" onblur="validateContactInfo(this)" oninput="validateContactInfo(this)">
           <span id="contactInfoWarning" style="color: red; display: none;">Please enter a valid email address.</span>
         </div>
         </div>
@@ -2294,33 +2300,118 @@ body {
             <h3>Frequently Asked Question</h3>
             <div class="accordionWrapper">
               <div class="accordionItem accordion-open">
-                <h2 class="accordionItemHeading"><span>01</span>Lorem ipsum</h2>
+                <h2 class="accordionItemHeading"><span>01</span>What is the DDE Marketplace and what is its primary function?</h2>
                 <div class="accordionItemContent">
-                  <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et
-                    dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-                    rebum. Stet
-                    clita kasd gubergren, no sea takimata sanctus</p>
+                  <p>The Double Deposit Escrow (DDE) Marketplace is a platform designed to allow two (or more) parties to create collateralized digital smart contracts. These smart contracts operate on the basis of either "win-win" or "lose-lose" philosophy, in that once funds have been deposited into the contracts and both parties have agreed to initiate a transaction/contract, they (the funds) cannot be released except by mutual-consent of both parties. Furthermore, if the contract is not completed/settled within a given time period, the funds deposited into the contract become unrecoverable. This feature, referred to as "burning", compels both parties to either negotiate or, ideally, complete the terms of the contract that they agreed to. In the process of negotiations, users can choose to extend the deadline of the contract to allow more time to complete the contract's terms, or they can choose to cancel the contract, at which time all funds and collateral will be returned to their original owners.
+                  </p>
                 </div>
               </div>
               <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>02</span>Lorem ipsum</h2>
+                <h2 class="accordionItemHeading"><span>02</span>What wallets are compatible with the DDE Marketplace?</h2>
                 <div class="accordionItemContent">
-                  <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et
-                    dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-                    rebum. Stet
-                    clita kasd gubergren, no sea takimata sanctus</p>
+                  <p>Currently, only Metamask is compatible.</p>
                 </div>
               </div>
               <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>03</span>Lorem ipsum</h2>
+                <h2 class="accordionItemHeading"><span>03</span>What currencies can I deposit to the DDE Markets?
+                </h2>
                 <div class="accordionItemContent">
-                  <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et
-                    dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-                    rebum. Stet
-                    clita kasd gubergren, no sea takimata sanctus</p>
+                  <p>Ethereum and DAI are the only coins that are currently compatible with our contracts. However, you can use these currencies as deposits/collateral and use the smart contract to buy or sell crypto for cash, and vice versa.</p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>04</span>What are the fees that are charged to use the platform?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>The receiver of the funds pays a 0.3% fee when the contract is complete/settled. If the contract is canceled, no fee is charged.</p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>05</span>What kind of contracts can I make?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>You can create contracts to hire workers, buy and sell goods, exchange currency, escrow funds to back agreements, and much more. Please follow the limitations and regulations of your respective countries and their laws.
+                  </p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>06</span>What happens if my funds are "burned" in a contract that goes over its deadline/expiration?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>Your funds are not recoverable. In order to mitigate this risk, ensure that you set your contract duration for longer than you believe is necessary, and be proactive in requesting time extensions with your counter-party if you believe that the current duration is not long enough to complete your transaction.
+                  </p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>07</span>How do I control access to my funds?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>Funds are deposited directly from the Metamask wallet into your Marketplace Account, and they are only accessible via connecting your Metamask wallet to the Marketplace.
+                  </p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>08</span>What happens if I lose my access to my Metamask account and my funds are still deposited in the Marketplace?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>Those funds, like any funds that were lost in the Metamask account, are lost and not recoverable. As such, we suggest you enable passphrase recovery for your Metamask account and that you keep your secret passphrase written down in at least 2 locations so that you do not lose access to either your Metamask account or your deposited funds.
+                  </p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>09</span>How do I start earning fees for trading?.
+                </h2>
+                <div class="accordionItemContent">
+                  <p>
+                  </p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>10</span>How does the reputation system work?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>
+                  </p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>11</span>How does the affiliate program work?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>
+                  </p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>12</span>What are the advantages of creating an account instead of using MetaMask as an account generator?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>
+                  </p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>13</span>How do I create an account without MetaMask?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>
+                  </p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>14</span>How do I contact support?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>This website does not profit off double deposit escrow contracts in any way. The users earn all the profits, and their associated affiliates. Therefore, they determine the success of the project. It is best to contact their forum/telegram/discord link to ask for any assistance.
+                  </p>
+                </div>
+              </div>
+              <div class="accordionItem accordion-close">
+                <h2 class="accordionItemHeading"><span>15</span> Who is liable if a contract can’t be completed due to counterparty failure?
+                </h2>
+                <div class="accordionItemContent">
+                  <p>You and your counterparty are the only ones liable. This website does not profit off double deposit escrow contracts in any way. This is not an eBay, Craigslist, Facebook Marketplace exchange. There is no 3rd party to protect you in the case of a failed contract. But that also means there are no excessive fees to trade like on eBay. Only the successful users and their affiliates gain exchange fees. If you have a new user interested in your product you are selling, or you are weary of the new seller with no reputation score, then feel free to customize the DDE contract and demand that they deposit more escrow than you. It never hurts to attempt this, and they have the right to agree or disagree.
+                  </p>
                 </div>
               </div>
             </div>
@@ -2377,18 +2468,17 @@ body {
       activeActions[contractHash] = isActive;
     }
 
-    function validateContactInfo() {
-      const contactInput = document.getElementById('myContactInfo');
-      const warningSpan = document.getElementById('contactInfoWarning');
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email validation regex
+    function validateContactInfo(contactInput) {
+    const warningSpan = document.getElementById('contactInfoWarning');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email validation regex
 
-      if (contactInput.value === '' || !emailRegex.test(contactInput.value)) {
+    if (contactInput.value === '' || !emailRegex.test(contactInput.value)) {
         warningSpan.style.display = 'block'; // Show warning if invalid
         warningSpan.textContent = translateThis('Please enter a valid email address. Other contact methods are optional.');
-      } else {
+    } else {
         warningSpan.style.display = 'none'; // Hide warning if valid
-      }
     }
+} 
     document.querySelectorAll('button').forEach(button => {
       if (!button.classList.length && !button.closest('.sidebar')) {
         button.classList.add('square-button2');
@@ -6415,7 +6505,7 @@ body {
               </div>
               <div class="input-wrapper-content">
                   <label for="contractImage">` + translateThis('Contract Images:') + `</label>
-                  <input type="file" id="contractImage" multiple accept="image/*,.txt">
+                  <input type="file" id="contractImage" multiple accept="image/*,.txt.doc,.pdf,.zip">
                   <span style="color: black;" id="fileNames"></span>
                   <div id="fileDisplayArea"></div>
                   <button type="button" id="changefile" style="display:none;">` + translateThis('Change Images') + `</button>
@@ -6423,7 +6513,7 @@ body {
               <div class="input-wrapper-area">
                 <div class="input-wrapper">
                   <label for="contactInfo">` + translateThis('Contact Information(email/chat):') + `</label>
-                  <textarea id="contactInfo"></textarea>
+                  <textarea id="contactInfo" ></textarea>
                   <div id="contactInfoWarning" style="color: red; display: none;">` + translateThis('Please enter a valid email address.') + `</div>
                 </div>
                 <div class="input-wrapper">
@@ -6470,6 +6560,7 @@ body {
       var recipientDepositInput = form.querySelector('#receiverDepositField');
       var imageInput = form.querySelector('#contractImage');
       var contactInfo = form.querySelector('#contactInfo')
+      var warningDiv = form.querySelector('#contactInfoWarning');
       var displayArea = form.querySelector('#fileDisplayArea');
       var fileNamesInput = form.querySelector('#fileNames');
       var auto = form.querySelector('#autoaccept');
@@ -6540,53 +6631,50 @@ body {
       // Event listener for image input
       imageInput.addEventListener('change', async () => {
         if (imageInput.files.length + selectedFiles.length > 10) {
-          await Swal.fire(translateThis("Please add less than the maximum of 10 files"));
-          return false;
+            await Swal.fire(translateThis("Please add less than the maximum of 10 files"));
+            return false;
         }
 
         for (const file of imageInput.files) {
-          const fileType = file.type;
-          const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml'];
-          const validTextType = ['text/plain'];
-          // const validDocTypes = ['application/msword'];
+            const fileType = file.type;
+            const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml'];
+            const validTextType = ['text/plain'];
+            const validDocTypes = ['application/msword', 'application/pdf', 'application/zip'];
 
-          // Check if the file type is valid
-          if (
-            validImageTypes.includes(fileType) || validTextType.includes(fileType) 
-            // || validDocTypes.includes(fileType)
-          ) {
-            if (validImageTypes.includes(fileType)) {
-              const myimage = await resizeImage(file);
-              if (myimage) {
-                image.push(myimage);
-                selectedFiles.push(file);
-              } else {
-                console.warn(`File ${file.name} is not a valid image`);
-              }
+            // Check if the file type is valid
+            if (validImageTypes.includes(fileType) || validTextType.includes(fileType) || validDocTypes.includes(fileType)) {
+                if (validImageTypes.includes(fileType)) {
+                    const myimage = await resizeImage(file);
+                    if (myimage) {
+                        image.push(myimage);
+                        selectedFiles.push(file);
+                    } else {
+                        console.warn(`File ${file.name} is not a valid image`);
+                    }
+                } else {
+                    const base64File = await readFileAsDataURL(file);
+                    image.push(base64File);
+                    selectedFiles.push(file);
+                    if (!validTextType.includes(fileType)) {
+                        await Swal.fire({
+                            icon: 'warning',
+                            title: translateThis('Security Warning'),
+                            text: translateThis('Text file attachments are preferred due to security reasons. You are uploading a DOC/PDF/ZIP file. Please make sure you trust any files being sent before proceeding.'),
+                        });
+                    }
+                }
             } else {
-              const base64File = await readFileAsDataURL(file);
-              image.push(base64File);
-              selectedFiles.push(file);
-              if (!validTextType.includes(fileType)) {
+                // Handle unsupported file types
                 await Swal.fire({
-                  icon: 'warning',
-                  title: translateThis('Security Warning'),
-                  text: translateThis('Text file attachments are preferred however this is a different file type (DOC/ZIP/etc). Please make sure you trust any files being sent before proceeding.'),
+                    icon: 'error',
+                    title: translateThis('Unsupported File Type'),
+                    text: translateThis('Only image, text, and specific document files are allowed. Please select a different file.'),
                 });
-              }
             }
-          } else {
-            // Handle unsupported file types
-            await Swal.fire({
-              icon: 'error',
-              title: translateThis('Unsupported File Type'),
-              text: translateThis('Only image and document files are allowed. Please select a different file.'),
-            });
-          }
         }
 
         updateFilesDisplay();
-      });
+    });
 
       function updateFilesDisplay() {
         displayArea.innerHTML = '';
@@ -6637,10 +6725,10 @@ body {
       });
 
       contactInfo.addEventListener('blur', function () {
-        const contactInput = document.getElementById('contactInfo');
+        const contactInput = contactInfo;
         const contactValue = contactInput.value.trim();
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const warningDiv = document.getElementById('contactInfoWarning');
+        
 
         if (!contactValue) {
           warningDiv.textContent = translateThis('Please provide contact information.');
