@@ -388,7 +388,6 @@ body {
             min-height: calc(100% - 75); /* Subtract footer height */
             max-height: calc(100% - 75); /* Subtract footer height */
             overflow-y: auto; /* Enable vertical scrolling if content overflows */
-            margin-bottom: 100px;
         }
 .main.markets::after {
   content: '';
@@ -697,7 +696,7 @@ h2 {
   color: black;
   font-size: 14px;
   outline: none;
-          box-shadow: unset ;
+  box-shadow: unset;
 }
 .header-search-area .square-button2 {
   border-radius: 0px;
@@ -746,7 +745,10 @@ h2 {
   margin: 0;
   margin-right: 10px;
 }
-      .dashboard-content-wrapper .pagination select, .header #languageSelect, .mobile-pagination-select {
+
+.dashboard-content-wrapper .pagination select,
+.header #languageSelect,
+.mobile-pagination-select, .account-withdraw-popup select {
   background-color: #E3E3E3;
   color: #322C62;
   border: none;
@@ -803,8 +805,9 @@ h2 {
 .dashboard-content-wrapper .listing-details {
   text-align: center;
 }
-      .token-ammount-content .token bdo, .token-ammount-content .amount bdo {
-  font-weight: bold;
+.token-ammount-content .token bdo, .token-ammount-content .amount bdo {
+    font-weight: bold;
+    margin-right: 2px;
 }
 .dashboard-content-wrapper .listing-details .message {
   color: #322C62;
@@ -870,12 +873,20 @@ h2 {
         .offer-popup-wrapper p, .offers-list-box div {
   margin-bottom: 10px;
   font-size: 14px;
-  white-space: nowrap !important;
 }
+.offer-popup-wrapper p {
+  white-space: normal !important;
+  word-break: break-all;
+}
+.offer-popup-wrapper p:not(:last-child) {
+  margin-bottom: 25px;
+}
+
 .offer-popup-wrapper p bdo {
-  width: 34%;
+  width: 100%;
   display: inline-block;
   font-weight: bold;
+  margin-bottom: 6px;
 }
         .offers-categories .offers-tab-container button, .account-details-wrapper button {
   background-color: #E3E3E3;
@@ -889,7 +900,14 @@ h2 {
   margin-right: 12px;
   cursor: pointer;
 }
-        .offers-categories .offers-header, .offers-categories .escrow-header {
+
+.account-details-wrapper button {
+  min-height: 40px;
+  height: 100%;
+}
+
+.offers-categories .offers-header,
+.offers-categories .escrow-header {
   font-size: 18px;
   color: #322C62;
   font-weight: bold;
@@ -942,6 +960,13 @@ h2 {
   padding-right: 18px;
   position: relative;
 }
+.account-form-wrapper .width-28 {
+  width: 28%;
+  padding: 0;
+}
+.account-form-wrapper .input-checkboxes {
+  width: 35%;
+}
 .account-form-wrapper #contactInfoWarning {
     position: absolute;
     bottom: -20px;
@@ -965,7 +990,7 @@ h2 {
   font-weight: bold;
   margin-bottom: 10px;
 }
-        .account-form-wrapper input, .account-form-wrapper select, .category-purchase-popup input {
+        .account-form-wrapper input, .account-form-wrapper select, .category-purchase-popup input, .account-withdraw-popup input {
   background: #FCFCFC;
   border: 1px solid #C3C3C3;
   border-radius: 5px;
@@ -1262,6 +1287,27 @@ h2 {
   justify-content: center;
   padding: 5px;
 }
+.account-withdraw-popup h2 {
+  font-size: 20px;
+  text-align: center;
+  color: #322C62;
+}
+.account-withdraw-popup .form-group {
+  margin-bottom: 10px;
+}
+.account-withdraw-popup label {
+  font-size: 14px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+  color: black;
+}
+.account-withdraw-popup select {
+  width: 100%;
+}
+.withdraw-button {
+  margin-top: 20px;
+}
 @media screen and (max-width: 1600px) {
   .header {
     height: 80px;
@@ -1323,6 +1369,15 @@ h2 {
   .faq-form h3 {
     font-size: 28px;
   }
+  .account-form-wrapper .input-checkboxes {
+    width: 40%;
+  }
+  .account-form-wrapper label {
+    font-size: 14px;
+  }
+  .account-form-wrapper .width-28 {
+    width: 31%;
+  }
 }
 
 @media screen and (max-width: 1399px) {
@@ -1347,6 +1402,15 @@ h2 {
   .about-box-info h4 {
     margin-bottom: 10px;
     font-size: 20px;
+  }
+  .account-form-wrapper .input-checkboxes {
+    width: 45%;
+  }
+  .account-form-wrapper .width-28 {
+    width: 37%;
+  }
+  .account-details-wrapper button {
+    font-size: 12px;
   }
 }
 
@@ -1414,6 +1478,15 @@ h2 {
   .offers-list-box {
     padding: 25px;
   }
+  .account-form-wrapper .width-28 {
+    width: 40%;
+  }
+  .checkboxes-form-wrapper .account-input-box {
+    width: 50%;
+  }
+  .account-form-wrapper label {
+    font-size: 12px;
+  }
 
 }
 
@@ -1445,9 +1518,9 @@ h2 {
     overflow-x: auto;
   }
 
-        .offers-list-box div bdo {
-          width: 40%;
-        }
+  .offers-list-box div bdo {
+    width: 40%;
+  }
   .dashboard-content-wrapper #paginationNumbers button {
     padding: 8px;
     font-size: 14px;
@@ -1504,10 +1577,26 @@ h2 {
   h2 {
     font-size: 22px;
   }
+  .sidebar {
+    padding: 15px;
+  }
+  .sidebar .sidebar-icons {
+    padding: 10px;
+  }
+  .sidebar button {
+    height: 52px;
+    margin-bottom: 35px;
+    font-size: 11px;
+  }
   .popup {
-    padding: 25px;
+    padding: 25px 20px;
     max-width: calc(540px - 25px);
   }
+  .offer-popup-wrapper p span button {
+    font-size: 10px;
+    padding: 2px;
+  }
+
   .modal-header h2 {
     margin-bottom: 20px;
   }
@@ -1597,10 +1686,12 @@ h2 {
   .offer-popup-wrapper .button-container .btn-gray {
     font-size: 15px;
   }
+}
 @media screen and (max-width: 575px) {
   .popup {
     max-width: 90%;
   }
+
   .input-wrapper-area {
     display: block;
   }
@@ -1623,9 +1714,15 @@ h2 {
   }
   .header-list {
     display: flex;
-    overflow-x: auto;
     white-space: nowrap;
-    padding-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .header2 a:not(:last-child) {
+    margin-right: 20px;
+  }
+  .header2 a {
+    font-size: 14px;
+    margin-bottom: 6px;
   }
   .header-list::-webkit-scrollbar {
     height: 4px;
@@ -1633,12 +1730,11 @@ h2 {
   .header-list::-webkit-scrollbar-thumb {
     background: white;
   }
-  .container.site-container {
-    height: calc(100vh - 180px);
+
+  .offer-popup-wrapper p:not(:last-child) {
+    margin-bottom: 20px;
   }
-  .offer-popup-wrapper p bdo {
-    width: 75%;
-  }
+
   .offer-popup-wrapper .button-container {
     display: block;
     text-align: center;
@@ -1659,9 +1755,7 @@ h2 {
     font-size: 13px;
     margin-right: 6px;
   }
-  .sidebar {
-    height: calc(100% - 180px);
-  }
+
   .account-details-wrapper #account {
     line-height: 20px;
     word-break: break-word;
@@ -1738,6 +1832,16 @@ h2 {
   .category-purchase-popup .detail-content {
     font-size: 16px;
   }
+  .token-ammount-content {
+    padding: 10px;
+    font-size: 11px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+    .container.site-container {
+      height: calc(100vh - 180px);
+    }
 }
 
 @media screen and (max-width: 400px) {
@@ -1869,7 +1973,13 @@ body {
 .dark-theme .account-form-wrapper label, .dark-theme .faq-accordion h3, .dark-theme .faq-accordion .accordionItemHeading, .dark-theme .faq-accordion .accordionItemContent p, .dark-theme .faq-accordion .accordionItemHeading span, .dark-theme .faq-accordion .accordion-open .accordionItemHeading::before, .dark-theme .faq-accordion .accordion-close .accordionItemHeading::before {
   color: white;
 }
-        .dark-theme .dashboard-content-wrapper .square-button, .dark-theme .header-search-area, .dark-theme .dashboard-content-wrapper #paginationNumbers button.active, .dark-theme .dashboard-content-wrapper #paginationNumbers button:hover, .dark-theme .offers-categories .offers-tab-container button, .dark-theme .account-details-wrapper button {
+
+.dark-theme .dashboard-content-wrapper .square-button,
+.dark-theme .header-search-area,
+.dark-theme .dashboard-content-wrapper #paginationNumbers button.active,
+.dark-theme .dashboard-content-wrapper #paginationNumbers button:hover,
+.dark-theme .offers-categories .offers-tab-container button,
+.dark-theme .account-details-wrapper button {
   border: 1px solid white;
 }
 .dark-theme .dashboard-content-wrapper .square-button:hover {
@@ -1898,6 +2008,9 @@ body {
 .dark-theme .account-details-wrapper .input-checkboxes .checkmark:after {
   border-color: white;
 }
+.dark-theme .account-withdraw-popup h2 {
+  color: #322c62;
+}
 
 #loadingIndicator {
   display: none;
@@ -1906,7 +2019,6 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
-}
 }
 </style>
 </head>
@@ -2085,16 +2197,20 @@ body {
         <button onclick="withdraw()" t-id="28">Withdraw tokens</button>
       </div>
       <div class="account-form-wrapper">
-        <div class="account-input-box">
+        <div class="account-input-box width-28">
           <label for="myContactInfo" t-id="29">Contact Information (email/signal/telegram):</label>
           <input id="myContactInfo" onblur="validateContactInfo()" oninput="validateContactInfo()">
           <span id="contactInfoWarning" style="color: red; display: none;">Please enter a valid email address.</span>
         </div>
-        <div class="account-input-box">
+        </div>
+        <div class="account-form-wrapper">
+        <div class="account-input-box width-28">
           <label for="myPassword" t-id="44">Password(for encryption):</label>
           <input id="myPasswordInput" type="password"></input>
         </div>
-        <div class="account-input-box account-box-position account-box-mobile">
+        </div>
+        <div class="account-form-wrapper">
+        <div class="account-input-box account-box-position account-box-mobile width-28">
               <button onclick="registerData()" t-id="30">Register information to my address(contact/encryption/optional)</button>
         </div>
       </div>
@@ -2116,7 +2232,7 @@ body {
         </div>
       </div>
       <div class="account-form-wrapper">
-        <div class="account-input-box account-box-position account-box-mobile">
+        <div class="account-input-box account-box-position account-box-mobile width-28">
           <button onclick="RefreshContracts()" t-id="32">Refresh/restore previously cleared contracts</button>
         </div>
       </div>
@@ -2129,7 +2245,9 @@ body {
             <option value="never" t-id="34">Never</option>
           </select>
         </div>
-        <div class="account-input-box account-box-position">
+        </div>
+        <div class="account-form-wrapper">
+        <div class="account-input-box account-box-position ">
           <button onclick="backupLocalStorage()" t-id="37">Backup cached site/user data</button>
         </div>
         <div class="account-input-box account-box-position">
@@ -4941,7 +5059,7 @@ body {
                 <div class="listing-image">${tempimg}</div>
                 <div class="listing-details">
                     <div class="token-ammount-content">
-                      <div class="token">` + '<bdo class="theText">' + translateThis("Currency") + '</bdo>' + ` ${tokennames[offer.token]}</div>
+                      <div class="token">` + '<bdo class="theText">' + translateThis("Currency:") + '</bdo>' + ` ${tokennames[offer.token]}</div>
                       <div class="amount">` + '<bdo class="theText">' + translateThis("Amount:") + '</bdo>'  + ` ${displayDecimals(offer.token, offer.amount)}</div>
                     </div>
                     <div class="message">` + '<bdo class="theText">' + translateThis("Details:") + '</bdo>' + ` ${offer.message.slice(0, 20) + (offer.message.length > 20 ? "..." : "")}</div>
@@ -5358,7 +5476,7 @@ body {
         recipient.innerHTML = text2;
         const recipientContainer = document.createElement('span');
         const recipientTextSpan = document.createElement('span');
-        recipientTextSpan.style.fontSize = '12px';
+        recipientTextSpan.style.fontSize = '';
         recipientTextSpan.textContent = listing.recipient;
         recipientTextSpan.style.cursor = 'pointer';
         recipientTextSpan.style.textDecoration = 'underline';
@@ -5453,7 +5571,7 @@ body {
             if(reputation[0] == 0 && reputation[1] == 0) {
             message.innerHTML += '<br><br>' + translateThis('Recipient is a new user of the markets.') + '<br>';
           } else {
-            message.innerHTML += '<br><br>' + translateThis('Recipients success rate:') + '<br><bdo>' + translateThis('Completed:') + '</bdo> ' + reputation[0] + '<br><bdo>' + translateThis('Failed:') + '</bdo> ' + reputation[1];
+            message.innerHTML += '<br><br>' + translateThis('Recipients success rate:') + '<br><br><bdo>' + translateThis('Completed:') + '</bdo> ' + reputation[0] + '<br><br><bdo>' + translateThis('Failed:') + '</bdo> ' + reputation[1];
           }
         } catch(e) {
           console.log(e);
@@ -5976,6 +6094,7 @@ body {
       var form = document.createElement('form');
       form.classList.add('popup-form');
       form.innerHTML = `
+      <div class="account-withdraw-popup">
         <h2>` + translateThis('Deposit tokens to your balance') + `</h2>
         <div class="form-group">
           <label for="token-select">` + translateThis('Select token:') + `</label>
@@ -5985,8 +6104,9 @@ body {
           <label for="amount-input">` + translateThis('Amount:') + `</label>
           <input type="number" step="0.00000001" min="0.00000001" id="amount-input" name="amount-input" required>
         </div>
-        <div class="form-group">
-          <button type="submit" class="btn">` + translateThis('Deposit') + `</button>
+        <div class="withdraw-button">
+          <button type="submit" class="btn btn-filled">` + translateThis('Deposit') + `</button>
+        </div>
         </div>
       `;
 
@@ -6093,6 +6213,7 @@ body {
       var form = document.createElement('form');
       form.classList.add('popup-form');
       form.innerHTML = `
+      <div class="account-withdraw-popup">
         <h2>` + translateThis('Withdraw tokens from your balance') + `</h2>
         <div class="form-group">
           <label for="token-select">` + translateThis('Select token:') + `</label>
@@ -6102,8 +6223,9 @@ body {
           <label for="amount-input">` + translateThis('Amount:') + `</label>
           <input type="number" step="0.00000001" min="0.00000001" id="amount-input" name="amount-input" required>
         </div>
-        <div class="form-group">
-          <button type="submit" class="btn">` + translateThis('Withdraw') + `</button>
+        <div class="withdraw">
+          <button type="submit" class="btn btn-filled">` + translateThis('Withdraw') + `</button>
+        </div>
         </div>
       `;
 
