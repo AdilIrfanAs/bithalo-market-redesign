@@ -2176,7 +2176,7 @@ body {
       <h2 t-id="25">ACCOUNTS</h2>
       <p id="account" t-id="26">Please connect metamask</p>
       <div class="account-btn-wrapper">
-        <button id="loginButton" onclick="login(1)" style="display: none;">Login</button>
+        <button id="loginButton" onclick="login(1)" style="display: none;">Login/Connect</button>
       </div>
       <div class="account-btn-wrapper">
         <button onclick="deposit()" t-id="27">Deposit tokens</button>
@@ -3073,8 +3073,8 @@ body {
     });
 
     document.getElementById('favorites-button').addEventListener('mouseout', function() {
-      document.getElementById('favorites-text').innerHTML = 'Favorites';
-      document.getElementById('favorites-text').style.color = '#322C62';
+      document.getElementById('favorites-text').innerHTML = '';
+      document.getElementById('favorites-text').style.color = '';
     });
 
     myContactInfo.addEventListener('blur', async function(event) {
@@ -6327,7 +6327,7 @@ body {
       var form = document.createElement('form');
       form.classList.add('popup-form');
       form.innerHTML = `<div id="createContractModal" class="modal modal-header">
-          <h2>` + translateThis('CREATE CONTRACT') + `</h2>
+          <h2>` + translateThis('Create Contract') + `</h2>
           <div class="modal-content form-contract-modal">
             <form id="createContractForm">
               <div class="input-wrapper">

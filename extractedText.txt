@@ -269,8 +269,4 @@
   "Previous Image": true,
   "No favorites found.": true,
   "Please enter a valid email address. Other contact methods are optional.": true,
-  "Minimize": true, //inside HTML tag
-  "Remove Cosigner": true, //inside HTML tag
-  "Transaction in progress...": true, //inside HTML tag
-  "Waiting for confirmation...": true, //inside HTML tag
 }
