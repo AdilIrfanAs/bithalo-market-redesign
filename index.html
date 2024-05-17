@@ -5188,28 +5188,31 @@ body {
     function goToPage(pageNumber) {
       currentPage = pageNumber;
       populateListings();
-      // updatePaginationControls();
     }
 
     function previousPage() {
       if (currentPage > 1) {
         currentPage--;
         populateListings();
-        // updatePaginationControls();
       }
     }
 
-    function nextPage() {
-      var totalItems = marketOffers.indices.length;
-      var totalPages = Math.ceil(totalItems / listingsPerPage);
-      if (currentPage < totalPages) {
+    async function nextPage() {
+    var totalItems = marketOffers.indices.length;
+    var totalPages = Math.ceil(totalItems / listingsPerPage);
+
+    if (currentPage < totalPages) {
         currentPage++;
-        populateListings();
-        // updatePaginationControls();
-      }
+        await populateListings();
+    } else {
+        document.getElementById("loadingStatus").innerHTML = loader;
+        await loadMarkets(totalItems, totalItems + 50); // Fetch next 50 posts
+        document.getElementById("loadingStatus").innerHTML = "";
+        currentPage++;
+        await populateListings();
     }
+}
     populateListings();
-    // updatePaginationControls();
 
     // Function to show the details popup for a listing
     async function showListing(listing, mode = 0) {
