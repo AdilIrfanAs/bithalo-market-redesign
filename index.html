@@ -903,7 +903,7 @@ h2 {
 
 .account-details-wrapper button {
   min-height: 40px;
-  height: 100%;
+  height: auto;
 }
 
 .offers-categories .offers-header,
@@ -968,11 +968,9 @@ h2 {
   width: 35%;
 }
 .account-form-wrapper #contactInfoWarning {
-    position: absolute;
-    bottom: -20px;
-    font-size: 12px;
-    left: 0;
-} 
+  font-size: 12px;
+  margin-top: 10px;
+}
 .account-form-wrapper .account-box-position {
   display: flex;
   align-items: end;
@@ -1313,6 +1311,19 @@ h2 {
   max-height: 540px;
   overflow-y: auto;
   padding-right: 20px;
+}
+#publicemail {
+  margin-bottom: 25px;
+  font-size: 14px;
+  font-weight: normal;
+  word-break: break-all;
+}
+#publicemail bdo {
+  font-weight: bold;
+}
+#publicemail span {
+  color: #322c62;
+  cursor: pointer;
 }
 @media screen and (max-width: 1600px) {
   .header {
@@ -3112,7 +3123,7 @@ body {
         console.log(e);
       }
         if(shortPublicKey == '' && userpubkey != '') {
-        shortPublicKey = userpubkey.substring(0, 10) + '...<bdo><span id="showMore" style="color:blue">' + translateThis('(show more)') + '</span></bdo>';
+        shortPublicKey = userpubkey.substring(0, 10) + '...<bdo><span id="showMore">' + translateThis('(show more)') + '</span></bdo>';
         datatext += "<bdo>" + translateThis("Public key(for encryption):") + "</bdo> " + shortPublicKey;
         document.getElementById('publicemail').innerHTML = datatext;
           document.getElementById('showMore').addEventListener('click', function() {
