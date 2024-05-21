@@ -18,6 +18,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="text/javascript" src="./translate.js"></script>
+  <script type="text/javascript" src="./faq.js"></script>
   <link rel="icon" type="image/x-icon" href="./favicon.ico">
   <title t-id="1">BitBay Decentralized Markets</title>
   <style>
@@ -501,7 +502,7 @@ h2 {
   justify-content: center;
   align-items: center;
 }
-.popup {
+.popup, .withdraw-swal-wrapper {
   position: relative;
   background-color: white;
   padding: 30px;
@@ -627,14 +628,14 @@ h2 {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-      .input-checkboxes input:checked ~ .checkmark:after {
+.input-checkboxes input:checked ~ .checkmark:after {
   display: block;
 }
-      .checkbox-tick-wrapper input:checked ~ .checkmark {
+.checkbox-tick-wrapper input:checked ~ .checkmark {
   background-color: transparent;
   border: 2px solid #0D2F80;
 }
-      .btn-filled, .btn-gray {
+.btn-filled, .btn-gray, .withdraw-swal-wrapper .swal2-actions button {
   background-color: #7066E0;
   border-radius: 4px;
   color: white;
@@ -647,22 +648,28 @@ h2 {
   font-size: 16px;
   font-weight: bold;
 }
-.btn-filled:hover {
+.btn-filled:hover, .withdraw-swal-wrapper .swal2-actions button:hover {
   background-color: transparent;
   color: #7066E0;
 }
-.btn-gray {
+.btn-gray, .withdraw-swal-wrapper .swal2-actions button.swal2-cancel {
   background-color: #858585;
   border: 2px solid #858585;
 }
-.btn-gray:hover {
+.btn-gray:hover, .withdraw-swal-wrapper .swal2-actions button.swal2-cancel:hover {
   background-color: transparent;
   color: #858585;
 }
 .dashboard-content-wrapper h2 {
   margin-bottom: 15px;
 }
-      .dashboard-content-wrapper .square-button, .header-search-area .square-button2 {
+.withdraw-swal-wrapper .swal2-actions button:focus {
+  box-shadow: unset;
+}
+.withdraw-swal-wrapper .swal2-actions button:hover {
+  background-image: unset !important;
+}
+.dashboard-content-wrapper .square-button, .header-search-area .square-button2 {
   background-color: #322C62;
   border: 1px solid #322C62;
   padding: 10px 15px;
@@ -748,7 +755,7 @@ h2 {
 
 .dashboard-content-wrapper .pagination select,
 .header #languageSelect,
-.mobile-pagination-select, .account-withdraw-popup select {
+.mobile-pagination-select, .account-withdraw-popup select, .withdraw-swal-wrapper select {
   background-color: #E3E3E3;
   color: #322C62;
   border: none;
@@ -988,7 +995,7 @@ h2 {
   font-weight: bold;
   margin-bottom: 10px;
 }
-        .account-form-wrapper input, .account-form-wrapper select, .category-purchase-popup input, .account-withdraw-popup input {
+        .account-form-wrapper input, .account-form-wrapper select, .category-purchase-popup input, .account-withdraw-popup input, .withdraw-swal-wrapper input {
   background: #FCFCFC;
   border: 1px solid #C3C3C3;
   border-radius: 5px;
@@ -998,6 +1005,10 @@ h2 {
   height: 40px;
   padding: 12px;
   font-size: 14px;
+}
+.withdraw-swal-wrapper input:focus {
+  box-shadow: unset;
+  border-color: #C3C3C3;
 }
 .account-form-wrapper .input-checkboxes label {
   margin-bottom: 0;
@@ -1096,6 +1107,7 @@ h2 {
   font-weight: normal;
   color: #060505;
   line-height: 27px;
+  max-height: initial !important;
 }
 
 .faq-accordion .accordion-open .accordionItemContent p {
@@ -1324,6 +1336,30 @@ h2 {
 #publicemail span {
   color: #322c62;
   cursor: pointer;
+}
+.withdraw-swal-wrapper {
+  border: none;
+  font-family: inherit;
+}
+.withdraw-swal-wrapper h2 {
+  padding: 0;
+  margin-bottom: 20px;
+}
+.withdraw-swal-wrapper .swal2-input {
+  display: block;
+  margin: 0;
+  width: 100%;
+  margin-bottom: 15px;
+}
+.withdraw-swal-wrapper .swal2-html-container, .withdraw-swal-wrapper .swal2-actions {
+  margin: 0;
+}
+.withdraw-swal-wrapper select {
+  height: auto;
+}
+.withdraw-swal-wrapper #swal2-validation-message {
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 @media screen and (max-width: 1600px) {
   .header {
@@ -2308,124 +2344,8 @@ body {
         </div>
         <div class="faq-content-wrapper">
           <div class="faq-accordion">
-            <h3>Frequently Asked Question</h3>
-            <div class="accordionWrapper">
-              <div class="accordionItem accordion-open">
-                <h2 class="accordionItemHeading"><span>01</span>What is the DDE Marketplace and what is its primary function?</h2>
-                <div class="accordionItemContent">
-                  <p>The Double Deposit Escrow (DDE) Marketplace is a platform designed to allow two (or more) parties to create collateralized digital smart contracts. These smart contracts operate on the basis of either "win-win" or "lose-lose" philosophy, in that once funds have been deposited into the contracts and both parties have agreed to initiate a transaction/contract, they (the funds) cannot be released except by mutual-consent of both parties. Furthermore, if the contract is not completed/settled within a given time period, the funds deposited into the contract become unrecoverable. This feature, referred to as "burning", compels both parties to either negotiate or, ideally, complete the terms of the contract that they agreed to. In the process of negotiations, users can choose to extend the deadline of the contract to allow more time to complete the contract's terms, or they can choose to cancel the contract, at which time all funds and collateral will be returned to their original owners.
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>02</span>What wallets are compatible with the DDE Marketplace?</h2>
-                <div class="accordionItemContent">
-                  <p>Currently, only Metamask is compatible.</p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>03</span>What currencies can I deposit to the DDE Markets?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>Ethereum and DAI are the only coins that are currently compatible with our contracts. However, you can use these currencies as deposits/collateral and use the smart contract to buy or sell crypto for cash, and vice versa.</p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>04</span>What are the fees that are charged to use the platform?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>The receiver of the funds pays a 0.3% fee when the contract is complete/settled. If the contract is canceled, no fee is charged.</p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>05</span>What kind of contracts can I make?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>You can create contracts to hire workers, buy and sell goods, exchange currency, escrow funds to back agreements, and much more. Please follow the limitations and regulations of your respective countries and their laws.
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>06</span>What happens if my funds are "burned" in a contract that goes over its deadline/expiration?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>Your funds are not recoverable. In order to mitigate this risk, ensure that you set your contract duration for longer than you believe is necessary, and be proactive in requesting time extensions with your counter-party if you believe that the current duration is not long enough to complete your transaction.
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>07</span>How do I control access to my funds?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>Funds are deposited directly from the Metamask wallet into your Marketplace Account, and they are only accessible via connecting your Metamask wallet to the Marketplace.
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>08</span>What happens if I lose my access to my Metamask account and my funds are still deposited in the Marketplace?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>Those funds, like any funds that were lost in the Metamask account, are lost and not recoverable. As such, we suggest you enable passphrase recovery for your Metamask account and that you keep your secret passphrase written down in at least 2 locations so that you do not lose access to either your Metamask account or your deposited funds.
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>09</span>How do I start earning fees for trading?.
-                </h2>
-                <div class="accordionItemContent">
-                  <p>
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>10</span>How does the reputation system work?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>11</span>How does the affiliate program work?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>12</span>What are the advantages of creating an account instead of using MetaMask as an account generator?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>13</span>How do I create an account without MetaMask?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>14</span>How do I contact support?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>This website does not profit off double deposit escrow contracts in any way. The users earn all the profits, and their associated affiliates. Therefore, they determine the success of the project. It is best to contact their forum/telegram/discord link to ask for any assistance.
-                  </p>
-                </div>
-              </div>
-              <div class="accordionItem accordion-close">
-                <h2 class="accordionItemHeading"><span>15</span> Who is liable if a contract can’t be completed due to counterparty failure?
-                </h2>
-                <div class="accordionItemContent">
-                  <p>You and your counterparty are the only ones liable. This website does not profit off double deposit escrow contracts in any way. This is not an eBay, Craigslist, Facebook Marketplace exchange. There is no 3rd party to protect you in the case of a failed contract. But that also means there are no excessive fees to trade like on eBay. Only the successful users and their affiliates gain exchange fees. If you have a new user interested in your product you are selling, or you are weary of the new seller with no reputation score, then feel free to customize the DDE contract and demand that they deposit more escrow than you. It never hurts to attempt this, and they have the right to agree or disagree.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <h3></h3>
+            <div id="accordionWrapper" class="accordionWrapper"></div>
           </div>
           <div class="faq-form-wrapper">
             <div class="faq-form">
@@ -2578,7 +2498,71 @@ body {
         // Reinsert the non-text content
         nonTextContent.forEach(node => element.appendChild(node));
       });
+      populateAbout(true);
     }
+
+    function populateAbout(isTranslationUpdate = false) {
+      const accordionWrapper = document.getElementById('accordionWrapper');
+      accordionWrapper.innerHTML = ''; // Clear existing content
+
+      // Translate and set the FAQ heading
+      const faqHeading = document.querySelector('.faq-accordion > h3');
+      faqHeading.textContent = translateThis('Frequently Asked Questions');
+
+      myfaq.forEach((section, index) => {
+        if (typeof section === 'string') { // Section title
+          const header = document.createElement('h4');
+          header.textContent = translateThis(section);
+          accordionWrapper.appendChild(header);
+        } else { // Questions and Answers
+          for (let i = 0; i < section.length; i += 2) {
+            const questionText = section[i];
+            const answerText = section[i + 1];
+
+            const question = document.createElement('div');
+            
+            question.classList.add('accordionItem', 'accordion-close');
+            question.innerHTML = `<h2 class="accordionItemHeading"><span>${(i/2 + 1).toString().padStart(2, '0')}</span>${translateThis(questionText)}</h2>`;
+            const answer = document.createElement('div');
+            answer.classList.add('accordionItemContent');
+            answer.innerHTML = `<p>${translateThis(answerText)}</p>`;
+            answer.style.maxHeight = "0px";
+            question.appendChild(answer);
+
+            accordionWrapper.appendChild(question);
+          }
+        }
+      });
+      if (isTranslationUpdate) {
+        attachAccordionEventListeners();
+      }
+    }
+
+    function attachAccordionEventListeners() {
+      const accordionItems = document.querySelectorAll('.accordionItemHeading');
+      accordionItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const content = this.nextElementSibling;
+
+          document.querySelectorAll('.accordionItemContent').forEach(otherContent => {
+            if (otherContent !== content) {
+              otherContent.style.maxHeight = "0px";
+              otherContent.parentNode.classList.replace('accordion-open', 'accordion-close');
+            }
+          });
+
+          if (content.style.maxHeight === "0px") {
+            content.style.maxHeight = content.scrollHeight + "px";
+            this.parentNode.classList.replace('accordion-close', 'accordion-open');
+          } else {
+            content.style.maxHeight = "0px";
+            this.parentNode.classList.replace('accordion-open', 'accordion-close');
+          }
+        });
+      });
+    }
+
+    populateAbout();
 
     var loadedFiles = {};
     // Open or create the IndexedDB database
@@ -2770,6 +2754,7 @@ body {
     var gasSetting = 1;
     var balances = {};
     var baseBalance = 0;
+    var newkey = 0;
     var myContactInfo = document.getElementById("myContactInfo");
     var offerExpiration = document.getElementById("offerExpiration");
     var AESkey = Crypto.SHA256("shared key")
@@ -2881,7 +2866,7 @@ body {
       document.getElementById("mycontracts").innerHTML = ""; // clear the container first
       document.getElementById('publicemail').innerHTML = "";
       document.getElementById('myPasswordInput').value = "";
-      document.getElementById("myPasswordInput").disabled = false;
+      document.getElementById("myPasswordInput").disabled = true;
       offerExpiration.selectedIndex = 0;
       currentMarketsLength = 0;
       userpubkey = "";
@@ -2891,6 +2876,7 @@ body {
       gasSetting = 1;
       baseFee = 0;
       myFavorites = [];
+      newkey = 0;
     }
 
     async function login(clear = 0) {
@@ -3108,22 +3094,64 @@ body {
         if(theFavorites) {
         myFavorites = JSON.parse(theFavorites);
       }
-      checkFavorites();
-      const userPWHash = localStorage.getItem(myaccounts + ":password");
-        if(userPWHash && document.getElementById("myPasswordInput").value != Crypto.SHA256("default")) {
-        const userPWHash2 = localStorage.getItem(myaccounts + ":savedpw");
-          if(!userPWHash2) {
-          await getUserPassword();
+      checkFavorites();        
+        if(document.getElementById("myPasswordInput").value != Crypto.SHA256("default") && newkey == 0 && accountprivkey == "") {
+          const newPassHash =  localStorage.getItem(myaccounts + ":mypassword");
+          if(!newPassHash) {
+            await Swal.fire({
+              title: translateThis('Create encryption key'),
+              text: translateThis('The program needs to create your encryption key. To do this it will ask you to sign a secret message using your wallet. Please follow the instructions so that encryption may be enabled.')
+            });
+            var mysignature = "";
+            try {
+              mysignature = await window.ethereum.request({
+                method: 'personal_sign',
+                params: ["This message is used to generate your RSA key.", window.ethereum.selectedAddress],
+              });
+              mysignature=Crypto.SHA256(mysignature);
+              localStorage.setItem(myaccounts + ":mypassword", mysignature);
+              userprivkey = mysignature;
+              for(var i=1; i<50000; i++) {
+                userprivkey=Crypto.SHA256(userprivkey);
+              }
+              console.log(userprivkey);
+              userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
+              userpubkey = cryptico.publicKeyString(userprivkey);
+              document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
+            } catch (error) {
+              await Swal.fire({
+                title: translateThis('Key creation failed'),
+                text: translateThis('You may choose to refresh the page to try again or you can attempt to create the key at a later date.')
+              });
+            }
+            newkey = 1;
         } else {
-          document.getElementById("myPasswordInput").value = userPWHash2;
-            userprivkey=userPWHash2;
+            userprivkey = newPassHash;
             for(var i=1; i<50000; i++) {
               userprivkey=Crypto.SHA256(userprivkey);
           }
+          console.log(userprivkey);
           userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
           userpubkey = cryptico.publicKeyString(userprivkey);
+          document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
+            newkey = 1;
         }
       }
+         //const userPWHash = localStorage.getItem(myaccounts + ":password");
+        //if(userPWHash && document.getElementById("myPasswordInput").value != Crypto.SHA256("default")) {
+        //  const userPWHash2 = localStorage.getItem(myaccounts + ":savedpw");
+        //  if(!userPWHash2) {
+        //    await getUserPassword();
+        //  } else {
+        //    document.getElementById("myPasswordInput").value = userPWHash2;
+        //    userprivkey=userPWHash2;
+        //    for(var i=1; i<50000; i++) {
+        //      userprivkey=Crypto.SHA256(userprivkey);
+        //    }
+        //    userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
+        //    userpubkey = cryptico.publicKeyString(userprivkey);
+        //  }
+        //}
       const gasSetting2 = localStorage.getItem(myaccounts + DDEaddy + ":gasOption");
         if(gasSetting2 && gasSetting2 == "1") {
         gasSetting = 1;
@@ -3576,34 +3604,30 @@ body {
     }
 
     async function modifyCustodian() {
-      // datalen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, 3).call());
-      let custodians = []
-      let index = 0;
-      let continueFetching = true;
+      const dataLength = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, 3).call());
+      let custodians = [];
+      let custodianOptions = {};
 
-      // Attempt to fetch custodians until an error is thrown indicating no more entries
-      while (continueFetching) {
-        try {
-          const custodianAddress = await DDEcontract.methods.custodianList(myaccounts, index).call();
-          console.log("Custodian Addressa: ", custodianAddress);
+      for (let index = 0; index < dataLength; index++) {
+        const custodianAddress = await DDEcontract.methods.custodianList(myaccounts, index).call();
+        const isActive = await DDEcontract.methods.isCustodian(myaccounts, custodianAddress).call();
+        if (isActive) {
           custodians.push(custodianAddress);
-          index++;
-        } catch (error) {
-          continueFetching = false; // Assume error means no more custodians
+          custodianOptions[custodianAddress] = custodianAddress;
         }
       }
 
-      let custodianOptions = {};
-      custodians.forEach(address => {
-        custodianOptions[address] = address;
-      });
+      if (custodians.length === 0) {
+        await Swal.fire(translateThis("No active custodians to remove."));
+        return;
+      }
 
       await Swal.fire({
         title: translateThis('Remove Cosigners/Custodians'),
         text: translateThis('Remove a cosigner/custodian.'),
         input: 'select',
         inputOptions: custodianOptions,
-        inputPlaceholder: 'Select a cosigner to remove',
+        inputPlaceholder: translateThis('Select a cosigner to remove'),
         showCancelButton: true,
         confirmButtonText: translateThis('Remove'),
         cancelButtonText: translateThis('Cancel'),
@@ -3622,10 +3646,10 @@ body {
           try {
             setActionActive(actionId, true);
             showLoader();
-            if(accountprivkey != "") {
+            if (accountprivkey !== "") {
               const gasEstimate = 130000;
               var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
-              if(!res) {
+              if (!res) {
                 return;
               }
             }
@@ -3641,7 +3665,6 @@ body {
         }
       });
     }
-
 
     async function setCustodian() {
       const actionId = generateActionId('setCustodian', "authorizeCustodian");
@@ -6441,9 +6464,9 @@ body {
                 cancelButtonText: translateThis("Show wallet address for receiving more funds"),
                 showCancelButton: true
               });
-            }
-            if(result2.isConfirmed) {
-              depOptions = 1;
+              if(result2.isConfirmed) {
+                depOptions = 1;
+              }
             }
             if(depOptions == 0) {
               await Swal.fire({
@@ -6638,6 +6661,7 @@ body {
 
       // Show Swal modal
       const { value: formValues, isConfirmed } = await Swal.fire({
+        customClass: "withdraw-swal-wrapper",
         title: translateThis('Withdraw tokens from your balance'),
         html:
           `<select id="token-select" class="swal2-input">
