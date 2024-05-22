@@ -100,6 +100,7 @@ body {
   background-size: 100% 100%;
   padding: 30px 25px;
   width: 115px;
+  height: calc(100vh - 140px);
 }
 .sidebar button {
   background-color: transparent;
@@ -1021,15 +1022,6 @@ h2 {
   background-color: #ECEFF8;
   padding: 40px 70px 30px;
   text-align: center;
-  margin-bottom: 35px;
-}
-
-.about-box-info h4 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 24px;
-  font-weight: bold;
-  color: #322C62;
 }
 
 .about-box-info p {
@@ -1039,8 +1031,13 @@ h2 {
   margin-top: 0;
 }
 
-.about-box-info strong {
-  font-size: 16px;
+.about-box-img {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.about-box-img img {
+  width: 100%;
 }
 
 .faq-content-wrapper {
@@ -1049,9 +1046,11 @@ h2 {
 
 /* accordion start */
 .faq-accordion {
-  width: 55%;
+  width: 100%;
 }
-
+#accordionWrapper h4 {
+  font-size: 16px;
+}
 .faq-accordion h3,
 .faq-form h3 {
   font-size: 32px;
@@ -1069,8 +1068,8 @@ h2 {
 
 .faq-accordion .accordionItemHeading {
   cursor: pointer;
-  margin-bottom: 12px 25px 12px 12px;
-  padding: 12px;
+  padding: 12px 25px 12px 12px;
+  margin-bottom: 12px;
   color: #060505;
   font-size: 16px;
   width: 100%;
@@ -1318,12 +1317,6 @@ h2 {
 .withdraw-button {
   margin-top: 20px;
 }
-.faq-accordion .accordionWrapper {
-  overflow: hidden;
-  max-height: 540px;
-  overflow-y: auto;
-  padding-right: 20px;
-}
 #publicemail {
   margin-bottom: 25px;
   font-size: 14px;
@@ -1361,6 +1354,35 @@ h2 {
     margin-top: 0;
     margin-bottom: 10px;
 }
+/* about tabs */
+.about-tab {
+  display: flex;
+}
+.about-tab button {
+  background-color: transparent;
+  color: #322c62;
+  border: 2px solid #322c62;
+  outline: none;
+  cursor: pointer;
+  padding: 0 25px;
+  transition: 0.3s;
+  font-size: 18px;
+  width: 320px;
+  height: 40px;
+  display: block;
+  margin-right: 2px;
+}
+.about-tab .tablinks.active {
+  display: block;
+}
+.about-tab button.active, .about-tab button:hover {
+  background-color: #322c62;
+  color: white;
+}
+.tabcontent {
+  display: none;
+  padding-top: 25px;
+}
 @media screen and (max-width: 1600px) {
   .header {
     height: 80px;
@@ -1371,6 +1393,7 @@ h2 {
   .sidebar {
     padding: 25px;
     width: 110px;
+    height: calc(100vh - 130px);
   }
   .sidebar button {
     width: 60px;
@@ -1400,16 +1423,9 @@ h2 {
 
   .about-box-info {
     padding: 35px 55px 30px;
-    margin-bottom: 35px;
   }
 
-  .about-box-info h4 {
-    margin-bottom: 15px;
-    font-size: 22px;
-  }
-
-  .about-box-info p,
-  .about-box-info strong {
+  .about-box-info p {
     font-size: 15px;
   }
 
@@ -1421,6 +1437,9 @@ h2 {
   .faq-accordion h3,
   .faq-form h3 {
     font-size: 28px;
+  }
+  .faq-accordion h3 {
+    margin: 0;
   }
   .account-form-wrapper .input-checkboxes {
     width: 40%;
@@ -1449,12 +1468,6 @@ h2 {
 
   .about-box-info {
     padding: 30px 45px;
-    margin-bottom: 35px;
-  }
-
-  .about-box-info h4 {
-    margin-bottom: 10px;
-    font-size: 20px;
   }
   .account-form-wrapper .input-checkboxes {
     width: 45%;
@@ -1481,6 +1494,7 @@ h2 {
   .sidebar {
     padding: 20px;
     width: 105px;
+    height: calc(100vh - 125px);
   }
   .sidebar button {
     width: 100%;
@@ -1510,7 +1524,6 @@ h2 {
 
   .about-box-info {
     padding: 30px 40px;
-    margin-bottom: 35px;
   }
 
   .faq-accordion h3,
@@ -1557,6 +1570,14 @@ h2 {
   .sidebar {
     padding: 18px;
     width: 95px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+  .sidebar button {
+    height: 50px;
+  }
+  .sidebar .sidebar-icons {
+    padding: 12px;
   }
   .header2 {
     height: 60px;
@@ -1739,6 +1760,11 @@ h2 {
   .offer-popup-wrapper .button-container .btn-gray {
     font-size: 15px;
   }
+  .about-tab button {
+    padding: 0 20px;
+    font-size: 16px;
+    width: 50%;
+  }
 }
 @media screen and (max-width: 575px) {
   .popup {
@@ -1836,17 +1862,8 @@ h2 {
     padding: 15px 10px;
   }
 
-  .about-box-info h4 {
-    font-size: 18px;
-  }
-
   .about-box-info {
     padding: 20px 15px;
-    margin-bottom: 25px;
-  }
-
-  .about-box-info strong {
-    line-height: 20px;
   }
 
   .faq-accordion {
@@ -1889,11 +1906,23 @@ h2 {
     padding: 10px;
     font-size: 11px;
   }
+  .about-tab button {
+    padding: 0 12px;
+    font-size: 14px;
+  }
 }
 
 @media screen and (max-width: 480px) {
     .container.site-container {
       height: calc(100vh - 180px);
+    }
+    .about-tab {
+      display: block;
+    }
+    .about-tab button {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 6px;
     }
 }
 
@@ -1918,6 +1947,9 @@ h2 {
   .mobile-toggle-header {
     display: flex;
     align-items: self-start;
+  }
+  .sidebar {
+    height: calc(100% - 180px);
   }
   .sidebar-toggle {
     margin-top: 0;
@@ -2047,7 +2079,7 @@ body {
 }
 
 .dark-theme .offer-popup-wrapper p,
-.dark-theme .offers-list-box div, .dark-theme .about-box-info p, .dark-theme .about-box-info strong, .dark-theme #swal2-title {
+.dark-theme .offers-list-box div, .dark-theme .about-box-info p, .dark-theme #swal2-title {
   color: black;
 }
 .dark-theme .header-search-wrapper #favorites-text {
@@ -2229,7 +2261,7 @@ body {
       <h2 t-id="25">ACCOUNTS</h2>
       <p id="account" t-id="26">Please connect metamask</p>
       <div class="account-btn-wrapper">
-        <button id="loginButton" onclick="login(1)" style="display: none;">Login/Connect</button>
+        <button id="loginButton" t-id="53" onclick="login(1)" style="display: none;">Login/Connect</button>
       </div>
       <div class="account-btn-wrapper">
         <button onclick="deposit()" t-id="27">Deposit tokens</button>
@@ -2328,55 +2360,31 @@ body {
     <div class="main about about-us">
       <!-- ss-container tag can be used for custom scrollers but it's not totally cross platform -->
       <div class="about-content-area">
-        <h2 t-id="40">ABOUT</h2>
-        <div class="about-box-info">
-          <h4>Welcome to the world of unbreakable contracts</h4>
-          <p>These are two party escrow(double deposit) contracts that cannot be broken and require no 3rd party
-            arbiters. Both users place a customizable deposit along with a payment into a joint account. If the deal
-            goes well they both sign off on it. If one party tries to defraud the other the deal will eventually expire
-            and blow up making it so that nobody wins and theft is profitless. This forces the users to be honest and
-            follow through with their agreements since they either win together or they lose together.</p>
-          <p>The markets themselves run on top of Solidity chains such as Ethereum and Polygon. Offers can range from
-            goods, services, barter and p2p trading. Since this webpage is fully open source and runs on the client
-            side, the user can also download this code from github and run it locally for even greater security. </p>
-          <strong>This protocol which was pioneered by BitHalo back in 2014 predated Ethereum and was the worlds first
-            smart contracts. This is a web based interface for fully decentralized markets.</strong>
-        </div>
-        <div class="faq-content-wrapper">
-          <div class="faq-accordion">
-            <h3></h3>
-            <div id="accordionWrapper" class="accordionWrapper"></div>
+        <div class="tabs-content-wrapper">
+          <div class="about-tab">
+            <button class="tablinks active" t-id="9" onclick="openCity(event, 'About')">About</button>
+            <button class="tablinks" onclick="openCity(event, 'FAQ')">Frequently Asked Questions</button>
           </div>
-          <div class="faq-form-wrapper">
-            <div class="faq-form">
-              <h3>Ask Anything</h3>
-              <form class="form-content">
-                <div class="faq-input-wrapper">
-                  <label>Your Name</label>
-                  <input type="text" />
-                </div>
-                <div class="faq-input-wrapper">
-                  <label>Your Email</label>
-                  <input type="email" />
-                </div>
-                <div class="faq-input-wrapper">
-                  <label>Message for us</label>
-                  <textarea type="text"></textarea>
-                </div>
-                <div class="form-content-button">
-                  <button type="submit" class="btn-filled">SUBMIT</button>
-                </div>
-                <div class="faq-social-icons">
-                  <a href="#"><img src="facebook-form-icon.png" alt="facebook icon" /></a>
-                  <a href="#"><img src="linkdin-form-icon.png" alt="linkdin icon" /></a>
-                  <a href="#"><img src="twitter-form-icon.png" alt="twiiter icon" /></a>
-                  <a href="#"><img src="pinterest-form-icon.png" alt="pinterest icon" /></a>
-                  <a href="#"><img src="youtube-form-icon.png" alt="youtube icon" /></a>
-                </div>
-              </form>
+          <div id="About" class="tabcontent" style="display: block;">
+            <h2 t-id="40">ABOUT</h2>
+            <div class="about-box-info">
+              <p t-id="41">Welcome to the world of unbreakable contracts. These are two party escrow(double deposit) contracts that cannot be broken and require no 3rd party arbiters. Both users place a customizable deposit along with a payment into a joint account. If the deal goes well they both sign off on it. If one party tries to defraud the other the deal will eventually expire and blow up making it so that nobody wins and theft is profitless. This forces the users to be honest and follow through with their agreements since they either win together or they lose together.</p>
+              <a href="https://www.youtube.com/watch?v=fge5inFWlkc" class="about-box-img">
+                <img src="two-party-escrow.jpg" alt="about box img"/>
+              </a> 
+              <p t-id="42">The markets themselves run on top of Solidity chains such as Ethereum and Polygon. Offers can range from goods, services, barter and p2p trading. Since this webpage is fully open source and runs on the client side, the user can also download this code from github and run it locally for even greater security. This protocol which was pioneered by BitHalo back in 2014 predated Ethereum and was the worlds first smart contracts. This is a web based interface for fully decentralized markets.</p>
+              <p t-id="43">For selling goods, users will definitely want to consider a drop shipping service or a service that provides discount shipping to compete with the shipping rates typically found in major companies. To do this, you should sign up for a 3rd party shipping account which should allow you to save up to 75% in shipping in some cases. Sellers may also charge buyers for shipping while in escrow and buyers should be careful to make sure the amount doesn't exceed the deposits or that they buy the shipping label themselves. Users should try to keep in communication with each other through the escrow process and it's recommended to have a backup of your keys so both parties are protected during escrow. Although these markets could be moderated through AI(such as webgpt) and community driven moderation, users are entirely responsible for the risks of what they post and for their own escrows. With that in mind, it's strongly recommended to not post content that is illegal in the country you reside. For deals that involve cash users should do their own due dilligence and their own 'know your customer' if needed. It's in everyones best interest to use double deposit escrow to get rid of deception in the world of international commerce and services. It is an advantage when users administrate contracts themselves because arbiters are unable to know the truth of a deal ruling unfairly and can collude causing great losses and they also incur a greater cost. Users are forced to work with each other to achieve a desirable outcome. Users are also the ones who host the offers using IPFS. So it's good practice to run your own IPFS node to archive the markets. It's recommended that you register your contact information to the blockchain. This makes it guaranteed that counter-parties in the contract know how to contact you for any questions about the negotiations. The code may be run locally and can also be audited by visiting the github page where the code and website are hosted. This system is ownerless and entirely free to use. However, there is a setting that can be activated for affiliates/referrals which can range from 0-1%. In order to encourage users to engage with affiliates, the fee is burned if it is not paid to an affiliate. This helps market the system by giving users a way to earn. A user of the markets is automatically an affiliate if they complete 10 deals. That allows them to use the markets for free if they choose to(as they can be their own affiliate) and it allows them to send users to the website through an affiliate link. Visiting through a link registers the affiliate to that account when a deal is accepted and let's them benefit from that referral. Also, some sellers may offer a more attractive referral fee which should allow affiliates to net more by mutual consent. For more information on how BitBay works you may visit: <a href="https://bitbay.market" target="_blank">https://bitbay.market</a></p>
+            </div>
+          </div>
+          <div id="FAQ" class="tabcontent">
+            <div class="faq-accordion">
+              <h3></h3>
+              <div id="accordionWrapper" class="accordionWrapper"></div>
             </div>
           </div>
         </div>
+        <!-- <div class="faq-content-wrapper">
+        </div> -->
         <!-- <p t-id="41"></p> -->
       </div>
       <div id="abount-container">
@@ -2506,8 +2514,8 @@ body {
       accordionWrapper.innerHTML = ''; // Clear existing content
 
       // Translate and set the FAQ heading
-      const faqHeading = document.querySelector('.faq-accordion > h3');
-      faqHeading.textContent = translateThis('Frequently Asked Questions');
+      const faqButton = document.querySelector('.about-tab button:nth-child(2)');
+       faqButton.textContent = translateThis('Frequently Asked Questions');
 
       myfaq.forEach((section, index) => {
         if (typeof section === 'string') { // Section title
@@ -2880,22 +2888,96 @@ body {
     }
 
     async function login(clear = 0) {
-      await Swal.fire({
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isMetaMaskInstalled = typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask;
+
+    // Android device but not in MetaMask browser
+    if (isAndroid && !isMetaMaskInstalled) {
+        Swal.fire({
+            title: translateThis('Login using unique password'),
+            html:
+                '<select id="network" class="swal2-select">' +
+                '<option value="0">Ethereum</option>' +
+                '<option value="1" selected>Sepolia Testnet</option>' +
+                '</select>' +
+                '<input type="password" id="password" class="swal2-input" placeholder="' + translateThis('Enter Password') + '">' +
+                '<input type="password" id="confirmPassword" class="swal2-input" placeholder="' + translateThis('Confirm Password') + '">',
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: translateThis('Confirm'),
+            cancelButtonText: translateThis('Cancel'),
+            preConfirm: () => {
+                const network = document.getElementById('network').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (password !== confirmPassword) {
+                    Swal.showValidationMessage(translateThis('Passwords do not match'));
+                    return false;
+                }
+
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{16,}$/;
+
+                if (!password.match(passwordRegex)) {
+                    Swal.showValidationMessage(translateThis('Password must be 16 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character.'));
+                    return false;
+                }
+
+                return { network: network, confirmedPassword: password };
+            }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const { network, confirmedPassword } = result.value;
+                showLoader();
+                var hashedPassword = Crypto.SHA256(confirmedPassword);
+                for (var i = 1; i < 50000; i++) {
+                    hashedPassword = Crypto.SHA256(hashedPassword);
+                }
+                const accountprivkey = '0x' + hashedPassword;
+                const userprivkey = cryptico.generateRSAKey(Crypto.SHA256(hashedPassword), 1024);
+                const userpubkey = cryptico.publicKeyString(userprivkey);
+                document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
+                document.getElementById("myPasswordInput").disabled = true;
+                if (parseInt(network) === 0) {
+                    web3 = new Web3("https://rpc.ankr.com/eth");
+                } else {
+                    web3 = new Web3("https://rpc.ankr.com/eth_sepolia");
+                }
+                const account = await web3.eth.accounts.privateKeyToAccount(accountprivkey);
+                const wallet = web3.eth.accounts.wallet;
+                wallet.add(account);
+                hideLoader();
+                isConnected = true;
+                document.getElementById("connectionstatus").innerHTML = translateThis("Connected.");
+                document.getElementById("account").innerHTML = loader;
+                document.getElementById("loginButton").style.display = 'none'; // Hide login button
+                var offersContainer = document.getElementById("myoffers");
+                var contractsContainer = document.getElementById("mycontracts");
+                offersContainer.innerHTML = loader;
+                contractsContainer.innerHTML = loader;
+                await populateListings();
+            }
+        });
+        return;
+    }
+
+    // Non-Android or MetaMask is installed
+    await Swal.fire({
         title: translateThis('Login/connect'),
         text: translateThis('Please choose which way you want to log into this website.'),
         showCancelButton: true,
-        confirmButtonText: translateThis('Connect Using Metamask'),
+        confirmButtonText: isMetaMaskInstalled ? translateThis('Connect Using Metamask') : translateThis('Install MetaMask'),
         cancelButtonText: translateThis('Create/access account using password'),
-      }).then(async (result) => {
+    }).then(async (result) => {
         if (result.isConfirmed) {
-            if (window.ethereum) { //Note: for mobile this only works if the webpage has <head> tag
+            if (isMetaMaskInstalled) {
                 defaultvars();
                 console.log("connecting");
                 await window.ethereum.request({method: 'eth_requestAccounts'});
                 web3 = new Web3(window.ethereum);
                 console.log("success");
-                if(clear == 1) {
-                    marketOffers = {'indices':[], 'results':[]};
+                if (clear == 1) {
+                    marketOffers = {'indices': [], 'results': []};
                 }
                 isConnected = true;
                 document.getElementById("connectionstatus").innerHTML = translateThis("Connected.");
@@ -2908,80 +2990,79 @@ body {
                 await loadUser(1);
                 await populateListings();
             } else {
-                isConnected = false;
-                document.getElementById("connectionstatus").innerHTML = translateThis("Not connected.");
-                document.getElementById("loginButton").style.display = 'block'; // Show login button
+                // Redirect to MetaMask installation page
+                window.location.href = 'https://metamask.io/download.html';
             }
         } else {
-          Swal.fire({
-            title: translateThis('Login using unique password'),
-            html:
-              '<select id="network" class="swal2-select">' +
-                '<option value="0">Ethereum</option>' +
-                '<option value="1" selected>Sepolia Testnet</option>' +
-              '</select>' +
-              '<input type="password" id="password" class="swal2-input" placeholder="'+translateThis('Enter Password')+'">' +
-              '<input type="password" id="confirmPassword" class="swal2-input" placeholder="'+translateThis('Confirm Password')+'">',
-            focusConfirm: false,
-            showCancelButton: true,
-            confirmButtonText: translateThis('Confirm'),
-            cancelButtonText: translateThis('Cancel'),
-            preConfirm: () => {
-              const network = document.getElementById('network').value;
-              const password = document.getElementById('password').value;
-              const confirmPassword = document.getElementById('confirmPassword').value;
-              
-              if (password !== confirmPassword) {
-                Swal.showValidationMessage(translateThis('Passwords do not match'));
-                return false;
-              }
+            Swal.fire({
+                title: translateThis('Login using unique password'),
+                html:
+                    '<select id="network" class="swal2-select">' +
+                    '<option value="0">Ethereum</option>' +
+                    '<option value="1" selected>Sepolia Testnet</option>' +
+                    '</select>' +
+                    '<input type="password" id="password" class="swal2-input" placeholder="'+translateThis('Enter Password')+'">' +
+                    '<input type="password" id="confirmPassword" class="swal2-input" placeholder="'+translateThis('Confirm Password')+'">',
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: translateThis('Confirm'),
+                cancelButtonText: translateThis('Cancel'),
+                preConfirm: () => {
+                    const network = document.getElementById('network').value;
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    
+                    if (password !== confirmPassword) {
+                        Swal.showValidationMessage(translateThis('Passwords do not match'));
+                        return false;
+                    }
 
-              const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{16,}$/;
+                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{16,}$/;
 
-              if (!password.match(passwordRegex)) {
-                Swal.showValidationMessage(translateThis('Password must be 16 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character. Some useful methods to remember a long password is to choose an uncommon phrase from a specific page of a book and replace some of the letters with numbers.'));
-                return false;
-              }
+                    if (!password.match(passwordRegex)) {
+                        Swal.showValidationMessage(translateThis('Password must be 16 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character.'));
+                        return false;
+                    }
 
-              return { network: network, confirmedPassword: password };
-            }
-          }).then(async (result) => {
-            if (result.isConfirmed) {
-              const { network, confirmedPassword } = result.value;
-              // Passwords match, proceed to set in localStorage
-              var hashedPassword = confirmedPassword;
-              hashedPassword = Crypto.SHA256(hashedPassword);
-              userprivkey=hashedPassword;
-              for(var i=1; i<50000; i++) {
-                userprivkey=Crypto.SHA256(userprivkey);
-              }
-              accountprivkey = '0x' + userprivkey;
-              userprivkey = cryptico.generateRSAKey(Crypto.SHA256(userprivkey), 1024);
-              userpubkey = cryptico.publicKeyString(userprivkey);
-              document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
-              document.getElementById("myPasswordInput").disabled = true;
-              if(parseInt(network) == 0) {
-                web3 = new Web3("https://rpc.ankr.com/eth");
-              } else {
-                web3 = new Web3("https://rpc.ankr.com/eth_sepolia");
-              }
-              const account = await web3.eth.accounts.privateKeyToAccount(accountprivkey);
-              const wallet = web3.eth.accounts.wallet;
-              wallet.add(account);
-              isConnected = true;
-              document.getElementById("connectionstatus").innerHTML = translateThis("Connected.");
-              document.getElementById("account").innerHTML = loader;
-              document.getElementById("loginButton").style.display = 'none'; // Hide login button
-              var offersContainer = document.getElementById("myoffers");
-              var contractsContainer = document.getElementById("mycontracts");
-              offersContainer.innerHTML = loader;
-              contractsContainer.innerHTML = loader;
-              await populateListings();
-            }
-          });
+                    return { network: network, confirmedPassword: password };
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const { network, confirmedPassword } = result.value;
+                    showLoader();
+                    var hashedPassword = Crypto.SHA256(confirmedPassword);
+                    for(var i=1; i<50000; i++) {
+                        hashedPassword = Crypto.SHA256(hashedPassword);
+                    }
+                    const accountprivkey = '0x' + hashedPassword;
+                    const userprivkey = cryptico.generateRSAKey(Crypto.SHA256(hashedPassword), 1024);
+                    const userpubkey = cryptico.publicKeyString(userprivkey);
+                    document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
+                    document.getElementById("myPasswordInput").disabled = true;
+                    if(parseInt(network) == 0) {
+                        web3 = new Web3("https://rpc.ankr.com/eth");
+                    } else {
+                        web3 = new Web3("https://rpc.ankr.com/eth_sepolia");
+                    }
+                    const account = await web3.eth.accounts.privateKeyToAccount(accountprivkey);
+                    const wallet = web3.eth.accounts.wallet;
+                    wallet.add(account);
+                    hideLoader();
+                    isConnected = true;
+                    document.getElementById("connectionstatus").innerHTML = translateThis("Connected.");
+                    document.getElementById("account").innerHTML = loader;
+                    document.getElementById("loginButton").style.display = 'none'; // Hide login button
+                    var offersContainer = document.getElementById("myoffers");
+                    var contractsContainer = document.getElementById("mycontracts");
+                    offersContainer.innerHTML = loader;
+                    contractsContainer.innerHTML = loader;
+                    await populateListings();
+                }
+            });
         }
-      });
-    }
+    });
+}
+
 
     async function login2(clear = 0) {
       if (window.ethereum) { //Note: for mobile this only works if the webpage has <head> tag
@@ -3111,6 +3192,7 @@ body {
               mysignature=Crypto.SHA256(mysignature);
               localStorage.setItem(myaccounts + ":mypassword", mysignature);
               userprivkey = mysignature;
+              showLoader();
               for(var i=1; i<50000; i++) {
                 userprivkey=Crypto.SHA256(userprivkey);
               }
@@ -3118,19 +3200,23 @@ body {
               userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
               userpubkey = cryptico.publicKeyString(userprivkey);
               document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
+              hideLoader();
             } catch (error) {
               await Swal.fire({
                 title: translateThis('Key creation failed'),
                 text: translateThis('You may choose to refresh the page to try again or you can attempt to create the key at a later date.')
               });
+              hideLoader();
             }
             newkey = 1;
         } else {
+            showLoader();
             userprivkey = newPassHash;
             for(var i=1; i<50000; i++) {
               userprivkey=Crypto.SHA256(userprivkey);
           }
           console.log(userprivkey);
+          hideLoader();
           userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
           userpubkey = cryptico.publicKeyString(userprivkey);
           document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
@@ -3513,6 +3599,7 @@ body {
               var hashedPassword = confirmedPassword;
               hashedPassword = Crypto.SHA256(hashedPassword);
               userprivkey=hashedPassword;
+              showLoader();
               for(var i=1; i<50000; i++) {
                 userprivkey=Crypto.SHA256(userprivkey);
               }
@@ -3521,6 +3608,7 @@ body {
               document.getElementById("myPasswordInput").value = hashedPassword;
               localStorage.setItem(myaccounts + ':password', Crypto.SHA256(hashedPassword+"1"));
               console.log('Password saved in localStorage:', Crypto.SHA256(hashedPassword+"1"));
+              hideLoader();
               await Swal.fire({
                 title: translateThis('Register Public Key'),
                 text: translateThis('Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.'),
@@ -3574,12 +3662,14 @@ body {
               var hashedPassword = confirmedPassword;
               hashedPassword = Crypto.SHA256(hashedPassword);
               userprivkey=hashedPassword;
+              showLoader();
               for(var i=1; i<50000; i++) {
                 userprivkey=Crypto.SHA256(userprivkey);
               }
               document.getElementById("myPasswordInput").value = hashedPassword;
               userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
               userpubkey = cryptico.publicKeyString(userprivkey);
+              hideLoader();
             } else {
               await Swal.fire({
                 title: translateThis('Passwords do not match'),
@@ -5198,22 +5288,35 @@ body {
       escrowContainer.appendChild(list3);
     }
     function openTab(evt, tabName) {
-      // Declare all variables
-      let i, tabcontent, tablinks;
-      // Get all elements with class="tabcontent" and hide them
-      tabcontent = document.getElementsByClassName("tabcontent");
-      for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-      }
-      // Get all elements with class="tablinks" and remove the class "active"
-      tablinks = document.getElementsByClassName("tablinks");
-      for (i = 0; i < tablinks.length; i++) {
+    // Declare all variables
+    let i, tabcontent, tablinks;
+    // Get all elements with class="tabcontent"
+    tabcontent = document.getElementsByClassName("tabcontent");
+    let isCurrentlyVisible = document.getElementById(tabName).style.display === 'block';
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
         tablinks[i].classList.remove("active");
-      }
-      // Show the current tab, and add an "active" class to the button that opened the tab
-      document.getElementById(tabName).style.display = "block";
-      evt.currentTarget.classList.add("active");
     }
+
+    // If the clicked tab is already visible, toggle the visibility of the other tabs
+    if (isCurrentlyVisible) {
+        for (i = 0; i < tabcontent.length; i++) {
+            if (tabcontent[i].id !== tabName) {
+                tabcontent[i].style.display = tabcontent[i].style.display === 'none' ? 'block' : 'none';
+            }
+        }
+    } else {
+        // Hide all tabs first
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        // Show the clicked tab
+        document.getElementById(tabName).style.display = 'block';
+        evt.currentTarget.classList.add("active");
+    }
+}
 
     function showMain(menu) {
 
@@ -5579,10 +5682,12 @@ body {
                   var hashedPassword = confirmedPassword;
                   hashedPassword = Crypto.SHA256(hashedPassword);
                   userprivkey2=hashedPassword;
+                  showLoader();
                   for(var i=1; i<50000; i++) {
                     userprivkey2=Crypto.SHA256(userprivkey2);
                   }
                   userprivkey2 = cryptico.generateRSAKey(userprivkey2, 1024);
+                  hideLoader();
                 }
               });
               var testdata = JSON.parse(thisText);
@@ -5620,6 +5725,7 @@ body {
               console.log(e);
               console.log("Decryption failed");
               await Swal.fire(translateThis("Decryption failed"));
+              hideLoader();
             }
           }
         });
@@ -8368,6 +8474,21 @@ body {
       if (itemClass == 'accordionItem accordion-close') {
         this.parentNode.className = 'accordionItem accordion-open';
       }
+    }
+
+    // about tabs
+    function openCity(evt, cityName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(cityName).style.display = "block";
+      evt.currentTarget.className += " active";
     }
 
     //Notes:

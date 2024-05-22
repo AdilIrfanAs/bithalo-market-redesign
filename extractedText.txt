@@ -269,6 +269,7 @@
   "Previous Image": true,
   "No favorites found.": true,
   "Please enter a valid email address. Other contact methods are optional.": true,
+  "No active custodians to remove.": true,
 }
 {
   "Login/connect": true,

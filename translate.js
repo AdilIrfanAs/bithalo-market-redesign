@@ -53,6 +53,7 @@ languages['ar']={
   "50":{"#ar": "محاولة إخطار العملاء المحتملين عبر عميل البريد الإلكتروني الافتراضي (عند الاقتضاء)"},
   "51":{"#ar": "تعيين الموقع المشارك"},
   "52":{"#ar": "التوقيع المشترك"},
+  "53": {"#ar": "تسجيل الدخول / الاتصال"},
   "Not connected.": "غير متصل.",
   "Connected.": "متصل.",
   "Please unlock Metamask so it can connect.": "يرجى فتح Metamask لتمكين الاتصال.",
@@ -411,7 +412,8 @@ languages['ar']={
   "Next Image": "الصورة التالية",
   "Previous Image": "الصورة السابقة",
   "No favorites found.": "لم يتم العثور على المفضلات.",
-  "Please enter a valid email address. Other contact methods are optional.": "يرجى إدخال عنوان بريد إلكتروني صالح. طرق الاتصال الأخرى اختيارية."
+  "Please enter a valid email address. Other contact methods are optional.": "يرجى إدخال عنوان بريد إلكتروني صالح. طرق الاتصال الأخرى اختيارية.",
+  "No active custodians to remove.": "لا يوجد أوصياء نشطين للإزالة.",
 };
 
 
@@ -468,6 +470,7 @@ languages['ch']={
   "50":{"#ch": "尝试通过默认电子邮件客户端通知潜在客户（如果适用）"},
   "51":{"#ch": "设置共同签署人"},
   "52":{"#ch": "共同签署"},
+  "53":{"#ch": "登录/连接"},
   "Not connected.": "未连接。",
   "Connected.": "已连接。",
   "Please unlock Metamask so it can connect.": "请解锁 Metamask 以便连接。",
@@ -826,7 +829,8 @@ languages['ch']={
   "Next Image": "下一张图片",
   "Previous Image": "上一张图片",
   "No favorites found.": "未找到收藏。",
-  "Please enter a valid email address. Other contact methods are optional.": "请输入有效的电子邮件地址。其他联系方式是可选的。"
+  "Please enter a valid email address. Other contact methods are optional.": "请输入有效的电子邮件地址。其他联系方式是可选的。",
+  "No active custodians to remove.": "没有活跃的监护人可移除。",
 };
 
 languages['en']={
@@ -881,7 +885,8 @@ languages['en']={
   "49":{"#en":"Set custom referral fee"},
   "50":{"#en": "Attempt to notify prospects through default email client(when applicable)"},
   "51":{"#en":"Set cosigner"},
-  "52":{"#en":"Cosign"}
+  "52":{"#en":"Cosign"},
+  "53":{"#en": "Login/Connect"},
 };
 
 languages['fr']={
@@ -937,6 +942,7 @@ languages['fr']={
   "50": {"#fr": "Tentative de notifier les prospects via le client de messagerie électronique par défaut (si applicable)"},
   "51": {"#fr": "Définir le co-signataire"},
   "52": {"#fr": "Cosigner"},
+  "53": {"#fr": "Connexion/Connecter"},
   "Not connected.": "Non connecté.",
   "Connected.": "Connecté.",
   "Please unlock Metamask so it can connect.": "Veuillez déverrouiller Metamask afin qu'il puisse se connecter.",
@@ -1295,7 +1301,8 @@ languages['fr']={
   "Next Image": "Image suivante",
   "Previous Image": "Image précédente",
   "No favorites found.": "Aucun favori trouvé.",
-  "Please enter a valid email address. Other contact methods are optional.": "Veuillez entrer une adresse email valide. Les autres méthodes de contact sont facultatives."
+  "Please enter a valid email address. Other contact methods are optional.": "Veuillez entrer une adresse email valide. Les autres méthodes de contact sont facultatives.",
+  "No active custodians to remove.": "Aucun gardien actif à retirer.",
 };
 
 languages['ge']={
@@ -1351,6 +1358,7 @@ languages['ge']={
   "50": {"#ge": "Versuch, potenzielle Kunden über den Standard-E-Mail-Client zu benachrichtigen (falls zutreffend)"},
   "51": {"#ge": "Mitsignierenden festlegen"},
   "52": {"#ge": "Mitunterschreiben"},
+  "53": {"#ge": "Anmelden/Verbinden"},
   "Not connected.": "Nicht verbunden.",
   "Connected.": "Verbunden.",
   "Please unlock Metamask so it can connect.": "Bitte entsperren Sie Metamask, damit es sich verbinden kann.",
@@ -1708,7 +1716,8 @@ languages['ge']={
   "Next Image": "Nächstes Bild",
   "Previous Image": "Vorheriges Bild",
   "No favorites found.": "Keine Favoriten gefunden.",
-  "Please enter a valid email address. Other contact methods are optional.": "Bitte geben Sie eine gültige E-Mail-Adresse ein. Andere Kontaktmethoden sind optional."
+  "Please enter a valid email address. Other contact methods are optional.": "Bitte geben Sie eine gültige E-Mail-Adresse ein. Andere Kontaktmethoden sind optional.",
+  "No active custodians to remove.": "Keine aktiven Verwalter zum Entfernen."
 };
 
 languages['it']={
@@ -1764,6 +1773,7 @@ languages['it']={
   "50": {"#it": "Tentativo di notificare i potenziali clienti tramite il client di posta elettronica predefinito (quando applicabile)"},
   "51": {"#it": "Imposta co-firmatario"},
   "52": {"#it": "Cosignare"},
+  "53": {"#it": "Accedi/Connetti"},
   "Not connected.": "Non connesso.",
   "Connected.": "Connesso.",
   "Please unlock Metamask so it can connect.": "Sblocca Metamask in modo che possa connettersi.",
@@ -2122,7 +2132,8 @@ languages['it']={
   "Next Image": "Immagine successiva",
   "Previous Image": "Immagine precedente",
   "No favorites found.": "Nessun preferito trovato.",
-  "Please enter a valid email address. Other contact methods are optional.": "Inserisci un indirizzo email valido. Altri metodi di contatto sono opzionali."
+  "Please enter a valid email address. Other contact methods are optional.": "Inserisci un indirizzo email valido. Altri metodi di contatto sono opzionali.",
+  "No active custodians to remove.": "Nessun custode attivo da rimuovere.",
 };
 
 languages['ja']={
@@ -2178,6 +2189,7 @@ languages['ja']={
   "50":{"#ja": "（該当する場合）デフォルトの電子メールクライアントを介して見込み顧客に通知を試みる"},
   "51":{"#ja": "共同署名者を設定する"},
   "52":{"#ja": "共同署名"},
+  "53":{"#ja": "ログイン/接続"},
   "Not connected.": "接続されていません。",
   "Connected.": "接続されました。",
   "Please unlock Metamask so it can connect.": "Metamaskをアンロックして接続してください。",
@@ -2536,7 +2548,8 @@ languages['ja']={
   "Next Image": "次の画像",
   "Previous Image": "前の画像",
   "No favorites found.": "お気に入りが見つかりませんでした。",
-  "Please enter a valid email address. Other contact methods are optional.": "有効なメールアドレスを入力してください。他の連絡方法は任意です。"
+  "Please enter a valid email address. Other contact methods are optional.": "有効なメールアドレスを入力してください。他の連絡方法は任意です。",
+  "No active custodians to remove.": "削除するアクティブな管理者はいません。",
 };
 
 languages['ko']={
@@ -2592,6 +2605,7 @@ languages['ko']={
   "50": {"#ko": "기본 이메일 클라이언트를 통해 (해당 경우에) 잠재고객에게 통지 시도"},
   "51": {"#ko": "공동 서명자 설정"},
   "52": {"#ko": "공동 서명"},
+  "53": {"#ko": "로그인/연결"},
   "Not connected.": "연결되지 않았습니다.",
   "Connected.": "연결되었습니다.",
   "Please unlock Metamask so it can connect.": "Metamask를 잠금 해제하여 연결하십시오.",
@@ -2950,8 +2964,8 @@ languages['ko']={
   "Next Image": "다음 이미지",
   "Previous Image": "이전 이미지",
   "No favorites found.": "즐겨찾기를 찾을 수 없습니다.",
-  "Please enter a valid email address. Other contact methods are optional.": "유효한 이메일 주소를 입력하세요. 다른 연락 방법은 선택 사항입니다."
-
+  "Please enter a valid email address. Other contact methods are optional.": "유효한 이메일 주소를 입력하세요. 다른 연락 방법은 선택 사항입니다.",
+  "No active custodians to remove.": "제거할 활성 보호자가 없습니다.",
 }
 
 languages['po']={
@@ -3007,6 +3021,7 @@ languages['po']={
   "50": {"#po": "Tentativa de notificar prospects através do cliente de e-mail padrão (quando aplicável)"},
   "51": {"#po": "Definir co-assinante"},
   "52": {"#po": "Cosignar"},
+  "53": {"#po": "Login/Conectar"},
   "Not connected.": "Não conectado.",
   "Connected.": "Conectado.",
   "Please unlock Metamask so it can connect.": "Desbloqueie o Metamask para que ele possa se conectar.",
@@ -3365,7 +3380,8 @@ languages['po']={
   "Next Image": "Próxima Imagem",
   "Previous Image": "Imagem Anterior",
   "No favorites found.": "Nenhum favorito encontrado.",
-  "Please enter a valid email address. Other contact methods are optional.": "Por favor, insira um endereço de email válido. Outros métodos de contato são opcionais."
+  "Please enter a valid email address. Other contact methods are optional.": "Por favor, insira um endereço de email válido. Outros métodos de contato são opcionais.",
+  "No active custodians to remove.": "Não há custódios ativos para remover.",
 };
 
 languages['ru'] = {
@@ -3421,6 +3437,7 @@ languages['ru'] = {
   "50": {"#ru": "Попытка уведомления потенциальных клиентов через стандартного почтового клиента (по возможности)"},
   "51": {"#ru": "Установить созависимого подписанта"},
   "52": {"#ru": "Совместно подписывать"},
+  "53": {"#ru": "Войти/Подключить"},
   "Not connected.": "Не подключено.",
   "Connected.": "Подключено.",
   "Please unlock Metamask so it can connect.": "Пожалуйста, разблокируйте Metamask, чтобы установить соединение.",
@@ -3779,8 +3796,8 @@ languages['ru'] = {
   "Next Image": "Следующее изображение",
   "Previous Image": "Предыдущее изображение",
   "No favorites found.": "Избранные не найдены.",
-  "Please enter a valid email address. Other contact methods are optional.": "Пожалуйста, введите действительный адрес электронной почты. Другие методы связи являются необязательными."
-
+  "Please enter a valid email address. Other contact methods are optional.": "Пожалуйста, введите действительный адрес электронной почты. Другие методы связи являются необязательными.",
+  "No active custodians to remove.": "Нет активных опекунов для удаления.",
 }
 
 languages['sp'] = {
@@ -3836,6 +3853,7 @@ languages['sp'] = {
   "50": {"#sp": "Intento de notificar a los posibles clientes a través del cliente de correo electrónico predeterminado (cuando sea aplicable)"},
   "51": {"#sp": "Establecer cosignatario"},
   "52": {"#sp": "Cosignar"},
+  "53": {"#sp": "Iniciar sesión/Conectar"},
   "Not connected.": "No conectado.",
   "Connected.": "Conectado.",
   "Please unlock Metamask so it can connect.": "Por favor, desbloquee Metamask para que pueda conectarse.",
@@ -4194,5 +4212,6 @@ languages['sp'] = {
   "Next Image": "Siguiente Imagen",
   "Previous Image": "Imagen Anterior",
   "No favorites found.": "No se encontraron favoritos.",
-  "Please enter a valid email address. Other contact methods are optional.": "Por favor, introduzca una dirección de correo electrónico válida. Otros métodos de contacto son opcionales."
+  "Please enter a valid email address. Other contact methods are optional.": "Por favor, introduzca una dirección de correo electrónico válida. Otros métodos de contacto son opcionales.",
+  "No active custodians to remove.": "No hay custodios activos para eliminar.",
 };
