@@ -11,6 +11,7 @@
 <script type="text/javascript" src="./web3.min.js"></script>
 <script type="text/javascript" src="./jdenticon.min.js"></script>
 <script type="text/javascript" src="./simple-scrollbar.min.js"></script>
+<script src="lottie-player.js"></script>
 <link rel="stylesheet" href="./open-sans.css">
 <link rel="stylesheet" href="./simple-scrollbar.css">
 <html>
@@ -101,6 +102,8 @@ body {
   padding: 30px 25px;
   width: 115px;
   height: calc(100vh - 140px);
+  overflow: hidden;
+  overflow-y: auto;
 }
 .sidebar button {
   background-color: transparent;
@@ -418,31 +421,31 @@ body {
   display: inline-block;
   border: 1px solid #3d0064;
   padding: 5px 5px;
-          border-radius: 4px; /* Make it square */
-          background-color: #3498db; /* Set default background color */
-          color: #ffffff; /* Set default text color */
+  border-radius: 4px; /* Make it square */
+  background-color: #3498db; /* Set default background color */
+  color: #ffffff; /* Set default text color */
   cursor: pointer;
-          transition: background-color 0.3s, color 0.3s; /* Add transition effect */
+  transition: background-color 0.3s, color 0.3s; /* Add transition effect */
 }
 
 .square-button:hover {
-          background-color: #003357; /* Invert background color on hover */
-          color: #dcdcdc; /* Invert text color on hover */
+  background-color: #003357; /* Invert background color on hover */
+  color: #dcdcdc; /* Invert text color on hover */
 }
 .square-button2 {
   display: inline-block;
   border: 1px solid #3d0064;
   padding: 5px 15px;
-          border-radius: 4px; /* Make it square */
-          background-color: #ebebeb; /* Set default background color */
-          color: #000000; /* Set default text color */
+  border-radius: 4px; /* Make it square */
+  background-color: #ebebeb; /* Set default background color */
+  color: #000000; /* Set default text color */
   cursor: pointer;
-          transition: background-color 0.3s, color 0.3s; /* Add transition effect */
+  transition: background-color 0.3s, color 0.3s; /* Add transition effect */
 }
 
-        .square-button2:hover, .offers-categories .offers-tab-container button:hover, .account-form-wrapper .account-box-position button:hover {
-          background-color: #003357; /* Invert background color on hover */
-          color: #dcdcdc; /* Invert text color on hover */
+.square-button2:hover, .offers-categories .offers-tab-container button:hover, .account-form-wrapper .account-box-position button:hover, .offers-categories .offers-tab-container button.active {
+  background-color: #003357; /* Invert background color on hover */
+  color: #dcdcdc; /* Invert text color on hover */
 }
 /* my css */
 .logo {
@@ -896,7 +899,7 @@ h2 {
   font-weight: bold;
   margin-bottom: 6px;
 }
-        .offers-categories .offers-tab-container button, .account-details-wrapper button {
+.offers-categories .offers-tab-container button, .account-details-wrapper button {
   background-color: #E3E3E3;
   border-radius: 6px;
   color: #322C62;
@@ -1372,16 +1375,89 @@ h2 {
   display: block;
   margin-right: 2px;
 }
-.about-tab .tablinks.active {
+.about-tab .abouttablinks.active {
   display: block;
 }
 .about-tab button.active, .about-tab button:hover {
   background-color: #322c62;
   color: white;
 }
-.tabcontent {
+.about-content-area .abouttabcontent {
   display: none;
   padding-top: 25px;
+}
+.notification-lottie-file {
+  position: fixed;
+  bottom: 60px;
+  right: 10px;
+  width: 60px;
+  background-color: #322c62;
+  border-radius: 50%;
+  padding: 10px;
+}
+#notification-box {
+  position: fixed;
+  bottom: 65px;
+  right: 90px;
+  max-width: 380px;
+  width: 100%;
+  background-color: white;
+  box-shadow: 1px 1px 5px 4px #80808057;
+  padding: 25px;
+  display: none;
+  max-height: 480px;
+  overflow: hidden;
+  overflow-y: auto;
+}
+#notification-box.active {
+  display: block;
+}
+.notification-box-content {
+  display: flex;
+  align-items: center;
+}
+.notification-box-content:not(:last-child) {
+  border-bottom: 2px solid #00000036;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+.notification-box-content-button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.notification-badge {
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.notification-badge img {
+  width: 100%;
+  height: 100%;
+}
+.notification-box-content-info {
+  width: calc(100% - 65px);
+  color: black;
+  text-align: left;
+}
+.notification-box-content-info h6 {
+  color: black;
+  font-size: 18px;
+  margin: 0;
+  margin-bottom: 6px;
+}
+.notification-box-content-info p {
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
+}
+#myoffers .tabcontent {
+  display: block;
 }
 @media screen and (max-width: 1600px) {
   .header {
@@ -1570,8 +1646,6 @@ h2 {
   .sidebar {
     padding: 18px;
     width: 95px;
-    overflow: hidden;
-    overflow-y: auto;
   }
   .sidebar button {
     height: 50px;
@@ -1653,6 +1727,11 @@ h2 {
   }
   .sidebar {
     padding: 15px;
+    position: fixed;
+    height: calc(100% - 125px);
+    z-index: 1;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
   }
   .sidebar .sidebar-icons {
     padding: 10px;
@@ -1691,14 +1770,6 @@ h2 {
   }
   .main.markets {
     width: 100%;
-  }
-  .sidebar {
-    position: fixed;
-    height: calc(100% - 125px);
-    z-index: 1;
-    transition: transform 0.3s ease;
-    transform: translateX(-100%);
-    overflow-y: auto;
   }
   .sidebar-toggle {
     width: 35px;
@@ -2064,10 +2135,10 @@ body {
 .dark-theme .dashboard-content-wrapper #paginationNumbers button.active,
 .dark-theme .dashboard-content-wrapper #paginationNumbers button:hover,
 .dark-theme .offers-categories .offers-tab-container button,
-.dark-theme .account-details-wrapper button {
+.dark-theme .account-details-wrapper button, .dark-theme .about-tab button.active, .dark-theme .about-tab button:hover, .dark-theme .about-tab button {
   border: 1px solid white;
 }
-.dark-theme .dashboard-content-wrapper .square-button:hover {
+.dark-theme .dashboard-content-wrapper .square-button:hover, .dark-theme .about-tab button.active, .dark-theme .about-tab button:hover {
   background-color: white;
   color: #322C62;
 }
@@ -2095,6 +2166,12 @@ body {
 }
 .dark-theme .account-withdraw-popup h2 {
   color: #322c62;
+}
+.dark-theme .about-tab button {
+  color: white;
+}
+.dark-theme .notification-lottie-file {
+  border: 4px solid white;
 }
 
 </style>
@@ -2362,10 +2439,10 @@ body {
       <div class="about-content-area">
         <div class="tabs-content-wrapper">
           <div class="about-tab">
-            <button class="tablinks active" t-id="9" onclick="openCity(event, 'About')">About</button>
-            <button class="tablinks" onclick="openCity(event, 'FAQ')">Frequently Asked Questions</button>
+            <button class="abouttablinks active" t-id="9" onclick="openCity(event, 'About')">About</button>
+            <button class="abouttablinks" onclick="openCity(event, 'FAQ')">Frequently Asked Questions</button>
           </div>
-          <div id="About" class="tabcontent" style="display: block;">
+          <div id="About" class="abouttabcontent" style="display: block;">
             <h2 t-id="40">ABOUT</h2>
             <div class="about-box-info">
               <p t-id="41">Welcome to the world of unbreakable contracts. These are two party escrow(double deposit) contracts that cannot be broken and require no 3rd party arbiters. Both users place a customizable deposit along with a payment into a joint account. If the deal goes well they both sign off on it. If one party tries to defraud the other the deal will eventually expire and blow up making it so that nobody wins and theft is profitless. This forces the users to be honest and follow through with their agreements since they either win together or they lose together.</p>
@@ -2376,7 +2453,7 @@ body {
               <p t-id="43">For selling goods, users will definitely want to consider a drop shipping service or a service that provides discount shipping to compete with the shipping rates typically found in major companies. To do this, you should sign up for a 3rd party shipping account which should allow you to save up to 75% in shipping in some cases. Sellers may also charge buyers for shipping while in escrow and buyers should be careful to make sure the amount doesn't exceed the deposits or that they buy the shipping label themselves. Users should try to keep in communication with each other through the escrow process and it's recommended to have a backup of your keys so both parties are protected during escrow. Although these markets could be moderated through AI(such as webgpt) and community driven moderation, users are entirely responsible for the risks of what they post and for their own escrows. With that in mind, it's strongly recommended to not post content that is illegal in the country you reside. For deals that involve cash users should do their own due dilligence and their own 'know your customer' if needed. It's in everyones best interest to use double deposit escrow to get rid of deception in the world of international commerce and services. It is an advantage when users administrate contracts themselves because arbiters are unable to know the truth of a deal ruling unfairly and can collude causing great losses and they also incur a greater cost. Users are forced to work with each other to achieve a desirable outcome. Users are also the ones who host the offers using IPFS. So it's good practice to run your own IPFS node to archive the markets. It's recommended that you register your contact information to the blockchain. This makes it guaranteed that counter-parties in the contract know how to contact you for any questions about the negotiations. The code may be run locally and can also be audited by visiting the github page where the code and website are hosted. This system is ownerless and entirely free to use. However, there is a setting that can be activated for affiliates/referrals which can range from 0-1%. In order to encourage users to engage with affiliates, the fee is burned if it is not paid to an affiliate. This helps market the system by giving users a way to earn. A user of the markets is automatically an affiliate if they complete 10 deals. That allows them to use the markets for free if they choose to(as they can be their own affiliate) and it allows them to send users to the website through an affiliate link. Visiting through a link registers the affiliate to that account when a deal is accepted and let's them benefit from that referral. Also, some sellers may offer a more attractive referral fee which should allow affiliates to net more by mutual consent. For more information on how BitBay works you may visit: <a href="https://bitbay.market" target="_blank">https://bitbay.market</a></p>
             </div>
           </div>
-          <div id="FAQ" class="tabcontent">
+          <div id="FAQ" class="abouttabcontent">
             <div class="faq-accordion">
               <h3></h3>
               <div id="accordionWrapper" class="accordionWrapper"></div>
@@ -2389,6 +2466,14 @@ body {
       </div>
       <div id="abount-container">
       </div>
+    </div>
+    <a href="#" class="notification-lottie-file" onclick="notifications()">
+      <lottie-player
+          src="https://lottie.host/ef562761-9dbd-49d2-8caa-39438d4ee918/p99FGDA20q.json"
+          background="transparent" speed="1" loop autoplay></lottie-player>
+    </a>
+    <div id="notification-box" class="notification-box-wrapper">
+      <div class="site-loader"><div class="loader"></div></div>
     </div>
   </div>
   <script>
@@ -2799,6 +2884,28 @@ body {
     var isMobile = window.innerWidth <= 480;
     var isFavoritesShown = false;
     var activeActions = {};
+    const statusDescriptions = {
+    "0": "Pending",
+    "1": "Accepted",
+    "2": "Rejected",
+    "3": "Completed",
+    "4": "Cancelled",
+    "5": "Expired"
+};
+
+const combinedStatusDescriptions = {
+    "0,0": "Initial State, Pending Review",
+    "1,0": "Accepted by One Party, Awaiting Response",
+    "1,1": "Mutually Accepted",
+    "2,0": "Rejected by One Party",
+    "2,2": "Mutually Rejected",
+    "3,0": "Completed by One Party, Awaiting Closure",
+    "3,3": "Fully Completed",
+    "4,0": "Cancelled by Initiator",
+    "4,4": "Mutually Agreed Cancellation",
+    "5,0": "Expired, Not Finalized",
+    "5,5": "Expired and Closed"
+};
     var loader = '<div class="site-loader"><div class="loader"></div></div>';
     var notifyFavorites = localStorage.getItem(myaccounts + DDEaddy + ":notifyFavorites");
     if(!notifyFavorites) {
@@ -3382,6 +3489,7 @@ body {
       } else {
         await checkMarketUpdate();
       }
+      await updateNotifications();
       await populateOffers();
     }
 
@@ -3462,6 +3570,7 @@ body {
     async function RefreshContracts() {
         if(myaccounts != '') {
         localStorage.setItem(myaccounts + DDEaddy + ":readmessages3", JSON.stringify({}));
+        await updateNotifications();
         await populateOffers();
       }
     }
@@ -4865,6 +4974,7 @@ body {
     }
     lastNotified = 0;
     lastNotified2 = 0;
+
     async function populateOffers() {
       const offersContainer = document.getElementById("myoffers");
       const contractsContainer = document.getElementById("mycontracts");
@@ -4997,13 +5107,13 @@ body {
           }
           if(parseInt(new Date().getTime()/1000) > lastNotified2 + 300) {
             notenough = 0;
-            if(myaccounts==offerData.sender && (web3.utils.toBN(offerData.amount).add(web3.utils.toBN(offerData.depositSender))).gt(web3.utils.toBN(balances[offerData.token].amount))) {
+            if(myaccounts==offerData2.sender && (web3.utils.toBN(offerData2.amount).add(web3.utils.toBN(offerData2.depositSender))).gt(web3.utils.toBN(balances[offerData2.token].amount))) {
               if(offerData.status[0] == 1) {
                 notenough = 1;
               }
             }
-            if(myaccounts==offerData.recipient && (web3.utils.toBN(offerData.depositRecipient)).gt(web3.utils.toBN(balances[offerData.token].amount))) {
-              if(offerData.status[1] == 1) {
+            if(myaccounts==offerData2.recipient && (web3.utils.toBN(offerData2.depositRecipient)).gt(web3.utils.toBN(balances[offerData2.token].amount))) {
+              if(offerData2.status[1] == 1) {
                 notenough = 1;
               }
             }
@@ -5286,6 +5396,8 @@ body {
     list3.appendChild(noContractsMsg);
     }
       escrowContainer.appendChild(list3);
+
+      // syncNotifications();
     }
     function openTab(evt, tabName) {
     // Declare all variables
@@ -5478,6 +5590,138 @@ body {
       style.textContent = `
         `;
       document.head.appendChild(style);
+    }
+
+async function updateNotifications() {
+    var notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
+    var readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages") || "{}");
+
+    await fetchOffersFromMethod('openOffers', notifications, readMessages);
+    await fetchOffersFromMethod('privateOffers', notifications, readMessages);
+    await fetchOffersFromMethod('escrows', notifications, readMessages);
+
+    localStorage.setItem(myaccounts + DDEaddy + ":unifiedNotifications", JSON.stringify(notifications));
+    displayNotifications();
+}
+async function fetchOffersFromMethod(methodName, notifications, readMessages) {
+    var mylen = 0;
+    try {
+        mylen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, methodName === 'escrows' ? 2 : (methodName === 'privateOffers' ? 1 : 0)).call());
+        for (var i = 0; i < mylen; i++) {
+            if (readMessages[i]) {
+                continue;
+            }
+            const offerHash = DOMPurify.sanitize(await DDEcontract.methods[methodName](myaccounts, i).call());
+            const offerData = await getOrderHash(offerHash);
+            const previousData = JSON.parse(localStorage.getItem(offerHash) || "{}");
+            localStorage.setItem(offerHash, JSON.stringify(offerData)); // Update the cache with the latest data
+
+            let mode = 0; 
+            if (methodName === 'openOffers') {
+                mode = 1;
+            } else if (methodName === 'privateOffers') {
+                mode = offerData.status[0] === 1 ? 1 : 2; 
+            } else if (methodName === 'escrows') {
+                mode = 4; 
+            }
+
+            let changes = detectChanges(offerData, previousData);
+            if (changes.length > 0) {
+                notifications[offerHash] = {
+                    type: methodName.replace('Offers', ''),
+                    title: offerData.message,
+                    message: changes.join(", "),
+                    timestamp: new Date().toISOString(),
+                    listing: offerData,
+                    mode: mode 
+                };
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching offer data:", error);
+    }
+}
+
+    function detectChanges(currentData, previousData) {
+        let changes = [];
+
+        // Determine default status based on the context or type of data
+        let defaultStatus = "Offer"; // Default fallback
+        if (currentData.type && currentData.type === "escrow") {
+            defaultStatus = "Escrow";
+        } else if (currentData.type && currentData.type === "contract") {
+            defaultStatus = "Contract";
+        }
+
+        // Ensure previousData has default values if undefined
+        if (!previousData || Object.keys(previousData).length === 0) {
+            previousData = { status: [defaultStatus, defaultStatus], amount: "0" };
+        }
+
+        // Ensure currentData has default values if undefined
+        if (!currentData.status) {
+            currentData.status = [defaultStatus, defaultStatus];
+        }
+        if (!previousData.status) {
+            previousData.status = [defaultStatus, defaultStatus];
+        }
+
+        // Construct status keys
+        const prevStatusKey = `${previousData.status[0]},${previousData.status[1]}`;
+        const currStatusKey = `${currentData.status[0]},${currentData.status[1]}`;
+
+        // Fetch status descriptions based on the keys
+        const oldStatus = combinedStatusDescriptions[prevStatusKey] || `${statusDescriptions[previousData.status[0]] || defaultStatus}, ${statusDescriptions[previousData.status[1]] || defaultStatus}`;
+        const newStatus = combinedStatusDescriptions[currStatusKey] || `${statusDescriptions[currentData.status[0]] || defaultStatus}, ${statusDescriptions[currentData.status[1]] || defaultStatus}`;
+
+        // Check if status has changed and push the new status description
+        if (prevStatusKey !== currStatusKey) {
+            changes.push(newStatus);
+        }
+
+        return changes;
+    }
+
+
+      function displayNotifications() {
+      const notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
+      const notificationBox = document.getElementById("notification-box");
+
+      // Clear existing notifications
+      notificationBox.innerHTML = '';
+
+      // Check if there are any notifications
+      if (Object.keys(notifications).length === 0) {
+          notificationBox.innerHTML = '<div class="notification-empty">No notifications</div>';
+      } else {
+          Object.entries(notifications).forEach(([hash, notification]) => {
+              const notificationContent = document.createElement('div');
+              notificationContent.className = 'notification-box-content';
+
+              const notificationButton = document.createElement('button');
+              notificationButton.className = 'notification-box-content-button';
+              notificationButton.innerHTML = `
+                  <div class="notification-badge">
+                      <img src="telegram.png" alt="notification img"/>
+                  </div>
+                  <div class="notification-box-content-info">
+                      <h6>${notification.title || "Default Title"}</h6>
+                      <p>${notification.message || "No details available."}</p>
+                  </div>
+              `;
+
+              notificationButton.addEventListener('click', () => {
+                  showListing(notification.listing, notification.mode);
+              });
+              notificationContent.appendChild(notificationButton);
+
+              notificationBox.appendChild(notificationContent);
+          });
+      }
+  }
+
+    function fromWei(value) {
+        return (value / 1e18).toFixed(4);
     }
 
     function displayDecimals(token, amountString) {
@@ -8479,16 +8723,21 @@ body {
     // about tabs
     function openCity(evt, cityName) {
       var i, tabcontent, tablinks;
-      tabcontent = document.getElementsByClassName("tabcontent");
+      tabcontent = document.getElementsByClassName("abouttabcontent");
       for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
       }
-      tablinks = document.getElementsByClassName("tablinks");
+      tablinks = document.getElementsByClassName("abouttablinks");
       for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
       }
       document.getElementById(cityName).style.display = "block";
       evt.currentTarget.className += " active";
+    }
+    // notification
+    function notifications() {
+      let sidebar = document.getElementById('notification-box');
+      sidebar.classList.toggle('active');
     }
 
     //Notes:
