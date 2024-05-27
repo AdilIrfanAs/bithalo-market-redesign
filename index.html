@@ -5602,7 +5602,15 @@ const combinedStatusDescriptions = {
         var tempimg = '';
         var myimg = await getFile(offer.image);
         if (myimg.length > 0 && myimg != '' && myimg[0] != '') {
-          tempimg = '<img src="' + myimg[0] + '" alt="./blank-image.jpg">';
+
+          const mimeType = myimg[0].match(/^data:(.*?);/)[1].toLowerCase();
+          const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+            if (imageMimeTypes.includes(mimeType)) {
+              tempimg = '<img src="' + myimg[0] + '" alt="./blank-image.jpg">';
+            } else {
+                // If not an image, display a placeholder
+                tempimg = '<img src="./document-icon.png" alt="Document Placeholder">';
+            }
         } else {
           tempimg = '<img src="./blank-image.jpg" alt="">';
         }
@@ -6091,6 +6099,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
                 img.classList.add('popup-image');
                 li.appendChild(img);
             } else {
+              if (mode !== 3) {
                 const downloadLink = document.createElement('a');
                 downloadLink.textContent = translateThis('Download File');
                 downloadLink.href = fileTypePrefix + ';base64,' + base64Content; // Set href normally
@@ -6118,8 +6127,8 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
                         document.body.removeChild(tempLink);
                     }
                 });
-
                 li.appendChild(downloadLink);
+              }
             }
 
             imageList.appendChild(li);
@@ -7347,7 +7356,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
               </div>
               <div class="input-wrapper-content">
                   <label for="contractImage">` + translateThis('Contract Images:') + `</label>
-                  <input type="file" id="contractImage" multiple accept="image/*,.txt.doc,.pdf,.zip">
+                  <input type="file" id="contractImage" multiple">
                   <span style="color: black;" id="fileNames"></span>
                   <div id="fileDisplayArea"></div>
                   <button type="button" id="changefile" style="display:none;">` + translateThis('Change Images') + `</button>
@@ -7483,6 +7492,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
               const validTextType = ['text/plain'];
               const validDocTypes = ['application/msword', 'application/pdf', 'application/zip'];
               const isZipFile = fileType.includes('zip');
+              const isValidDoc = fileType.includes('doc', 'docx');
 
               
               if (file.size > 10 * 1024 * 1024) { // 10 MB in bytes
@@ -7495,7 +7505,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
               }
 
               // Check if the file type is valid
-              if (validImageTypes.includes(fileType) || validTextType.includes(fileType) || validDocTypes.includes(fileType) || isZipFile) {
+              if (validImageTypes.includes(fileType) || validTextType.includes(fileType) || isValidDoc || validDocTypes.includes(fileType) || isZipFile) {
                   if (validImageTypes.includes(fileType)) {
                       const myimage = await resizeImage(file);
                       if (myimage) {
@@ -8142,16 +8152,22 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
     }
     
     async function readFileAsDataURL(file) {
-        return new Promise((resolve, reject) => {
-            let reader = new FileReader();
-            reader.onload = () => {
-                const base64Data = reader.result.split(',')[1];
-                const fileTypePrefix = `data:${file.type};base64,`;
-                resolve(fileTypePrefix + base64Data);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = () => {
+            const resultParts = reader.result.split(',');
+            if (resultParts.length < 2) {
+                reject(new Error("Invalid file data"));
+                return;
+            }
+            const base64Data = resultParts[1];
+            const fileTypePrefix = `data:${file.type};base64,`;
+            resolve(fileTypePrefix + base64Data);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
 
     async function acceptOffer(listing) {
       const actionId = generateActionId(listing.hash, "acceptOffer");
