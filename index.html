@@ -5599,21 +5599,29 @@ const combinedStatusDescriptions = {
         }
         var gridItem = document.createElement('div');
         gridItem.classList.add('listing-grid-item');
-        var tempimg = '';
         var myimg = await getFile(offer.image);
-        if (myimg.length > 0 && myimg != '' && myimg[0] != '') {
+        var tempimg = '<img src="./blank-image.jpg" alt="">'; 
+        var foundImage = false; 
 
-          const mimeType = myimg[0].match(/^data:(.*?);/)[1].toLowerCase();
-          const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
-            if (imageMimeTypes.includes(mimeType)) {
-              tempimg = '<img src="' + myimg[0] + '" alt="./blank-image.jpg">';
-            } else {
-                // If not an image, display a placeholder
+        if (myimg.length > 0) {
+            const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+
+            for (let i = 0; i < myimg.length; i++) {
+                const mimeType = myimg[i].match(/^data:(.*?);/)[1].toLowerCase();
+
+                if (imageMimeTypes.includes(mimeType)) {
+                    tempimg = '<img src="' + myimg[i] + '" alt="./blank-image.jpg">';
+                    foundImage = true;
+                    break; 
+                }
+            }
+
+            if (!foundImage) {
+                // If no image is found, display a document icon
                 tempimg = '<img src="./document-icon.png" alt="Document Placeholder">';
             }
-        } else {
-          tempimg = '<img src="./blank-image.jpg" alt="">';
         }
+
         gridItem.innerHTML = `
                 <div class="listing-image">${tempimg}</div>
                 <div class="listing-details">
@@ -6041,6 +6049,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
 
       const imageContainer = document.createElement('div');
       imageContainer.classList.add('image-container');
+
       const leftArrow = document.createElement('span');
       leftArrow.innerHTML = '&#10094;';
       leftArrow.classList.add('arrow', 'left-arrow');
@@ -6061,7 +6070,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
 
       function showSlides(n) {
         const slides = document.getElementsByClassName('popup-image');
-        if (slides.length === 0) return; // Exit if no slides are present
+        if (slides.length === 0) return;
 
         if (n > slides.length) {
             slideIndex = 1;
@@ -6072,79 +6081,93 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
         }
 
         for (let i = 0; i < slides.length; i++) {
-            if (slides[i]) slides[i].style.display = 'none'; // Check if slide exists before accessing style
+            if (slides[i]) slides[i].style.display = 'none'; 
         }
 
         if (slides[slideIndex - 1]) {
-            slides[slideIndex - 1].style.display = 'block'; // Check if slide exists before accessing style
+            slides[slideIndex - 1].style.display = 'block'; 
         }
     }
-      const imageList = document.createElement('ul');
-      const arrowsContainer = document.createElement('div');
-      var myimgs = await getFile(listing.image);
-      if(myimgs.length > 0) {          
-        imageList.classList.add('image-list');
-        imageList.style.listStyle = 'none';
-          imageList.onclick = function() { plusSlides(1); };
+    const imageList = document.createElement('ul');
+    const arrowsContainer = document.createElement('div');
+    const downloadContainer = document.createElement('div');
+    downloadContainer.classList.add('download-container');
+    var myimgs = await getFile(listing.image);
+    var downloadLinks = [];
+    var imageCount = 0;
+    if (myimgs.length > 0) {
+      imageList.classList.add('image-list');
+      imageList.style.listStyle = 'none';
+      imageList.onclick = function() { plusSlides(1); };
 
-          for (let i = 0; i < myimgs.length; i++) {
-            console.log("Images List: ", myimgs[i]);
-            const li = document.createElement('li');
-            const fileData = myimgs[i];
-            const [fileTypePrefix, base64Content] = fileData.split(';base64,');
+      for (let i = 0; i < myimgs.length; i++) {
+        console.log("Images List: ", myimgs[i]);
+        const li = document.createElement('li');
+        const fileData = myimgs[i];
+        const [fileTypePrefix, base64Content] = fileData.split(';base64,');
 
-            if (fileTypePrefix.startsWith('data:image')) {
-                const img = document.createElement('img');
-                img.src = fileTypePrefix + ';base64,' + base64Content;
-                img.classList.add('popup-image');
-                li.appendChild(img);
-            } else {
-              if (mode !== 3) {
-                const downloadLink = document.createElement('a');
-                downloadLink.textContent = translateThis('Download File');
-                downloadLink.href = fileTypePrefix + ';base64,' + base64Content; // Set href normally
-
-                const fileExtension = fileTypePrefix.split('/')[1].split(';')[0];
-                downloadLink.download = translateThis(`downloaded_file`); // Dynamically set the filename
-
-                downloadLink.addEventListener('click', async function (event) {
-                    event.preventDefault(); // Prevent the default link behavior
-                    const result = await Swal.fire({
-                        icon: 'warning',
-                        title: translateThis('Security Warning'),
-                        text: translateThis('You are about to download a file. Please make sure you trust any files being sent before proceeding.'),
-                        showCancelButton: true,
-                        confirmButtonText: translateThis('Proceed'),
-                        cancelButtonText: translateThis('Cancel'),
-                    });
-                    if (result.isConfirmed) {
-                        // Use a temporary link to trigger the download
-                        const tempLink = document.createElement('a');
-                        tempLink.href = this.href;
-                        tempLink.download = this.download;
-                        document.body.appendChild(tempLink);
-                        tempLink.click();
-                        document.body.removeChild(tempLink);
-                    }
-                });
-                li.appendChild(downloadLink);
-              }
-            }
-
-            imageList.appendChild(li);
+        // Check if the file type is an image
+        if (fileTypePrefix.startsWith('data:image')) {
+            const img = document.createElement('img');
+            img.src = fileTypePrefix + ';base64,' + base64Content;
+            img.classList.add('popup-image');
+            li.appendChild(img);
+            imageCount++;
+        } else {
+            downloadLinks.push(fileTypePrefix + ';base64,' + base64Content);
         }
 
+        imageList.appendChild(li);
+      }
+
+      if (imageCount > 0) {
         arrowsContainer.classList.add('arrows-container');
         arrowsContainer.style.position = 'relative';
 
-        if (myimgs.length > 1) {
+        if (imageCount > 1) {
           arrowsContainer.appendChild(leftArrow);
           arrowsContainer.appendChild(rightArrow);
         }
 
         imageContainer.appendChild(imageList);
         imageContainer.appendChild(arrowsContainer);
+      } else {
+        imageContainer.style.display = 'none';
       }
+    } else {
+      imageContainer.style.display = 'none';
+    }
+    popup.appendChild(imageContainer);
+      if (downloadLinks.length > 0 && mode !== 3) {
+        const downloadAllLink = document.createElement('a');
+        downloadAllLink.textContent = translateThis('Download Files');
+        downloadAllLink.href = '#';
+        downloadAllLink.addEventListener('click', async function (event) {
+            event.preventDefault();
+            const result = await Swal.fire({
+                icon: 'warning',
+                title: translateThis('Security Warning'),
+                text: translateThis('You are about to download files. Please make sure you trust any files being sent before proceeding.'),
+                showCancelButton: true,
+                confirmButtonText: translateThis('Proceed'),
+                cancelButtonText: translateThis('Cancel'),
+            });
+            if (result.isConfirmed) {
+                downloadLinks.forEach(link => {
+                    const tempLink = document.createElement('a');
+                    tempLink.href = link;
+                    tempLink.download = ''; 
+                    document.body.appendChild(tempLink);
+                    tempLink.click();
+                    document.body.removeChild(tempLink);
+                });
+            }
+        });
+        downloadContainer.appendChild(downloadAllLink);
+        // imageContainer.appendChild(downloadContainer); 
+      }
+
+      // popup.appendChild(downloadContainer);
       const details = document.createElement('div');
       details.classList.add('popup-details');
 
@@ -6819,6 +6842,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
       popup.appendChild(topBar);
       popup.appendChild(popupWrapper);
       popupWrapper.appendChild(imageContainer);
+      popupWrapper.appendChild(downloadContainer);
       details.style.whiteSpace = 'nowrap';
       details.style.marginRight = '10px';
       details.style.marginLeft = '10px';
