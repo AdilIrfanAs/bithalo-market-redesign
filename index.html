@@ -1469,6 +1469,9 @@ h2 {
 .offer-popup .button-container button{
   font-size: 12px;
 }
+.offer-popup-wrapper .modal-funds-text {
+  word-break: break-word;
+}
 @media screen and (max-width: 1600px) {
   .header {
     height: 80px;
@@ -1848,7 +1851,6 @@ h2 {
   .popup {
     max-width: 90%;
   }
-
   .input-wrapper-area {
     display: block;
   }
@@ -6182,6 +6184,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
       }
 
       const sender = document.createElement('p');
+      sender.classList.add("modal-funds-text");
       var text = "<bdo>" + translateThis("Sender:") + "</bdo> ";
       if(listing.sender == "0x0000000000000000000000000000000000000000") {
         if(theuser != listing.recipient) {
@@ -7384,6 +7387,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
                   <span style="color: black;" id="fileNames"></span>
                   <div id="fileDisplayArea"></div>
                   <button type="button" id="changefile" style="display:none;">` + translateThis('Change Images') + `</button>
+                  <p style="color: grey; font-size: 0.8em;">` + translateThis('Maximum file size: 10 MB per file.') + `</p>
               </div>
               <div class="input-wrapper-area">
                 <div class="input-wrapper">

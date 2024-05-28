@@ -412,3 +412,6 @@
   "No notifications": true,
   "No active custodians to remove.": true
 }
+{
+  "Maximum file size: 10 MB per file.": true
+}

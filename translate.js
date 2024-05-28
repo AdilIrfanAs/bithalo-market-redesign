@@ -438,6 +438,7 @@ languages['ar']={
   "Mutually Agreed Cancellation": "إلغاء متفق عليه من الطرفين",
   "Expired, Not Finalized": "منتهي الصلاحية، غير مكتمل",
   "Expired and Closed": "منتهي الصلاحية ومغلق",
+  "Maximum file size: 10 MB per file.": "الحد الأقصى لحجم الملف: 10 ميغابايت لكل ملف.",
 };
 
 
@@ -879,6 +880,7 @@ languages['ch']={
   "Mutually Agreed Cancellation": "双方同意取消",
   "Expired, Not Finalized": "已过期，未完成",
   "Expired and Closed": "已过期且已关闭",
+  "Maximum file size: 10 MB per file.": "每个文件的最大文件大小：10MB。",
 };
 
 languages['en']={
@@ -1375,6 +1377,7 @@ languages['fr']={
   "Mutually Agreed Cancellation": "Annulation convenue mutuellement",
   "Expired, Not Finalized": "Expiré, non finalisé",
   "Expired and Closed": "Expiré et fermé",
+  "Maximum file size: 10 MB per file.": "Taille maximale du fichier : 10 Mo par fichier.",
 };
 
 languages['ge']={
@@ -1814,6 +1817,7 @@ languages['ge']={
   "Mutually Agreed Cancellation": "Gegenseitig vereinbarte Stornierung",
   "Expired, Not Finalized": "Abgelaufen, nicht abgeschlossen",
   "Expired and Closed": "Abgelaufen und geschlossen",
+  "Maximum file size: 10 MB per file.": "Maximale Dateigröße: 10 MB pro Datei.",
 };
 
 languages['it']={
@@ -2254,6 +2258,7 @@ languages['it']={
   "Mutually Agreed Cancellation": "Cancellazione concordata mutualmente",
   "Expired, Not Finalized": "Scaduto, non finalizzato",
   "Expired and Closed": "Scaduto e chiuso",
+  "Maximum file size: 10 MB per file.": "Dimensione massima del file: 10 MB per file.",
 };
 
 languages['ja']={
@@ -2694,6 +2699,7 @@ languages['ja']={
   "Mutually Agreed Cancellation": "双方が合意したキャンセル",
   "Expired, Not Finalized": "期限切れ、未確定",
   "Expired and Closed": "期限切れかつクローズ",
+  "Maximum file size: 10 MB per file.": "ファイルあたりの最大ファイルサイズ：10MB。",
 };
 
 languages['ko']={
@@ -3134,7 +3140,8 @@ languages['ko']={
   "Mutually Agreed Cancellation": "상호 합의된 취소",
   "Expired, Not Finalized": "만료되었으나 확정되지 않음",
   "Expired and Closed": "만료되고 종료됨",
-}
+  "Maximum file size: 10 MB per file.": "파일당 최대 파일 크기: 10MB.",
+};
 
 languages['po']={
   "1": {"#po": "Mercados Descentralizados BitBay"},
@@ -3574,6 +3581,7 @@ languages['po']={
   "Mutually Agreed Cancellation": "Cancelamento Mutuamente Acordado",
   "Expired, Not Finalized": "Expirado, Não Finalizado",
   "Expired and Closed": "Expirado e Encerrado",
+  "Maximum file size: 10 MB per file.": "Tamanho máximo do arquivo: 10 MB por arquivo.",
 };
 
 languages['ru'] = {
@@ -4014,6 +4022,7 @@ languages['ru'] = {
   "Mutually Agreed Cancellation": "Взаимно согласованная отмена",
   "Expired, Not Finalized": "Истекло, не завершено",
   "Expired and Closed": "Истекло и закрыто",
+  "Maximum file size: 10 MB per file.": "Максимальный размер файла: 10 МБ на файл.",
 }
 
 languages['sp'] = {
@@ -4454,4 +4463,5 @@ languages['sp'] = {
   "Mutually Agreed Cancellation": "Cancelación acordada mutuamente",
   "Expired, Not Finalized": "Expirado, no finalizado",
   "Expired and Closed": "Expirado y cerrado",
+  "Maximum file size: 10 MB per file.": "Tamaño máximo del archivo: 10 MB por archivo."
 };
