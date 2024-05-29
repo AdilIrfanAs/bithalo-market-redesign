@@ -5671,6 +5671,7 @@ const combinedStatusDescriptions = {
         shown++;
       }
       listingsDiv.appendChild(gridContainer);
+      updatePaginationControls(shown);
       // Inject CSS styles into a style tag
       var style = document.createElement('style');
       style.textContent = `
