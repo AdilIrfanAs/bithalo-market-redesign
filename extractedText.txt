@@ -415,3 +415,25 @@
 {
   "Maximum file size: 10 MB per file.": true
 }
+
+{
+  "Registration Required": true,
+  "No user data found. Please register your contact information and encryption key.": true,
+  "Type your message here..." : true,
+  "Messages": true,
+  "Your message has been sent successfully.": true,
+  "Message Sent": true,
+  "Transaction cancelled by user": true,
+  "Send Anyway" : true,
+  "Warning: your encryption key is not registered, messages you receive will be visible to everyone.": true,
+  "Your Encryption Key is Not Registered": true,
+  "Please be aware, the recipient does not support encryption. Any private messages sent will be visible to anyone.": true,
+  "Recipient Does Not Support Encryption" : true,
+  "Encryption Not Supported by Both Parties": true,
+  "Neither you nor the recipient support encryption. Any private messages sent will be visible to anyone.": true,
+  "Your notes have been saved successfully.": true,
+  "Notes Saved": true,
+  "Enter your notes for this offer": true,
+  "Encryption Supported": true,
+}
+

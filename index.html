@@ -859,12 +859,12 @@ h2 {
   display: flex;
   align-items: center;
 }
-      .offer-popup .favorites-button2, .offer-popup .favorites-button3 {
+.offer-popup .favorites-button2, .offer-popup .favorites-button3 {
   background-color: #ECEFF8;
   color: #322C62;
   width: 35px;
   height: 35px;
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
   padding: 8px;
@@ -1478,6 +1478,29 @@ h2 {
 .dashboard-content-wrapper .pagination .button-disabled img {
     filter: brightness(0.1);
 }
+.message-body button {
+  background-color: #322C62;
+  color: white;
+  border: 1px solid #322C62;
+  font-weight: bold;
+  font-size: 16px;
+}
+.message-body button:hover {
+  background-color: transparent;
+  color: #322C62;
+}
+
+.message-body {
+    word-break: break-word;
+}
+
+.message-body .message-body-inner {
+    max-height: 80px;
+    overflow: hidden;
+    overflow-y: auto;
+    padding: 10px;
+}
+
 @media screen and (max-width: 1600px) {
   .header {
     height: 80px;
@@ -2237,6 +2260,57 @@ body {
     background-color: #e0e0e0; /* Lighter grey background */
 }
 
+    .message-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001; /* High z-index to overlay on top of other content */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 80%;
+    max-width: 520px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: none; /* Initially hidden */
+  }
+
+  .message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #322c62;
+  }
+
+  .close-btn {
+    cursor: pointer;
+    font-size: 24px;
+  }
+
+  .message-body textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    resize: none;
+    border-radius: 5px;
+  }
+
+  .message-body button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
 </style>
 </head>
 <body>
@@ -2475,9 +2549,8 @@ body {
         <div class="account-input-box account-box-position">
           <button onclick="setCustodian()" t-id="51">Set cosigner</button>
         </div>
-
         <div class="account-input-box account-box-position">
-          <button onclick="modifyCustodian()" t-id="51">Remove Cosigner</button>
+          <button onclick="modifyCustodian()" t-id="54">Remove Cosigner</button>
         </div>
         <div class="account-input-box account-box-position">
           <button onclick="cosign()" t-id="52">Cosign</button>
@@ -2901,7 +2974,7 @@ body {
     showMain('markets');
     var web3 = [];
     var DDEcontract = "";
-    var DDEaddy = "0x221e4385b0F3ac0bD4d64553c92B81E0D322315B"; //Sepolia testnet is default market view
+    var DDEaddy = "0x22680Be97c62AD69b4f1aeA4BB0f9633186cD4D0"; //Sepolia testnet is default market view
     var myaccounts = "";
     var userpubkey = "";
     var userprivkey = "";
@@ -3033,7 +3106,7 @@ const combinedStatusDescriptions = {
     function defaultvars() {
       DDEcontract = "";
       myaccounts = "";
-      DDEaddy = "0x221e4385b0F3ac0bD4d64553c92B81E0D322315B";
+      DDEaddy = "0x22680Be97c62AD69b4f1aeA4BB0f9633186cD4D0";
       balances = {};
       baseBalance = 0;
       gasPrice = "";
@@ -3284,7 +3357,7 @@ const combinedStatusDescriptions = {
         });
         netname = "Sepolia Testnet";
         netname2 = "ETH";
-        DDEaddy = "0x221e4385b0F3ac0bD4d64553c92B81E0D322315B";
+        DDEaddy = "0x22680Be97c62AD69b4f1aeA4BB0f9633186cD4D0";
         gasOptions[0] = {
           gasLimit: 1500000,
           gasPrice: null,
@@ -3965,7 +4038,7 @@ const combinedStatusDescriptions = {
               }
             }
             showLoader();
-            await DDEcontract.methods.authorizeCustodian(result.value, true).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+            await DDEcontract.methods.authorizeCustodian(result.value, true, false).send({ "from": myaccounts, ...gasOptions[gasSetting] });
             hideLoader();
             Swal.fire(translateThis("Cosigner designation successful. Now you will be asked to authorize the cosigner for contract clearance."));
           } catch (e) {
@@ -4474,7 +4547,7 @@ const combinedStatusDescriptions = {
             'pinata_secret_api_key': pinataSecretApiKey
           }
         });
-        console.log(response.data.IpfsHash);
+        // console.log(response.data.IpfsHash);
         return DOMPurify.sanitize(response.data.IpfsHash);
       } catch (error) {
         console.log(error);
@@ -5949,7 +6022,6 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
     }
   }
     // populateListings();
-
     // Function to show the details popup for a listing
     async function showListing(listing, mode = 0) {
       const actionId = generateActionId(listing.hash, "showListing");
@@ -6044,6 +6116,13 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
       }
       const popupContainer = document.createElement('div');
       popupContainer.classList.add('popup-container');
+
+
+      var encryptionBadge = document.createElement('p');
+      encryptionBadge.textContent = `🔒 ${translateThis('Encryption Supported')}`;
+      encryptionBadge.style.color = 'green';
+      encryptionBadge.style.fontSize = '12px';
+      encryptionBadge.style.marginLeft = '10px';
 
       const popup = document.createElement('div');
       const popupWrapper = document.createElement('div');
@@ -6232,9 +6311,15 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
           });
         };
 
+         // Check if the recipient supports encryption and display badge
+         var { supportsEncryption: senderSupportsEncryption} = await userSupportsEncryption(listing.sender);
+
         senderContainer.appendChild(senderTextSpan);
         senderContainer.appendChild(document.createTextNode('\u00A0'));
         senderContainer.appendChild(copyButton);
+        if (senderSupportsEncryption) {
+          senderContainer.appendChild(encryptionBadge);
+        }
         sender.appendChild(senderContainer);
       }
 
@@ -6277,9 +6362,15 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
             }
           });
         };
+        // Check if the recipient supports encryption and display badge
+        var { supportsEncryption: recipientSupportsEncryption} = await userSupportsEncryption(listing.recipient);
+
         recipientContainer.appendChild(recipientTextSpan);
         recipientContainer.appendChild(document.createTextNode('\u00A0'));
         recipientContainer.appendChild(copyButton);
+        if(recipientSupportsEncryption) {
+          recipientContainer.appendChild(encryptionBadge);
+        }
         recipient.appendChild(recipientContainer);
       }
 
@@ -6847,6 +6938,118 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
         };
         topBar.appendChild(linkButton);
       }
+      var notesButton = document.createElement('span');
+      notesButton.innerHTML = '&#128221;';
+      notesButton.style.fontSize = "15px";
+      notesButton.classList.add('favorites-button3');
+      notesButton.style.marginLeft = "10px";
+      notesButton.addEventListener('mouseover', function() {
+        this.style.cursor = 'pointer';
+      });
+      notesButton.addEventListener('mouseout', function() {
+        this.style.cursor = 'auto';
+      });
+      notesButton.onclick = function() {
+      const existingNotes = localStorage.getItem(myaccounts + DDEaddy +'notes_' + listing.hash) || '';
+      Swal.fire({
+        title: translateThis('Enter your notes for this offer'),
+        input: 'textarea',
+        inputValue: existingNotes,
+        showCancelButton: true,
+        confirmButtonText: translateThis('Save'),
+        cancelButtonText: translateThis('Cancel'),
+      }).then((result) => {
+        if (result.isConfirmed && result.value !== undefined) {
+          localStorage.setItem(myaccounts + DDEaddy +'notes_' + listing.hash, result.value);
+          Swal.fire({
+            icon: 'success',
+            title: translateThis('Notes Saved'),
+            text: translateThis('Your notes have been saved successfully.'),
+          });
+        }
+      });
+    };
+
+    const messageButton = document.createElement('span');
+    messageButton.innerHTML = '&#9993;'; // Unicode for envelope (message icon)
+    messageButton.classList.add('favorites-button3');
+    messageButton.style.fontSize = "20px";
+    messageButton.style.marginLeft = "10px";
+    messageButton.addEventListener('mouseover', function() {
+      this.style.cursor = 'pointer';
+    });
+    messageButton.addEventListener('mouseout', function() {
+      this.style.cursor = 'auto';
+          });
+
+  if(mode !== 3){  
+    const user = myaccounts; // Current user's address
+    const hash = listing.hash;
+    const statusKey = listing.status.join(',');
+
+    const validStatusesForMessaging = ["1,1", "1,0", "3,0"];
+    const isStatusValid = validStatusesForMessaging.includes(statusKey);
+
+    // Simulate contract checks
+    const isParticipant = (listing.sender === user || listing.recipient === user);
+    const isContractActive = (listing.status[0] < 4 && listing.status[1] < 4);
+
+    if (isStatusValid && isParticipant && isContractActive) {
+        messageButton.style.display = 'inline-block';
+    } else {
+        messageButton.style.display = 'none';
+    }
+    messageButton.onclick = async function() {
+    const  recipientAddress = myaccounts === listing.sender ? listing.recipient : listing.sender;
+    const  senderAddress = myaccounts === listing.sender ? listing.sender : listing.recipient;
+    const { supportsEncryption: recipientSupportsEncryption, publicKey: recipientPublicKey } = await userSupportsEncryption(recipientAddress);
+    const { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(senderAddress);
+    
+        if (!recipientSupportsEncryption && !senderSupportsEncryption) {
+        Swal.fire({
+          icon: 'warning',
+          title: translateThis('Encryption Not Supported by Both Parties'),
+          text: translateThis('Neither you nor the recipient support encryption. Any private messages sent will be visible to anyone.'),
+          showCancelButton: true,
+          confirmButtonText: translateThis('Send Anyway'),
+          cancelButtonText: translateThis('Cancel'),
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleSendMessage(listing.hash, senderAddress, recipientAddress, false);
+          }
+        });
+      } else if (!recipientSupportsEncryption) {
+      Swal.fire({
+        icon: 'warning',
+        title: translateThis('Recipient Does Not Support Encryption'),
+        text: translateThis('Please be aware, the recipient does not support encryption. Any private messages sent will be visible to anyone.'),
+        showCancelButton: true,
+        confirmButtonText: translateThis('Send Anyway'),
+        cancelButtonText: translateThis('Cancel'),
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await handleSendMessage(listing.hash,senderAddress, recipientAddress, false);
+        }
+      });
+    } else if (!senderSupportsEncryption) {
+      Swal.fire({
+        icon: 'warning',
+        title: translateThis('Your Encryption Key is Not Registered'),
+        text: translateThis('Warning: your encryption key is not registered, messages you receive will be visible to everyone.'),
+        showCancelButton: true,
+        confirmButtonText: translateThis('Send Anyway'),
+        cancelButtonText: translateThis('Cancel'),
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await handleSendMessage(listing.hash, senderAddress, recipientAddress, result.value, recipientPublicKey);
+        }
+      });
+    } else {
+      await handleSendMessage(listing.hash, senderAddress, recipientAddress, true, recipientPublicKey);
+    }
+  }};
+      topBar.appendChild(notesButton);
+      topBar.appendChild(messageButton);
       topBar.appendChild(closeButton);
       popup.appendChild(topBar);
       popup.appendChild(popupWrapper);
@@ -6891,6 +7094,116 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
       }
     }
 
+   
+    async function handleSendMessage(hash, sender, recipient, encrypt = false, recipientPublicKey = null) {
+        const existingMessages = await fetchMessages(hash, recipient);
+        const { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(myaccounts);
+        const messagesContainer = createMessagePopup(existingMessages, senderSupportsEncryption);
+
+        const messagePopup = document.querySelector('.popup-container');
+        messagePopup.appendChild(messagesContainer);
+        messagesContainer.style.display = 'block';
+
+        const input = messagesContainer.querySelector('textarea');
+        const sendButton = messagesContainer.querySelector('button');
+
+        sendButton.onclick = async () => {
+          try{
+          const message = input.value;
+          let finalMessage = message;
+          if (encrypt && recipientPublicKey) {
+            finalMessage = "ENC:" + cryptico.encrypt(message, recipientPublicKey, userprivkey).cipher;
+          }
+          const gasEstimate = 90000; 
+          const res = await confirmTransaction(gasEstimate, 0, tokens[0].address);
+          if (!res) {
+            throw new Error(translateThis('Transaction cancelled by user'));
+          }
+          setActionActive('sendMessage', true);
+          showLoader();
+
+          await DDEcontract.methods.sendMessage(hash, sender, finalMessage).send({ from: myaccounts, ...gasOptions[gasSetting] });
+          hideLoader();
+          Swal.fire({
+            icon: 'success',
+            title: translateThis('Message Sent'),
+            text: translateThis('Your message has been sent successfully.'),
+          });
+
+          input.value = '';
+          messagesContainer.remove();
+        } catch (error) {
+          console.error('Failed to send message:', error);
+          hideLoader();
+          showError(error);
+        }  finally {
+        hideLoader();
+        setActionActive('sendMessage', false);
+        messagesContainer.remove();
+      }
+    }
+  }
+
+  function createMessagePopup(messages, userSupportsEncryption) {
+    const decryptedMessages = messages.map(msg => {
+        if (userSupportsEncryption && msg.startsWith("ENC:")) {
+            var encryptedPart = msg.substring(4); // Remove the "ENC:" prefix
+            var decryptionResult = cryptico.decrypt(encryptedPart, userprivkey);
+            if (decryptionResult.status === "success") {
+                return decryptionResult.plaintext;
+            } else {
+                console.error("Decryption failed:", decryptionResult.status);
+                return "Failed to decrypt message"; // Or handle this case as needed
+            }
+        } else {
+            return msg; // Return the plain text message as is
+        }
+    });
+
+    const popup = document.createElement('div');
+    popup.className = 'message-popup';
+    popup.innerHTML = `
+        <div class="message-header">
+          ${translateThis('Messages')}
+          <span class="close-btn">&times;</span>
+        </div>
+        <div class="message-body">
+          <div class="message-body-inner">
+            ${decryptedMessages.map(msg => `<p>${msg}</p>`).join('')}
+          </div>
+          <textarea placeholder="${translateThis('Type your message here...')}"></textarea>
+          <button>${translateThis('Send')}</button>
+        </div>
+    `;
+
+    // Close button functionality
+    popup.querySelector('.close-btn').onclick = function() {
+        popup.remove();
+    };
+
+    return popup;
+}
+
+    async function fetchMessages(hash, user) {
+    let messages = [];
+        try {
+            let index = 0;
+            while (true) { // Continuously attempt to fetch messages until an error is thrown
+                const message = await DDEcontract.methods.messages(hash, user, index).call();
+                messages.push(message);
+                index++; // Increment to fetch the next message
+            }
+        } catch (error) {
+            if (messages.length === 0) {
+                console.log("No messages found for this hash and user.");
+            } else {
+                console.log("Fetched all messages successfully.");
+            }
+            console.error('Error fetching messages:', error);
+        }
+        return messages; // Return the fetched messages or an empty array if none were found
+    }
+   
     function removeListingFromView(listing) {
       const listingElement = document.querySelector(`#listing-${listing.hash}`); // Assuming listings have an ID based on their hash
       if (listingElement) {
@@ -7283,6 +7596,42 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
         await Swal.fire(translateThis("Action is already in progress for this contract."));
         return;
       }
+          // Fetch user data to check if encryption key and contact info are registered
+    const datalen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, 3).call());
+    if (datalen > 0) {
+        const contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(myaccounts, datalen - 1).call()));
+        if (!contact2.mycontact || !contact2.publickey) {
+            const response = await Swal.fire({
+                title: translateThis("Registration Required"),
+                text: translateThis("Please register your contact information and encryption key before creating a contract."),
+                icon: 'warning',
+                confirmButtonText: translateThis('Continue'),
+                showCancelButton: true,
+                cancelButtonText: translateThis('Cancel')
+            });
+
+            if (response.isConfirmed) {
+
+            } else {
+
+                return;
+            }
+        }
+    } else {
+        const response = await Swal.fire({
+            title: translateThis("Registration Required"),
+            text: translateThis("No user data found. Please register your contact information and encryption key."),
+            icon: 'warning',
+            confirmButtonText: translateThis('Continue'),
+            showCancelButton: true,
+            cancelButtonText: translateThis('Cancel')
+        });
+
+        if (response.isConfirmed) {
+        } else {
+            return;
+        }
+    } 
       // showLoader();
       // Create the popup container
       const popupContainer = document.createElement('div');
@@ -7711,7 +8060,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
               depnotice = 1;
             }
           }          
-          if(depnotice == 1) {
+          if(depnotice == 1 && accountprivkey != "") {
             await Swal.fire({
               title: translateThis('Deposit'),
               text: translateThis("You have funds in your wallet but you should move some to your markets/trading account in order to interact with offers like this. Would you like to do that now?"),
@@ -8236,7 +8585,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
               depnotice = 1;
             }
           }          
-          if(depnotice == 1) {
+          if(depnotice == 1 && accountprivkey != "") {
             await Swal.fire({
               title: translateThis('Deposit'),
               text: translateThis("You have funds in your wallet but you should move some to your markets/trading account in order to interact with offers like this. Would you like to do that now?"),
@@ -8650,6 +8999,26 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
         }
       }
     }
+
+    
+    async function userSupportsEncryption(userAddress) {
+      try {
+        var DDEcontract4 = new web3.eth.Contract(DDEabi, DDEaddy);
+        const dataLength = DOMPurify.sanitize(await DDEcontract4.methods.getArrayLength(userAddress, 3).call());
+        if (dataLength > 0) {
+          const userData = JSON.parse(DOMPurify.sanitize(await DDEcontract4.methods.userdata(userAddress, dataLength - 1).call()));
+          return {
+            supportsEncryption: !!userData.publickey,
+            publicKey: userData.publickey
+          };
+        }
+        return { supportsEncryption: false };
+      } catch (error) {
+        console.error('Error checking encryption support:', error);
+        return { supportsEncryption: false };
+      }
+    }
+
     async function updateQuantity(listing) {
       const actionId = generateActionId(listing.hash, "updateQuantity");
       if (isActionActive(actionId)) {
