@@ -869,6 +869,16 @@ h2 {
   justify-content: center;
   padding: 8px;
 }
+
+.message-button {
+  background-color: #ECEFF8;
+  color: #322C62;
+  width: 35px;
+  height: 35px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
 .offer-popup .favorites-button2 {
   margin-right: 6px;
 }
@@ -6024,6 +6034,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
     // populateListings();
     // Function to show the details popup for a listing
     async function showListing(listing, mode = 0) {
+      console.log("listing mood", listing, mode);
       const actionId = generateActionId(listing.hash, "showListing");
       if (isActionActive(actionId)) {
         await Swal.fire(translateThis("Action is already in progress for this contract."));
@@ -6972,7 +6983,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
 
     const messageButton = document.createElement('span');
     messageButton.innerHTML = '&#9993;'; // Unicode for envelope (message icon)
-    messageButton.classList.add('favorites-button3');
+    messageButton.classList.add('message-button');
     messageButton.style.fontSize = "20px";
     messageButton.style.marginLeft = "10px";
     messageButton.addEventListener('mouseover', function() {
@@ -6981,75 +6992,10 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
     messageButton.addEventListener('mouseout', function() {
       this.style.cursor = 'auto';
           });
-
-  if(mode !== 3){  
-    const user = myaccounts; // Current user's address
-    const hash = listing.hash;
-    const statusKey = listing.status.join(',');
-
-    const validStatusesForMessaging = ["1,1", "1,0", "3,0"];
-    const isStatusValid = validStatusesForMessaging.includes(statusKey);
-
-    // Simulate contract checks
-    const isParticipant = (listing.sender === user || listing.recipient === user);
-    const isContractActive = (listing.status[0] < 4 && listing.status[1] < 4);
-
-    if (isStatusValid && isParticipant && isContractActive) {
-        messageButton.style.display = 'inline-block';
-    } else {
-        messageButton.style.display = 'none';
-    }
-    messageButton.onclick = async function() {
-    const  recipientAddress = myaccounts === listing.sender ? listing.recipient : listing.sender;
-    const  senderAddress = myaccounts === listing.sender ? listing.sender : listing.recipient;
-    const { supportsEncryption: recipientSupportsEncryption, publicKey: recipientPublicKey } = await userSupportsEncryption(recipientAddress);
-    const { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(senderAddress);
-    
-        if (!recipientSupportsEncryption && !senderSupportsEncryption) {
-        Swal.fire({
-          icon: 'warning',
-          title: translateThis('Encryption Not Supported by Both Parties'),
-          text: translateThis('Neither you nor the recipient support encryption. Any private messages sent will be visible to anyone.'),
-          showCancelButton: true,
-          confirmButtonText: translateThis('Send Anyway'),
-          cancelButtonText: translateThis('Cancel'),
-        }).then((result) => {
-          if (result.isConfirmed) {
-            handleSendMessage(listing.hash, senderAddress, recipientAddress, false);
-          }
-        });
-      } else if (!recipientSupportsEncryption) {
-      Swal.fire({
-        icon: 'warning',
-        title: translateThis('Recipient Does Not Support Encryption'),
-        text: translateThis('Please be aware, the recipient does not support encryption. Any private messages sent will be visible to anyone.'),
-        showCancelButton: true,
-        confirmButtonText: translateThis('Send Anyway'),
-        cancelButtonText: translateThis('Cancel'),
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          await handleSendMessage(listing.hash,senderAddress, recipientAddress, false);
-        }
-      });
-    } else if (!senderSupportsEncryption) {
-      Swal.fire({
-        icon: 'warning',
-        title: translateThis('Your Encryption Key is Not Registered'),
-        text: translateThis('Warning: your encryption key is not registered, messages you receive will be visible to everyone.'),
-        showCancelButton: true,
-        confirmButtonText: translateThis('Send Anyway'),
-        cancelButtonText: translateThis('Cancel'),
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          await handleSendMessage(listing.hash, senderAddress, recipientAddress, result.value, recipientPublicKey);
-        }
-      });
-    } else {
-      await handleSendMessage(listing.hash, senderAddress, recipientAddress, true, recipientPublicKey);
-    }
-  }};
-      topBar.appendChild(notesButton);
-      topBar.appendChild(messageButton);
+      if(mode !== 3){
+        topBar.appendChild(notesButton);
+        topBar.appendChild(messageButton);
+      }
       topBar.appendChild(closeButton);
       popup.appendChild(topBar);
       popup.appendChild(popupWrapper);
@@ -7062,7 +7008,77 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
       popupWrapper.appendChild(buttonContainer);
       popupContainer.appendChild(popup);
 
+
+
       document.body.appendChild(popupContainer);
+
+    if(mode !== 3){  
+      const user = myaccounts; // Current user's address
+      const hash = listing.hash;
+      const statusKey = listing.status.join(',');
+
+      const validStatusesForMessaging = ["1,1", "1,0", "3,0"];
+      const isStatusValid = validStatusesForMessaging.includes(statusKey);
+
+      // Simulate contract checks
+      const isParticipant = (listing.sender === user || listing.recipient === user);
+      const isContractActive = (listing.status[0] < 4 && listing.status[1] < 4);
+      const isLoggedIn = (myaccounts !== "");
+
+      if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
+          messageButton.style.display = 'inline-flex';
+      } else {
+          messageButton.style.display = 'none';
+      }
+      messageButton.onclick = async function() {
+      const  recipientAddress = myaccounts === listing.sender ? listing.recipient : listing.sender;
+      const  senderAddress = myaccounts === listing.sender ? listing.sender : listing.recipient;
+      const { supportsEncryption: recipientSupportsEncryption, publicKey: recipientPublicKey } = await userSupportsEncryption(recipientAddress);
+      const { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(senderAddress);
+      
+          if (!recipientSupportsEncryption && !senderSupportsEncryption) {
+          Swal.fire({
+            icon: 'warning',
+            title: translateThis('Encryption Not Supported by Both Parties'),
+            text: translateThis('Neither you nor the recipient support encryption. Any private messages sent will be visible to anyone.'),
+            showCancelButton: true,
+            confirmButtonText: translateThis('Send Anyway'),
+            cancelButtonText: translateThis('Cancel'),
+          }).then((result) => {
+            if (result.isConfirmed) {
+              handleSendMessage(listing.hash, senderAddress, recipientAddress, false);
+            }
+          });
+        } else if (!recipientSupportsEncryption) {
+        Swal.fire({
+          icon: 'warning',
+          title: translateThis('Recipient Does Not Support Encryption'),
+          text: translateThis('Please be aware, the recipient does not support encryption. Any private messages sent will be visible to anyone.'),
+          showCancelButton: true,
+          confirmButtonText: translateThis('Send Anyway'),
+          cancelButtonText: translateThis('Cancel'),
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            await handleSendMessage(listing.hash,senderAddress, recipientAddress, false);
+          }
+        });
+      } else if (!senderSupportsEncryption) {
+        Swal.fire({
+          icon: 'warning',
+          title: translateThis('Your Encryption Key is Not Registered'),
+          text: translateThis('Warning: your encryption key is not registered, messages you receive will be visible to everyone.'),
+          showCancelButton: true,
+          confirmButtonText: translateThis('Send Anyway'),
+          cancelButtonText: translateThis('Cancel'),
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            await handleSendMessage(listing.hash, senderAddress, recipientAddress, result.value, recipientPublicKey);
+          }
+        });
+      } else {
+        await handleSendMessage(listing.hash, senderAddress, recipientAddress, true, recipientPublicKey);
+      }
+  }};
 
       // Add CSS rules
       const style = document.createElement('style');
@@ -8285,7 +8301,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
         //  data2.depositSender *= quantity;
         //  data2.depositRecipient *= quantity;
         //}          
-        console.log(data2);
+        console.log("data2",data2);
         //May eventually want to check for duplicate contract hash submission
         var result = await showListing(data2, 3)
           if(result == false) {
