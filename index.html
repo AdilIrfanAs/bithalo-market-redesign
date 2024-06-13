@@ -3449,7 +3449,6 @@ const combinedStatusDescriptions = {
               for(var i=1; i<50000; i++) {
                 userprivkey=Crypto.SHA256(userprivkey);
               }
-              console.log(userprivkey);
               userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
               userpubkey = cryptico.publicKeyString(userprivkey);
               document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
@@ -4680,7 +4679,8 @@ const combinedStatusDescriptions = {
     //the graphics card to moderate, they can call a list of volunteer services who run AI WebGPT to filter it(and maybe recommend tags)
     //for them based on their criteria. One way to enforce a search protocol is have those who post to markets do so from a separate contract.
     //This way they can also be the ones required to remove the search tags and the contract manages everything.
-    async function loadMarkets(low = 1, high = 1, searchText = '') {        
+    var tempCurator = "0x25A2c592DDD5F930a9CB271b9AC3e72bbBc3d351";
+    async function loadMarkets(low = 1, high = 1, searchText = '') {
         var DDEcontract3 = DDEcontract;
         if(DDEcontract == '') {
             DDEcontract3 = DDEcontract2;
@@ -4690,6 +4690,16 @@ const combinedStatusDescriptions = {
             currentMarketsLength = DOMPurify.sanitize(result);
             mlength = result;
         });
+        var listlen = DOMPurify.sanitize(await DDEcontract3.methods.getArrayLength(tempCurator,3).call());
+        var udata = {};
+        if(listlen > 0) {
+          var udata2 = JSON.parse(DOMPurify.sanitize(await DDEcontract3.methods.userdata(tempCurator, listlen-1).call()));
+          if(typeof udata2 === 'object' && 'users' in udata2) {
+            for(var uinx = 0; uinx < udata2['users'].length; uinx++) {
+              udata[udata2['users'][uinx]] = 1;
+            }
+          }
+        }
         var index = 1;
         if(high > 1 && low != 0 && high <= mlength && low <= high) {
             index = low;
@@ -4720,6 +4730,9 @@ const combinedStatusDescriptions = {
                   expiredOffers.push(hash);
                 } else {
                   jsondata = await getOrderHash(hash);
+                  if(udata.hasOwnProperty(jsondata.sender) || udata.hasOwnProperty(jsondata.recipient)) {
+                      continue;
+                    }
                   if(parseInt(jsondata.timelimit[1]) != 0) {
                     if(parseInt(jsondata.timelimit[1]) > parseInt(CurrentTimeStamp)) {
                       if(!marketOffers.hasOwnProperty(offerID)) {
@@ -4833,6 +4846,9 @@ const combinedStatusDescriptions = {
               if (offerID == 0) {
               } else {
                 jsondata = await getOrderHash(hash);
+                if(udata.hasOwnProperty(jsondata.sender) || udata.hasOwnProperty(jsondata.recipient)) {
+                  throw new Error('a');
+                }
                 if(parseInt(jsondata.timelimit[1]) != 0) {
                   if(parseInt(jsondata.timelimit[1]) > parseInt(CurrentTimeStamp)) {
                     if(!marketOffers.hasOwnProperty(offerID)) {
@@ -4897,11 +4913,14 @@ const combinedStatusDescriptions = {
                                   }
                                   jsondata = marketOffers[hash];
                                 } else {
+                                  jsondata = await getOrderHash(hash);
+                                  if(udata.hasOwnProperty(jsondata.sender) || udata.hasOwnProperty(jsondata.recipient)) {
+                                    return;
+                                  }
                                   if(!marketOffers.hasOwnProperty(offerID)) {
                                       marketOffers.indices.push(offerID);
                                   }
                                   marketOffers[offerID] = hash;
-                                  jsondata = await getOrderHash(hash);
                                   if(parseInt(jsondata.timelimit[1]) != 0) {
                                       if(parseInt(jsondata.timelimit[1]) > parseInt(CurrentTimeStamp)) {
                                           marketOffers[hash] = jsondata;
@@ -4944,6 +4963,9 @@ const combinedStatusDescriptions = {
                     await DDEcontract3.methods.markets(index).call().then(async function (hash) {
                         hash = DOMPurify.sanitize(hash);
                         jsondata = await getOrderHash(hash);
+                        if(udata.hasOwnProperty(jsondata.sender) || udata.hasOwnProperty(jsondata.recipient)) {
+                          return;
+                        }
                         if(parseInt(jsondata.timelimit[1]) != 0) {
                             if(parseInt(jsondata.timelimit[1]) > parseInt(CurrentTimeStamp)) {
                                 if(!marketOffers.hasOwnProperty(index)) {
@@ -6034,7 +6056,6 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
     // populateListings();
     // Function to show the details popup for a listing
     async function showListing(listing, mode = 0) {
-      console.log("listing mood", listing, mode);
       const actionId = generateActionId(listing.hash, "showListing");
       if (isActionActive(actionId)) {
         await Swal.fire(translateThis("Action is already in progress for this contract."));
@@ -6127,13 +6148,6 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
       }
       const popupContainer = document.createElement('div');
       popupContainer.classList.add('popup-container');
-
-
-      var encryptionBadge = document.createElement('p');
-      encryptionBadge.textContent = `🔒 ${translateThis('Encryption Supported')}`;
-      encryptionBadge.style.color = 'green';
-      encryptionBadge.style.fontSize = '12px';
-      encryptionBadge.style.marginLeft = '10px';
 
       const popup = document.createElement('div');
       const popupWrapper = document.createElement('div');
@@ -6323,17 +6337,23 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
         };
 
          // Check if the recipient supports encryption and display badge
-         var { supportsEncryption: senderSupportsEncryption} = await userSupportsEncryption(listing.sender);
+        
+        var { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(listing.sender);
+
+        var senderEncryptionBadge = document.createElement('p');
+        senderEncryptionBadge.textContent = `🔒 ${translateThis('Encryption Supported')}`;
+        senderEncryptionBadge.style.color = 'green';
+        senderEncryptionBadge.style.fontSize = '12px';
+        senderEncryptionBadge.style.marginLeft = '10px';
 
         senderContainer.appendChild(senderTextSpan);
         senderContainer.appendChild(document.createTextNode('\u00A0'));
         senderContainer.appendChild(copyButton);
-        if (senderSupportsEncryption) {
-          senderContainer.appendChild(encryptionBadge);
+        if(senderSupportsEncryption) {
+          senderContainer.appendChild(senderEncryptionBadge);
         }
         sender.appendChild(senderContainer);
       }
-
       const recipient = document.createElement('p');
       var text2 = "<bdo>" + translateThis("Recipient:") + "</bdo> ";
       if(listing.recipient == "0x0000000000000000000000000000000000000000") {
@@ -6375,12 +6395,17 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
         };
         // Check if the recipient supports encryption and display badge
         var { supportsEncryption: recipientSupportsEncryption} = await userSupportsEncryption(listing.recipient);
+        var recipientEncryptionBadge = document.createElement('p');
+        recipientEncryptionBadge.textContent = `🔒 ${translateThis('Encryption Supported')}`;
+        recipientEncryptionBadge.style.color = 'green';
+        recipientEncryptionBadge.style.fontSize = '12px';
+        recipientEncryptionBadge.style.marginLeft = '10px';
 
         recipientContainer.appendChild(recipientTextSpan);
         recipientContainer.appendChild(document.createTextNode('\u00A0'));
         recipientContainer.appendChild(copyButton);
         if(recipientSupportsEncryption) {
-          recipientContainer.appendChild(encryptionBadge);
+          recipientContainer.appendChild(recipientEncryptionBadge);
         }
         recipient.appendChild(recipientContainer);
       }
@@ -7200,25 +7225,24 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
     return popup;
 }
 
-    async function fetchMessages(hash, user) {
-    let messages = [];
-        try {
-            let index = 0;
-            while (true) { // Continuously attempt to fetch messages until an error is thrown
-                const message = await DDEcontract.methods.messages(hash, user, index).call();
-                messages.push(message);
-                index++; // Increment to fetch the next message
-            }
-        } catch (error) {
-            if (messages.length === 0) {
-                console.log("No messages found for this hash and user.");
-            } else {
-                console.log("Fetched all messages successfully.");
-            }
-            console.error('Error fetching messages:', error);
-        }
-        return messages; // Return the fetched messages or an empty array if none were found
-    }
+  async function fetchMessages(hash, user) {
+      let messages = [];
+      try {
+          const messageCount = await DDEcontract.methods.getMessageLength(hash, user).call();
+          if (messageCount > 0) {
+              for (let index = 0; index < messageCount; index++) {
+                  const message = await DDEcontract.methods.messages(hash, user, index).call();
+                  messages.push(message);
+              }
+              console.log("Fetched all messages successfully.");
+          } else {
+              console.log("No messages found for this hash and user.");
+          }
+      } catch (error) {
+          console.error('Error fetching messages:', error);
+      }
+      return messages; // Return the fetched messages or an empty array if none were found
+  }
    
     function removeListingFromView(listing) {
       const listingElement = document.querySelector(`#listing-${listing.hash}`); // Assuming listings have an ID based on their hash
@@ -9166,6 +9190,11 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
           }
         }
       });
+    }
+
+    async function postData(myuserdata) {
+      await DDEcontract.methods.adduserdata(JSON.stringify(myuserdata)).send({"from":myaccounts,...gasOptions[gasSetting]});
+      await Swal.fire(translateThis("Data added!"));
     }
 
     async function addAPI(text) {
