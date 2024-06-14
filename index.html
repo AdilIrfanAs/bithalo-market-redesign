@@ -1505,10 +1505,28 @@ h2 {
 }
 
 .message-body .message-body-inner {
-    max-height: 80px;
+    max-height: 150px;
     overflow: hidden;
     overflow-y: auto;
     padding: 10px;
+}
+
+.message-receiver, .message-sender {
+  border-radius: 10px;
+  padding: 10px;
+  line-height: 18px;
+  width: 90%;
+  color: black;
+}
+
+.message-sender {
+  background-color: #DAF0C4; 
+  margin-left: auto;
+}
+
+.message-receiver {
+  text-align: left;
+  background-color: #D3E8EE;
 }
 
 @media screen and (max-width: 1600px) {
@@ -2556,6 +2574,8 @@ body {
             <option value="0" t-id="39">Use default IPFS Pinata Gateway</option>
           </select>
         </div>
+      </div>
+      <div class="account-form-wrapper">
         <div class="account-input-box account-box-position">
           <button onclick="setCustodian()" t-id="51">Set cosigner</button>
         </div>
@@ -7137,67 +7157,89 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
 
    
     async function handleSendMessage(hash, sender, recipient, encrypt = false, recipientPublicKey = null) {
-        const existingMessages = await fetchMessages(hash, recipient);
-        const { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(myaccounts);
-        const messagesContainer = createMessagePopup(existingMessages, senderSupportsEncryption);
+    const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + hash + 'lastMessageIndex') || 0;
+    const existingMessages = await fetchMessages(hash, recipient, lastMessageIndex);
+    const { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(myaccounts);
+    const messagesContainer = createMessagePopup(existingMessages, senderSupportsEncryption);
 
-        const messagePopup = document.querySelector('.popup-container');
-        messagePopup.appendChild(messagesContainer);
-        messagesContainer.style.display = 'block';
+    const messagePopup = document.querySelector('.popup-container');
+    messagePopup.appendChild(messagesContainer);
+    messagesContainer.style.display = 'block';
 
-        const input = messagesContainer.querySelector('textarea');
-        const sendButton = messagesContainer.querySelector('button');
+    const input = messagesContainer.querySelector('textarea');
+    const sendButton = messagesContainer.querySelector('button');
 
-        sendButton.onclick = async () => {
-          try{
-          const message = input.value;
-          let finalMessage = message;
-          if (encrypt && recipientPublicKey) {
-            finalMessage = "ENC:" + cryptico.encrypt(message, recipientPublicKey, userprivkey).cipher;
-          }
+    sendButton.onclick = async () => {
+      try {
+        const message = input.value;
+        let finalMessage = message;
+        let storedMessage = message; // Message to store locally in plaintext
+
+        if (encrypt && recipientPublicKey) {
+          const timestamp = new Date().getTime();
+          const padding = Crypto.SHA256(timestamp).substring(0, 16);
+          finalMessage = "ENC:" + cryptico.encrypt(message + "#*#*#" + timestamp + padding, recipientPublicKey, userprivkey).cipher;
+        }
+
+        if(accountprivkey !== ''){
           const gasEstimate = 90000; 
           const res = await confirmTransaction(gasEstimate, 0, tokens[0].address);
           if (!res) {
             throw new Error(translateThis('Transaction cancelled by user'));
           }
-          setActionActive('sendMessage', true);
-          showLoader();
+        }
+        setActionActive('sendMessage', true);
+        showLoader();
 
-          await DDEcontract.methods.sendMessage(hash, sender, finalMessage).send({ from: myaccounts, ...gasOptions[gasSetting] });
-          hideLoader();
-          Swal.fire({
-            icon: 'success',
-            title: translateThis('Message Sent'),
-            text: translateThis('Your message has been sent successfully.'),
-          });
+        const sendResult = await DDEcontract.methods.sendMessage(hash, sender, finalMessage).send({ from: myaccounts, ...gasOptions[gasSetting] });
+        if (sendResult) {
+            // Store the plaintext message in local storage
+            const newMessage = {
+                message: storedMessage,
+                sender: myaccounts,
+                timestamp: new Date().getTime()
+            };
+            // Check if the message already exists to avoid duplication
+            if (!existingMessages.some(msg => msg.timestamp === newMessage.timestamp && msg.message === newMessage.message)) {
+                existingMessages.push(newMessage);
+                localStorage.setItem(myaccounts + DDEaddy + hash + recipient + 'messages', JSON.stringify(existingMessages));
+            }
+        }
+        hideLoader();
+        Swal.fire({
+          icon: 'success',
+          title: translateThis('Message Sent'),
+          text: translateThis('Your message has been sent successfully.'),
+        });
 
-          input.value = '';
-          messagesContainer.remove();
-        } catch (error) {
-          console.error('Failed to send message:', error);
-          hideLoader();
-          showError(error);
-        }  finally {
+        input.value = '';
+        messagesContainer.remove();
+      } catch (error) {
+        console.error('Failed to send message:', error);
+        hideLoader();
+        showError(error);
+      } finally {
         hideLoader();
         setActionActive('sendMessage', false);
         messagesContainer.remove();
       }
     }
-  }
+}
 
-  function createMessagePopup(messages, userSupportsEncryption) {
+function createMessagePopup(messages, userSupportsEncryption, sender, recipient) {
     const decryptedMessages = messages.map(msg => {
-        if (userSupportsEncryption && msg.startsWith("ENC:")) {
-            var encryptedPart = msg.substring(4); // Remove the "ENC:" prefix
-            var decryptionResult = cryptico.decrypt(encryptedPart, userprivkey);
+        if (userSupportsEncryption && msg.message.startsWith("ENC:")) {
+            const encryptedPart = msg.message.substring(4);
+            const decryptionResult = cryptico.decrypt(encryptedPart, userprivkey);
             if (decryptionResult.status === "success") {
-                return decryptionResult.plaintext;
+                const messageParts = decryptionResult.plaintext.split("#*#*#");
+                return { ...msg, message: messageParts[0], timestamp: messageParts[1] };
             } else {
                 console.error("Decryption failed:", decryptionResult.status);
-                return "Failed to decrypt message"; // Or handle this case as needed
+                return { ...msg, message: "Failed to decrypt message" };
             }
         } else {
-            return msg; // Return the plain text message as is
+            return msg;
         }
     });
 
@@ -7210,7 +7252,10 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
         </div>
         <div class="message-body">
           <div class="message-body-inner">
-            ${decryptedMessages.map(msg => `<p>${msg}</p>`).join('')}
+            ${decryptedMessages.sort((a, b) => a.timestamp - b.timestamp).map(msg => {
+                const messageClass = msg.sender === myaccounts ? 'message-sender' : 'message-receiver';
+                return `<p class="${messageClass}"><b>${msg.sender === myaccounts ? translateThis('You') : translateThis('Counterparty')}:</b> ${msg.message}</p>`;
+            }).join('')}
           </div>
           <textarea placeholder="${translateThis('Type your message here...')}"></textarea>
           <button>${translateThis('Send')}</button>
@@ -7225,24 +7270,51 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
     return popup;
 }
 
-  async function fetchMessages(hash, user) {
-      let messages = [];
-      try {
-          const messageCount = await DDEcontract.methods.getMessageLength(hash, user).call();
-          if (messageCount > 0) {
-              for (let index = 0; index < messageCount; index++) {
-                  const message = await DDEcontract.methods.messages(hash, user, index).call();
-                  messages.push(message);
-              }
-              console.log("Fetched all messages successfully.");
-          } else {
-              console.log("No messages found for this hash and user.");
-          }
-      } catch (error) {
-          console.error('Error fetching messages:', error);
-      }
-      return messages; // Return the fetched messages or an empty array if none were found
-  }
+async function fetchMessages(hash, user, startIndex) {
+    let storedMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + hash + user + 'messages') || '[]');
+    let index = parseInt(startIndex);
+    let newMessagesFetched = false;
+
+    try {
+        while (true) {
+            const message = DOMPurify.sanitize(await DDEcontract.methods.messages(hash, user, index).call());
+            if (!message) break; // Assuming the call returns null or similar when no more messages are available
+
+            // Check if the message is already in the stored messages
+            if (!storedMessages.some(msg => msg.index === index)) {
+                storedMessages.push({ message, sender: user, timestamp: new Date().getTime(), index: index });
+                newMessagesFetched = true;
+            }
+            index++;
+        }
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+    } finally {
+        if (newMessagesFetched) {
+            // Only update local storage if new messages were fetched
+            localStorage.setItem(myaccounts + DDEaddy + hash + user + 'messages', JSON.stringify(storedMessages));
+            localStorage.setItem(myaccounts + DDEaddy + hash + user + 'lastMessageIndex', index.toString());
+        }
+    }
+    return storedMessages;
+}
+
+// Enble this implimetation in after next deployment 
+// async function fetchMessages(hash, user, startIndex) {
+//     let messages = [];
+//     try {
+//         const messageCount = DOMPurify.sanitize(await DDEcontract.methods.getMessageLength(hash, user).call());
+//         for (let index = startIndex; index < messageCount; index++) {
+//             const message = DOMPurify.sanitize(await DDEcontract.methods.messages(hash, user, index).call());
+//             messages.push(message);
+//         }
+//         console.log("Fetched new messages successfully.");
+//         localStorage.setItem(myaccounts + DDEaddy + hash + 'lastMessageIndex', messageCount);
+//     } catch (error) {
+//         console.error('Error fetching messages:', error);
+//     }
+//     return messages; // Return the fetched messages or an empty array if none were found
+// }
    
     function removeListingFromView(listing) {
       const listingElement = document.querySelector(`#listing-${listing.hash}`); // Assuming listings have an ID based on their hash
@@ -7648,12 +7720,10 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
                 confirmButtonText: translateThis('Continue'),
                 showCancelButton: true,
                 cancelButtonText: translateThis('Cancel')
-            });
-
+            }); 
             if (response.isConfirmed) {
 
             } else {
-
                 return;
             }
         }

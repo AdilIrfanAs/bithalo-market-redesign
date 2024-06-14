@@ -436,4 +436,8 @@
   "Enter your notes for this offer": true,
   "Encryption Supported": true,
 }
+{
+  "You": true,
+  "Counterparty": true
+}
 
