@@ -437,6 +437,11 @@
   "Encryption Supported": true,
 }
 {
+  "Register Contact Information and Public Key": true,
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": true,
+  "Enter your email/contact information": true,
+  "Please enter your contact information.": true,
+  "Please Login/connect your wallet to create a contract.": true,
   "You": true,
   "Counterparty": true
 }

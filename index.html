@@ -3041,6 +3041,7 @@ body {
     var myFavorites = [];
     var DDEcontract2 = new web3.eth.Contract(DDEabi, DDEaddy);
     var marketOffers = {'indices':[], 'results':[]};
+    var currentViewContext = '';
     //web3[0] = new Web3("https://cloudflare-eth.com");
     //web3[1] = new Web3("https://bsc-dataseed.binance.org");
     //web3[2] = new Web3("https://api-goerli.etherscan.io/");
@@ -3447,6 +3448,7 @@ const combinedStatusDescriptions = {
         const theFavorites =  localStorage.getItem(myaccounts + DDEaddy + ":myFavorites");
         if(theFavorites) {
         myFavorites = JSON.parse(theFavorites);
+        updatePaginationControls(myFavorites.length);
       }
       checkFavorites();        
         if(document.getElementById("myPasswordInput").value != Crypto.SHA256("default") && newkey == 0 && accountprivkey == "") {
@@ -4258,14 +4260,14 @@ const combinedStatusDescriptions = {
       });
     }
 
-    async function registerData() {
+    async function registerData(contactInfo) {
       const actionId = generateActionId("registerData", "registerData");
       if (isActionActive(actionId)) {
         await Swal.fire(translateThis("Action is already in progress for this contract."));
         return;
       }
 
-      myemail = document.getElementById('myContactInfo').value;
+      myemail = contactInfo || document.getElementById('myContactInfo').value;
       const { value: formValues } = await Swal.fire({
         title: '',
         html:
@@ -4805,6 +4807,7 @@ const combinedStatusDescriptions = {
                 }
               }
               var validOffers = 0;
+              updatePaginationControls(mylen);
               for (var myinx = 0; myinx < mylen; myinx++) {
                 if(validOffers == high) {
                   break;
@@ -5657,7 +5660,7 @@ const combinedStatusDescriptions = {
     //**************MARKETS TAB//**************
     // global variables for pagination
     var currentPage = 1;
-    var listingsPerPage = 4;
+    var listingsPerPage = 1 ;
 
     async function populateListings(searchText = "", sortHits = 0) {
         if(sortHits == 1) {
@@ -5796,7 +5799,7 @@ const combinedStatusDescriptions = {
         shown++;
       }
       listingsDiv.appendChild(gridContainer);
-      updatePaginationControls(shown);
+      // updatePaginationControls(shown);
       // Inject CSS styles into a style tag
       var style = document.createElement('style');
       style.textContent = `
@@ -5991,12 +5994,15 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
                 document.getElementById("loadingStatus").innerHTML = translateThis("No favorites found.");
                return;
            }
+           currentViewContext = 'favorites';
            await loadMarkets(0, 5, favorites);
-           isFavoritesShown = true; // Set flag to true after loading favorites
+           updatePaginationControls(favorites.length);
+           isFavoritesShown = true;
           //  document.getElementById("favorites-text").textContent = translateThis("Hide Favorites");
        } else {
-           await loadMarkets(1, 5); // Load normal listings
-           isFavoritesShown = false; // Reset flag after hiding favorites
+           currentViewContext = '';
+           await loadMarkets(1, 5);
+           isFavoritesShown = false; 
           //  document.getElementById("favorites-text").textContent = translateThis("Show Favorites");
        }
        
@@ -6024,55 +6030,129 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
 
       // Disable or enable buttons based on the current page
       prevButton.disabled = currentPage === 1;
-      nextButton.disabled = currentPage * listingsPerPage >=  currentMarketsLength - 1;
+      nextButton.disabled = currentPage * listingsPerPage >=  totalItems;
       prevButton.classList.toggle('button-disabled', currentPage === 1);
-      nextButton.classList.toggle('button-disabled', currentPage * listingsPerPage >=  currentMarketsLength - 1);
+      nextButton.classList.toggle('button-disabled', currentPage * listingsPerPage >=  totalItems);
 
       function createPageButton(page) {
         let pageButton = document.createElement('button');
         pageButton.textContent = page;
         pageButton.className = 'page-number';
-        pageButton.onclick = function () { goToPage(page); };
+        pageButton.onclick = function () { goToPage(page, totalItems); };
         if (page === currentPage) {
           pageButton.classList.add('active'); // Highlight the current page
         }
         paginationNumbers.appendChild(pageButton);
       }
+
+    // populateListings();
+
     }
 
-    function goToPage(pageNumber) {
-      currentPage = pageNumber;
-      populateListings();
-      updatePaginationControls(marketOffers.indices.length);
-    }
+    async function goToPage(pageNumber, totalItems){
+    currentPage = pageNumber;
+      await populateListings();
+      updatePaginationControls(totalItems);
+}
+
+    // async function previousPage() {
+    //   if (currentPage > 1) {
+    //     currentPage--;
+    //     await populateListings();
+    //     updatePaginationControls(marketOffers.indices.length);
+    //   }
+    // }
 
     async function previousPage() {
-      if (currentPage > 1) {
+    var totalItems;
+    // Determine the total items based on the current context
+    switch (currentViewContext) {
+        case 'favorites':
+            const favorites = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":myFavorites")) || [];
+            totalItems = favorites.length;
+            break;
+        case 'userStore':
+            const userStoreKey = document.getElementById("searchText").value.split("userStore:")[1].trim();
+            totalItems = await getTotalItemsForUserStore(userStoreKey);
+            break;
+        default:
+            totalItems = marketOffers.indices.length;
+            break;
+    }
+
+    if (currentPage > 1) {
         currentPage--;
         await populateListings();
-        updatePaginationControls(marketOffers.indices.length);
-      }
-    }
-
-    async function nextPage() {
-    var totalItems = marketOffers.indices.length;
-    var totalPages = Math.ceil(totalItems / listingsPerPage);
-
-    if (currentPage < totalPages) {
-        currentPage++;
-        await populateListings();
         updatePaginationControls(totalItems);
-    } else {
-        document.getElementById("loadingStatus").innerHTML = loader;
-        await loadMarkets(totalItems, totalItems + 5); // Fetch next listings
-        document.getElementById("loadingStatus").innerHTML = "";
-        if (currentPage < totalPages) {
-            currentPage++;
-        }
-        await populateListings();
-        updatePaginationControls(totalItems + 5);
     }
-  }
+}
+
+    async function getTotalItemsForUserStore(userStoreKey) {
+    try {
+        const totalItems = await DDEcontract3.methods.getArrayLength(userStoreKey, 0).call();
+        return DOMPurify.sanitize(totalItems);
+    } catch (error) {
+        console.error("Error fetching total items for user store:", error);
+        return 0;
+    }
+}
+
+async function nextPage() {
+    var totalItems;
+    var startIndex = currentPage * listingsPerPage;
+    var endIndex = startIndex + listingsPerPage;
+
+    // Handle different contexts for loading markets
+    switch (currentViewContext) {
+        case 'favorites':
+            const favorites = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":myFavorites")) || [];
+            totalItems = favorites.length;
+            if (startIndex < totalItems) {
+                await loadMarkets(startIndex, Math.min(endIndex, totalItems), favorites);
+            }
+            break;
+        case 'userStore':
+            const userStoreKey = document.getElementById("searchText").value.split("userStore:")[1].trim();
+            totalItems = await getTotalItemsForUserStore(userStoreKey);
+            if (startIndex < totalItems) {
+                await loadMarkets(startIndex, Math.min(endIndex, totalItems), "userStore:" + userStoreKey);
+            }
+            break;
+        default:
+            totalItems = marketOffers.indices.length;
+            if (startIndex < totalItems) {
+                await loadMarkets(startIndex, endIndex);
+            }
+            break;
+    }
+    console.log("totalItems", totalItems);
+    var totalPages = Math.ceil(totalItems / listingsPerPage);
+    currentPage = Math.min(currentPage + 1, totalPages); // Ensure currentPage does not exceed totalPages
+
+    document.getElementById("loadingStatus").innerHTML = "";
+    await populateListings();
+    updatePaginationControls(totalItems);
+}
+
+  //   async function nextPage() {
+  //   var totalItems = marketOffers.indices.length;
+  //   var totalPages = Math.ceil(totalItems / listingsPerPage);
+
+  //   if (currentPage < totalPages) {
+  //       currentPage++;
+  //       await populateListings();
+  //       updatePaginationControls(totalItems);
+  //   } else {
+  //       document.getElementById("loadingStatus").innerHTML = loader;
+  //       await loadMarkets(totalItems, totalItems + 5); // Fetch next listings
+  //       document.getElementById("loadingStatus").innerHTML = "";
+  //       if (currentPage < totalPages) {
+  //           currentPage++;
+  //       }
+  //       await populateListings();
+  //       updatePaginationControls(totalItems + 5);
+  //   }
+  // }
     // populateListings();
     // Function to show the details popup for a listing
     async function showListing(listing, mode = 0) {
@@ -6351,6 +6431,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
               popupContainer.remove();
               showMain('markets');
               document.getElementById("searchText").value="userStore:"+listing.sender;
+              currentViewContext = 'userStore';
               loadMarkets(0, 5, "userStore:"+listing.sender);
             }
           });
@@ -6409,6 +6490,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
               popupContainer.remove();
               showMain('markets');
                 document.getElementById("searchText").value="userStore:"+listing.recipient;
+                currentViewContext = 'userStore';
                 loadMarkets(0, 5, "userStore:"+listing.recipient);
             }
           });
@@ -7703,15 +7785,20 @@ async function fetchMessages(hash, user, startIndex) {
     }
 
     async function createContract(publicoffer = true, counterdata = {}) {
+      if(myaccounts == "") {
+        await Swal.fire({title: translateThis("Please Login/connect your wallet to create a contract."), icon: 'warning'});
+        return;
+      }
       const actionId = generateActionId(counterdata, "createContract");
       if (isActionActive(actionId)) {
         await Swal.fire(translateThis("Action is already in progress for this contract."));
         return;
       }
+      var DDEcontract4 = new web3.eth.Contract(DDEabi, DDEaddy);
           // Fetch user data to check if encryption key and contact info are registered
-    const datalen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, 3).call());
+      const datalen = DOMPurify.sanitize(await DDEcontract4.methods.getArrayLength(myaccounts, 3).call());
     if (datalen > 0) {
-        const contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(myaccounts, datalen - 1).call()));
+        const contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract4.methods.userdata(myaccounts, datalen - 1).call()));
         if (!contact2.mycontact || !contact2.publickey) {
             const response = await Swal.fire({
                 title: translateThis("Registration Required"),
@@ -7722,7 +7809,29 @@ async function fetchMessages(hash, user, startIndex) {
                 cancelButtonText: translateThis('Cancel')
             }); 
             if (response.isConfirmed) {
-
+              await Swal.fire({
+                title: translateThis('Register Contact Information and Public Key'),
+                html: `
+                    <input id="contactInfoInput" class="swal2-input" placeholder="${translateThis('Enter your email/contact information')}">
+                    <p>${translateThis('Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.')}</p>
+                `,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: translateThis('Yes'),
+                cancelButtonText: translateThis('No'),
+                preConfirm: () => {
+                    const contactInfo = document.getElementById('contactInfoInput').value;
+                    if (!contactInfo) {
+                        Swal.showValidationMessage(translateThis('Please enter your contact information.'));
+                        return false;
+                    }
+                    return { contactInfo };
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed && result.value) {
+                    await registerData(result.value.contactInfo);
+                }
+            });
             } else {
                 return;
             }
@@ -7736,8 +7845,30 @@ async function fetchMessages(hash, user, startIndex) {
             showCancelButton: true,
             cancelButtonText: translateThis('Cancel')
         });
-
         if (response.isConfirmed) {
+          await Swal.fire({
+              title: translateThis('Register Contact Information and Public Key'),
+              html: `
+                  <input id="contactInfoInput" class="swal2-input" placeholder="${translateThis('Enter your email/contact information')}">
+                  <p>${translateThis('Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.')}</p>
+              `,
+              icon: 'question',
+              showCancelButton: true,
+              confirmButtonText: translateThis('Yes'),
+              cancelButtonText: translateThis('No'),
+              preConfirm: () => {
+                  const contactInfo = document.getElementById('contactInfoInput').value;
+                  if (!contactInfo) {
+                      Swal.showValidationMessage(translateThis('Please enter your contact information.'));
+                      return false;
+                  }
+                  return { contactInfo };
+              }
+          }).then(async (result) => {
+              if (result.isConfirmed && result.value) {
+                  await registerData(result.value.contactInfo);
+              }
+          });
         } else {
             return;
         }
