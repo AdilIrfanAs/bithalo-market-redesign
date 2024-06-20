@@ -458,6 +458,13 @@ languages['ar']={
   "Notes Saved": "تم حفظ الملاحظات",
   "Enter your notes for this offer": "أدخل ملاحظاتك لهذا العرض",
   "Encryption Supported": "التشفير مدعوم",
+  "Register Contact Information and Public Key": "سجل معلومات الاتصال والمفتاح العام",
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": "هل ترغب في تسجيل هذا المفتاح العام في حسابك الآن؟ هكذا سيعرف المستخدمون كيفية تشفير عروضهم لك.",
+  "Enter your email/contact information": "أدخل بريدك الإلكتروني/معلومات الاتصال",
+  "Please enter your contact information.": "يرجى إدخال معلومات الاتصال الخاصة بك.",
+  "Please Login/connect your wallet to create a contract.": "يرجى تسجيل الدخول/ربط محفظتك لإنشاء عقد.",
+  "You": "أنت",
+  "Counterparty": "الطرف الآخر",
 };
 
 
@@ -918,7 +925,14 @@ languages['ch']={
   "Your notes have been saved successfully.": "您的笔记已成功保存。",
   "Notes Saved": "笔记已保存",
   "Enter your notes for this offer": "输入此优惠的备注",
-  "Encryption Supported": "支持加密"
+  "Encryption Supported": "支持加密",
+  "Register Contact Information and Public Key": "注册联系信息和公钥",
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": "您现在想将这个公钥注册到您的账户吗？这样用户就会知道如何对他们对您的报价进行加密。",
+  "Enter your email/contact information": "输入您的电子邮件/联系信息",
+  "Please enter your contact information.": "请输入您的联系信息。",
+  "Please Login/connect your wallet to create a contract.": "请登录/连接您的钱包以创建合同。",
+  "You": "您",
+  "Counterparty": "对方",
 };
 
 languages['en']={
@@ -1436,6 +1450,13 @@ languages['fr']={
   "Notes Saved": "Notes enregistrées",
   "Enter your notes for this offer": "Entrez vos notes pour cette offre",
   "Encryption Supported": "Chiffrement pris en charge",
+  "Register Contact Information and Public Key": "Enregistrer les informations de contact et la clé publique",
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": "Souhaitez-vous enregistrer cette clé publique sur votre compte maintenant ? C'est ainsi que les utilisateurs sauront comment chiffrer leurs offres pour vous.",
+  "Enter your email/contact information": "Entrez votre email/informations de contact",
+  "Please enter your contact information.": "Veuillez entrer vos informations de contact.",
+  "Please Login/connect your wallet to create a contract.": "Veuillez vous connecter/relier votre portefeuille pour créer un contrat.",
+  "You": "Vous",
+  "Counterparty": "Contrepartie",
 };
 
 languages['ge']={
@@ -1895,6 +1916,13 @@ languages['ge']={
   "Notes Saved": "Notizen gespeichert",
   "Enter your notes for this offer": "Geben Sie Ihre Notizen zu diesem Angebot ein",
   "Encryption Supported": "Verschlüsselung unterstützt",
+  "Register Contact Information and Public Key": "Kontaktinformationen und öffentlichen Schlüssel registrieren",
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": "Möchten Sie diesen öffentlichen Schlüssel jetzt auf Ihrem Konto registrieren? So wissen die Benutzer, wie sie ihre Angebote an Sie verschlüsseln können.",
+  "Enter your email/contact information": "Geben Sie Ihre E-Mail/Kontaktinformationen ein",
+  "Please enter your contact information.": "Bitte geben Sie Ihre Kontaktinformationen ein.",
+  "Please Login/connect your wallet to create a contract.": "Bitte melden Sie sich an/verbinden Sie Ihre Wallet, um einen Vertrag zu erstellen.",
+  "You": "Sie",
+  "Counterparty": "Gegenpartei",
 };
 
 languages['it']={
@@ -2355,6 +2383,13 @@ languages['it']={
   "Notes Saved": "Note salvate",
   "Enter your notes for this offer": "Inserisci le tue note per questa offerta",
   "Encryption Supported": "Cifratura supportata",
+  "Register Contact Information and Public Key": "Registra informazioni di contatto e chiave pubblica",
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": "Vuoi registrare questa chiave pubblica sul tuo account ora? Così gli utenti sapranno come criptare le loro offerte per te.",
+  "Enter your email/contact information": "Inserisci la tua email/informazioni di contatto",
+  "Please enter your contact information.": "Inserisci le tue informazioni di contatto.",
+  "Please Login/connect your wallet to create a contract.": "Per favore accedi/collega il tuo portafoglio per creare un contratto.",
+  "You": "Tu",
+  "Counterparty": "Controparte",
 };
 
 languages['ja']={
@@ -2815,6 +2850,13 @@ languages['ja']={
   "Notes Saved": "メモが保存されました",
   "Enter your notes for this offer": "このオファーのメモを入力してください",
   "Encryption Supported": "暗号化がサポートされています",
+  "Register Contact Information and Public Key": "連絡先情報と公開鍵を登録する",
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": "この公開鍵を今すぐアカウントに登録しますか？これにより、ユーザーはあなたへのオファーを暗号化する方法を知ることができます。",
+  "Enter your email/contact information": "メールアドレス/連絡先情報を入力してください",
+  "Please enter your contact information.": "連絡先情報を入力してください。",
+  "Please Login/connect your wallet to create a contract.": "ログインしてウォレットを接続し、契約を作成してください。",
+  "You": "あなた",
+  "Counterparty": "相手方",
 };
 
 languages['ko']={
@@ -3275,6 +3317,13 @@ languages['ko']={
   "Notes Saved": "메모 저장됨",
   "Enter your notes for this offer": "이 제안에 대한 메모를 입력하세요",
   "Encryption Supported": "암호화 지원됨",
+  "Register Contact Information and Public Key": "연락처 정보 및 공개 키 등록",
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": "이제 이 공개 키를 계정에 등록하시겠습니까? 사용자가 당신에게 제안을 암호화하는 방법을 알 수 있습니다.",
+  "Enter your email/contact information": "이메일/연락처 정보 입력",
+  "Please enter your contact information.": "연락처 정보를 입력해 주세요.",
+  "Please Login/connect your wallet to create a contract.": "로그인/지갑 연결하여 계약 생성",
+  "You": "당신",
+  "Counterparty": "상대방",
 };
 
 languages['po']={
@@ -3734,7 +3783,14 @@ languages['po']={
   "Your notes have been saved successfully.": "Suas anotações foram salvas com sucesso.",
   "Notes Saved": "Notas salvas",
   "Enter your notes for this offer": "Insira suas anotações para esta oferta",
-  "Encryption Supported": "Criptografia suportada"
+  "Encryption Supported": "Criptografia suportada",
+  "Register Contact Information and Public Key": "Registrar Informações de Contato e Chave Pública",
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": "Você gostaria de registrar esta chave pública em sua conta agora? É assim que os usuários saberão como criptografar suas ofertas para você.",
+  "Enter your email/contact information": "Digite seu e-mail/informações de contato",
+  "Please enter your contact information.": "Por favor, insira suas informações de contato.",
+  "Please Login/connect your wallet to create a contract.": "Por favor, faça login/conecte sua carteira para criar um contrato.",
+  "You": "Você",
+  "Counterparty": "Contraparte",
 };
 
 languages['ru'] = {
@@ -4195,6 +4251,13 @@ languages['ru'] = {
   "Notes Saved": "Заметки сохранены",
   "Enter your notes for this offer": "Введите ваши заметки для этого предложения",
   "Encryption Supported": "Шифрование поддерживается",
+  "Register Contact Information and Public Key": "Зарегистрировать контактную информацию и открытый ключ",
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": "Хотите зарегистрировать этот открытый ключ в своем аккаунте сейчас? Так пользователи узнают, как шифровать свои предложения вам.",
+  "Enter your email/contact information": "Введите вашу электронную почту/контактную информацию",
+  "Please enter your contact information.": "Пожалуйста, введите вашу контактную информацию.",
+  "Please Login/connect your wallet to create a contract.": "Пожалуйста, войдите в систему/подключите ваш кошелек для создания контракта.",
+  "You": "Вы",
+  "Counterparty": "Контрагент",
 };
 
 languages['sp'] = {
@@ -4655,4 +4718,11 @@ languages['sp'] = {
   "Notes Saved": "Notas guardadas",
   "Enter your notes for this offer": "Ingresa tus notas para esta oferta",
   "Encryption Supported": "Cifrado admitido",
+  "Register Contact Information and Public Key": "Registrar Información de Contacto y Clave Pública",
+  "Would you like to register this public key to your account now? This is how users will know how to encrypt their offers to you.": "¿Desea registrar esta clave pública en su cuenta ahora? Así es como los usuarios sabrán cómo cifrar sus ofertas para usted.",
+  "Enter your email/contact information": "Ingrese su correo electrónico/información de contacto",
+  "Please enter your contact information.": "Por favor, ingrese su información de contacto.",
+  "Please Login/connect your wallet to create a contract.": "Por favor, inicie sesión/conecte su billetera para crear un contrato.",
+  "You": "Usted",
+  "Counterparty": "Contraparte",
 };
