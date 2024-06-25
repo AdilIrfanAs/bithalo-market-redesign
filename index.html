@@ -871,13 +871,32 @@ h2 {
 }
 
 .message-button {
-  background-color: #ECEFF8;
-  color: #322C62;
-  width: 35px;
-  height: 35px;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
+    position: relative; /* Add this line */
+    background-color: #ECEFF8;
+    color: #322C62;
+    width: 35px;
+    height: 35px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    display: flex; /* Ensure it uses flexbox to center the icon */
+    /* border-radius: 50%; Optional: makes the button circular */
+}
+.message-count-indicator {
+    position: absolute; /* Position it relative to the message button */
+    top: 0;
+    right: 0;
+    background-color: red; /* Red is commonly used for alerts and notifications */
+    color: white;
+    border-radius: 50%; /* Circular shape */
+    padding: 2px 5px; /* Padding to adjust the content inside the circle */
+    font-size: 12px; /* Smaller font size for the indicator */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px; /* Minimum width to ensure the circle shape even with single digit */
+    height: 20px; /* Fixed height for consistency */
+    box-shadow: 0 0 2px #000; /* Optional: adds a slight shadow for better visibility */
 }
 .offer-popup .favorites-button2 {
   margin-right: 6px;
@@ -2660,15 +2679,16 @@ body {
 
     function validateContactInfo(contactInput) {
     const warningSpan = document.getElementById('contactInfoWarning');
+    const emailClientCheckbox = document.getElementById('emailClient');
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email validation regex
 
-    if (contactInput.value === '' || !emailRegex.test(contactInput.value)) {
+    if (emailClientCheckbox.checked && (contactInput.value === '' || !emailRegex.test(contactInput.value))) {
         warningSpan.style.display = 'block'; // Show warning if invalid
-        warningSpan.textContent = translateThis('Please enter a valid email address. Other contact methods are optional.');
+        warningSpan.textContent = translateThis('Please enter a valid email address so you can automatically email users who share their email address.');
     } else {
         warningSpan.style.display = 'none'; // Hide warning if valid
     }
-} 
+}
     document.querySelectorAll('button').forEach(button => {
       if (!button.classList.length && !button.closest('.sidebar')) {
         button.classList.add('square-button2');
@@ -3653,7 +3673,7 @@ const combinedStatusDescriptions = {
         if(login == 1) {
         await getUserAPI(currentChainId);
         document.getElementById("loadingStatus").innerHTML = loader;
-        await loadMarkets(1, 5);
+        await loadMarkets(0, 5);
         document.getElementById("loadingStatus").innerHTML = '';
       } else {
         await checkMarketUpdate();
@@ -5660,7 +5680,7 @@ const combinedStatusDescriptions = {
     //**************MARKETS TAB//**************
     // global variables for pagination
     var currentPage = 1;
-    var listingsPerPage = 1 ;
+    var listingsPerPage = 4 ;
 
     async function populateListings(searchText = "", sortHits = 0) {
         if(sortHits == 1) {
@@ -7113,6 +7133,12 @@ async function nextPage() {
     messageButton.classList.add('message-button');
     messageButton.style.fontSize = "20px";
     messageButton.style.marginLeft = "10px";
+
+    const messageCountIndicator = document.createElement('span');
+    messageCountIndicator.classList.add('message-count-indicator');
+    messageCountIndicator.style.display = 'none'; // Hide initially
+    messageButton.appendChild(messageCountIndicator);
+
     messageButton.addEventListener('mouseover', function() {
       this.style.cursor = 'pointer';
     });
@@ -7154,6 +7180,9 @@ async function nextPage() {
 
       if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
           messageButton.style.display = 'inline-flex';
+
+          const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + listing.hash + 'lastMessageIndex') || 0;
+          await fetchMessages(listing.hash, user, lastMessageIndex);
       } else {
           messageButton.style.display = 'none';
       }
@@ -7171,9 +7200,9 @@ async function nextPage() {
             showCancelButton: true,
             confirmButtonText: translateThis('Send Anyway'),
             cancelButtonText: translateThis('Cancel'),
-          }).then((result) => {
+          }).then(async (result) => {
             if (result.isConfirmed) {
-              handleSendMessage(listing.hash, senderAddress, recipientAddress, false);
+             await handleSendMessage(listing.hash, recipientAddress, false, null, listing.sender, listing.recipient);
             }
           });
         } else if (!recipientSupportsEncryption) {
@@ -7186,7 +7215,7 @@ async function nextPage() {
           cancelButtonText: translateThis('Cancel'),
         }).then(async (result) => {
           if (result.isConfirmed) {
-            await handleSendMessage(listing.hash,senderAddress, recipientAddress, false);
+            await handleSendMessage(listing.hash, recipientAddress, false, null, listing.sender, listing.recipient);
           }
         });
       } else if (!senderSupportsEncryption) {
@@ -7199,11 +7228,11 @@ async function nextPage() {
           cancelButtonText: translateThis('Cancel'),
         }).then(async (result) => {
           if (result.isConfirmed) {
-            await handleSendMessage(listing.hash, senderAddress, recipientAddress, result.value, recipientPublicKey);
+            await handleSendMessage(listing.hash, recipientAddress, result.value, recipientPublicKey, listing.sender, listing.recipient);
           }
         });
       } else {
-        await handleSendMessage(listing.hash, senderAddress, recipientAddress, true, recipientPublicKey);
+        await handleSendMessage(listing.hash, recipientAddress, true, recipientPublicKey, listing.sender, listing.recipient);
       }
   }};
 
@@ -7238,11 +7267,11 @@ async function nextPage() {
     }
 
    
-    async function handleSendMessage(hash, sender, recipient, encrypt = false, recipientPublicKey = null) {
+    async function handleSendMessage(hash, recipient, encrypt = false, recipientPublicKey = null, listingSender, listingRecipient) {
     const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + hash + 'lastMessageIndex') || 0;
     const existingMessages = await fetchMessages(hash, recipient, lastMessageIndex);
-    const { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(myaccounts);
-    const messagesContainer = createMessagePopup(existingMessages, senderSupportsEncryption);
+    const { supportsEncryption: senderSupportsEncryption, publicKey: senderPublicKey } = await userSupportsEncryption(myaccounts);
+    const messagesContainer = createMessagePopup(existingMessages, senderSupportsEncryption, listingSender, listingRecipient);
 
     const messagePopup = document.querySelector('.popup-container');
     messagePopup.appendChild(messagesContainer);
@@ -7263,31 +7292,26 @@ async function nextPage() {
           finalMessage = "ENC:" + cryptico.encrypt(message + "#*#*#" + timestamp + padding, recipientPublicKey, userprivkey).cipher;
         }
 
-        if(accountprivkey !== ''){
-          const gasEstimate = 90000; 
-          const res = await confirmTransaction(gasEstimate, 0, tokens[0].address);
-          if (!res) {
-            throw new Error(translateThis('Transaction cancelled by user'));
-          }
+        // Encrypt message for local storage if sender's public key is available
+        if (senderPublicKey) {
+          storedMessage = "ENC:" + cryptico.encrypt(message, senderPublicKey).cipher;
         }
-        setActionActive('sendMessage', true);
-        showLoader();
 
-        const sendResult = await DDEcontract.methods.sendMessage(hash, sender, finalMessage).send({ from: myaccounts, ...gasOptions[gasSetting] });
+        showLoader();
+        const sendResult = await DDEcontract.methods.sendMessage(hash, myaccounts, finalMessage).send({ from: myaccounts });
         if (sendResult) {
-            // Store the plaintext message in local storage
             const newMessage = {
                 message: storedMessage,
                 sender: myaccounts,
                 timestamp: new Date().getTime()
             };
-            // Check if the message already exists to avoid duplication
             if (!existingMessages.some(msg => msg.timestamp === newMessage.timestamp && msg.message === newMessage.message)) {
                 existingMessages.push(newMessage);
                 localStorage.setItem(myaccounts + DDEaddy + hash + recipient + 'messages', JSON.stringify(existingMessages));
             }
         }
         hideLoader();
+        setActionActive('sendMessage', false);
         Swal.fire({
           icon: 'success',
           title: translateThis('Message Sent'),
@@ -7297,9 +7321,13 @@ async function nextPage() {
         input.value = '';
         messagesContainer.remove();
       } catch (error) {
-        console.error('Failed to send message:', error);
+
         hideLoader();
-        showError(error);
+        console.error(error);
+        await showError(error);
+        setActionActive('sendMessage', false);
+        messagesContainer.remove();
+        console.error('Failed to send message:', error);
       } finally {
         hideLoader();
         setActionActive('sendMessage', false);
@@ -7308,6 +7336,7 @@ async function nextPage() {
     }
 }
 
+
 function createMessagePopup(messages, userSupportsEncryption, sender, recipient) {
     const decryptedMessages = messages.map(msg => {
         if (userSupportsEncryption && msg.message.startsWith("ENC:")) {
@@ -7315,13 +7344,13 @@ function createMessagePopup(messages, userSupportsEncryption, sender, recipient)
             const decryptionResult = cryptico.decrypt(encryptedPart, userprivkey);
             if (decryptionResult.status === "success") {
                 const messageParts = decryptionResult.plaintext.split("#*#*#");
-                return { ...msg, message: messageParts[0], timestamp: messageParts[1] };
+                return { ...msg, message: messageParts[0] }; // Only return the actual message part
             } else {
                 console.error("Decryption failed:", decryptionResult.status);
                 return { ...msg, message: "Failed to decrypt message" };
             }
         } else {
-            return msg;
+            return msg; // Return the plaintext message if not encrypted
         }
     });
 
@@ -7335,8 +7364,12 @@ function createMessagePopup(messages, userSupportsEncryption, sender, recipient)
         <div class="message-body">
           <div class="message-body-inner">
             ${decryptedMessages.sort((a, b) => a.timestamp - b.timestamp).map(msg => {
-                const messageClass = msg.sender === myaccounts ? 'message-sender' : 'message-receiver';
-                return `<p class="${messageClass}"><b>${msg.sender === myaccounts ? translateThis('You') : translateThis('Counterparty')}:</b> ${msg.message}</p>`;
+                const isCurrentUser = msg.sender === myaccounts;
+                const messageClass = isCurrentUser ? 'message-sender' : 'message-receiver';
+                const displayName = isCurrentUser 
+                    ? (sender === myaccounts ? translateThis('Sender (You)') : translateThis('Recipient (You)')) 
+                    : (sender === msg.sender ? translateThis('Sender') : translateThis('Recipient'));
+                return `<p class="${messageClass}"><b>${displayName}:</b> ${msg.message}</p>`;
             }).join('')}
           </div>
           <textarea placeholder="${translateThis('Type your message here...')}"></textarea>
@@ -7352,20 +7385,33 @@ function createMessagePopup(messages, userSupportsEncryption, sender, recipient)
     return popup;
 }
 
+
 async function fetchMessages(hash, user, startIndex) {
     let storedMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + hash + user + 'messages') || '[]');
     let index = parseInt(startIndex);
     let newMessagesFetched = false;
+    let unreadMessageCount = 0;
 
     try {
         while (true) {
             const message = DOMPurify.sanitize(await DDEcontract.methods.messages(hash, user, index).call());
-            if (!message) break; // Assuming the call returns null or similar when no more messages are available
+            if (!message) break;
 
-            // Check if the message is already in the stored messages
+            let decryptedMessage = message;
+            if (message.startsWith("ENC:")) {
+                const decryptionResult = cryptico.decrypt(message.substring(4), userprivkey);
+                if (decryptionResult.status === "success") {
+                    decryptedMessage = decryptionResult.plaintext.split("#*#*#")[0];
+                } else {
+                    console.error("Decryption failed:", decryptionResult.status);
+                    decryptedMessage = "Failed to decrypt message";
+                }
+            }
+
             if (!storedMessages.some(msg => msg.index === index)) {
-                storedMessages.push({ message, sender: user, timestamp: new Date().getTime(), index: index });
+                storedMessages.push({ message: decryptedMessage, sender: user, timestamp: new Date().getTime(), index: index });
                 newMessagesFetched = true;
+                unreadMessageCount++;
             }
             index++;
         }
@@ -7373,30 +7419,23 @@ async function fetchMessages(hash, user, startIndex) {
         console.error('Error fetching messages:', error);
     } finally {
         if (newMessagesFetched) {
-            // Only update local storage if new messages were fetched
             localStorage.setItem(myaccounts + DDEaddy + hash + user + 'messages', JSON.stringify(storedMessages));
             localStorage.setItem(myaccounts + DDEaddy + hash + user + 'lastMessageIndex', index.toString());
+            updateMessageCountIndicator(unreadMessageCount);
         }
     }
     return storedMessages;
 }
 
-// Enble this implimetation in after next deployment 
-// async function fetchMessages(hash, user, startIndex) {
-//     let messages = [];
-//     try {
-//         const messageCount = DOMPurify.sanitize(await DDEcontract.methods.getMessageLength(hash, user).call());
-//         for (let index = startIndex; index < messageCount; index++) {
-//             const message = DOMPurify.sanitize(await DDEcontract.methods.messages(hash, user, index).call());
-//             messages.push(message);
-//         }
-//         console.log("Fetched new messages successfully.");
-//         localStorage.setItem(myaccounts + DDEaddy + hash + 'lastMessageIndex', messageCount);
-//     } catch (error) {
-//         console.error('Error fetching messages:', error);
-//     }
-//     return messages; // Return the fetched messages or an empty array if none were found
-// }
+function updateMessageCountIndicator(count) {
+    const indicator = document.querySelector('.message-count-indicator');
+    if (count > 0) {
+        indicator.textContent = count;
+        indicator.style.display = 'inline-block';
+    } else {
+        indicator.style.display = 'none';
+    }
+}
    
     function removeListingFromView(listing) {
       const listingElement = document.querySelector(`#listing-${listing.hash}`); // Assuming listings have an ID based on their hash
@@ -8353,7 +8392,7 @@ async function fetchMessages(hash, user, startIndex) {
         var depositRecipient = document.getElementById("recipient-deposit-input").value;
         var timeLimit = document.getElementById("timeLimit").value;
         var contactinfo = document.getElementById("contactInfo").value;
-          var message = JSON.stringify({message: document.getElementById("contractDetails").value, contact: contactinfo, image: image});
+        var message = JSON.stringify({message: document.getElementById("contractDetails").value, contact: contactinfo, image: image});
         if (contactinfo != '') {
           document.getElementById("myContactInfo").value = contactinfo;
           await saveContactInfo(contactinfo);
@@ -9510,7 +9549,7 @@ async function fetchMessages(hash, user, startIndex) {
     //End Dark/Light Mode
     setInterval(loadUser, 90000);
     document.getElementById("loadingStatus").innerHTML = loader;
-    loadMarkets(1, 5).then(() => {
+    loadMarkets(0, 5).then(() => {
       updatePaginationControls(marketOffers.indices.length);
       document.getElementById("loadingStatus").innerHTML = '';
     });

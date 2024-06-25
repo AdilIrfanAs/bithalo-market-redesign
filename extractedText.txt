@@ -445,4 +445,7 @@
   "You": true,
   "Counterparty": true
 }
+{
+  "Please enter a valid email address so you can automatically email users who share their email address.": true,
+}
 
