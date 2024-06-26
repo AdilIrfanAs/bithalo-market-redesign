@@ -465,6 +465,10 @@ languages['ar']={
   "Please Login/connect your wallet to create a contract.": "يرجى تسجيل الدخول/ربط محفظتك لإنشاء عقد.",
   "You": "أنت",
   "Counterparty": "الطرف الآخر",
+  "Please enter a valid email address so you can automatically email users who share their email address.": "يرجى إدخال عنوان بريد إلكتروني صالح حتى تتمكن من إرسال بريد إلكتروني تلقائيًا للمستخدمين الذين يشاركون عنوان بريدهم الإلكتروني.",
+  "Registration Recommended": "يوصى بالتسجيل",
+  "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": "نوصي بتسجيل معلومات الاتصال ومفتاح التشفير الخاص بك قبل إنشاء عقد. هل ترغب في التسجيل الآن؟",
+  "Don't show this again": "لا تظهر هذا مرة أخرى",
 };
 
 
@@ -933,6 +937,10 @@ languages['ch']={
   "Please Login/connect your wallet to create a contract.": "请登录/连接您的钱包以创建合同。",
   "You": "您",
   "Counterparty": "对方",
+  "Please enter a valid email address so you can automatically email users who share their email address.": "请输入有效的电子邮件地址，以便您可以自动向共享其电子邮件地址的用户发送电子邮件。",
+  "Registration Recommended": "建议注册",
+  "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": "我们建议您在创建合同之前注册您的联系信息和加密密钥。您现在要注册吗？",
+  "Don't show this again": "不再显示此内容",
 };
 
 languages['en']={
@@ -1457,6 +1465,10 @@ languages['fr']={
   "Please Login/connect your wallet to create a contract.": "Veuillez vous connecter/relier votre portefeuille pour créer un contrat.",
   "You": "Vous",
   "Counterparty": "Contrepartie",
+  "Please enter a valid email address so you can automatically email users who share their email address.": "Veuillez entrer une adresse e-mail valide afin de pouvoir envoyer automatiquement des e-mails aux utilisateurs qui partagent leur adresse e-mail.",
+  "Registration Recommended": "Inscription recommandée",
+  "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": "Nous vous recommandons d'enregistrer vos informations de contact et votre clé de chiffrement avant de créer un contrat. Voulez-vous vous inscrire maintenant ?",
+  "Don't show this again": "Ne plus afficher",
 };
 
 languages['ge']={
@@ -1923,6 +1935,10 @@ languages['ge']={
   "Please Login/connect your wallet to create a contract.": "Bitte melden Sie sich an/verbinden Sie Ihre Wallet, um einen Vertrag zu erstellen.",
   "You": "Sie",
   "Counterparty": "Gegenpartei",
+  "Please enter a valid email address so you can automatically email users who share their email address.": "Bitte geben Sie eine gültige E-Mail-Adresse ein, damit Sie automatisch E-Mails an Benutzer senden können, die ihre E-Mail-Adresse teilen.",
+  "Registration Recommended": "Registrierung empfohlen",
+  "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": "Wir empfehlen, Ihre Kontaktinformationen und Ihren Verschlüsselungsschlüssel zu registrieren, bevor Sie einen Vertrag erstellen. Möchten Sie sich jetzt registrieren?",
+  "Don't show this again": "Nicht mehr anzeigen",
 };
 
 languages['it']={
@@ -2390,6 +2406,10 @@ languages['it']={
   "Please Login/connect your wallet to create a contract.": "Per favore accedi/collega il tuo portafoglio per creare un contratto.",
   "You": "Tu",
   "Counterparty": "Controparte",
+  "Please enter a valid email address so you can automatically email users who share their email address.": "Si prega di inserire un indirizzo email valido in modo da poter inviare automaticamente email agli utenti che condividono il loro indirizzo email.",
+  "Registration Recommended": "Registrazione consigliata",
+  "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": "Consigliamo di registrare le tue informazioni di contatto e la chiave di crittografia prima di creare un contratto. Vuoi registrarti ora?",
+  "Don't show this again": "Non mostrare più",
 };
 
 languages['ja']={
@@ -2857,6 +2877,10 @@ languages['ja']={
   "Please Login/connect your wallet to create a contract.": "ログインしてウォレットを接続し、契約を作成してください。",
   "You": "あなた",
   "Counterparty": "相手方",
+  "Please enter a valid email address so you can automatically email users who share their email address.": "有効なメールアドレスを入力してください。メールアドレスを共有するユーザーに自動的にメールを送信できます。",
+  "Registration Recommended": "登録をお勧めします",
+  "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": "契約を作成する前に、連絡先情報と暗号化キーを登録することをお勧めします。今すぐ登録しますか？",
+  "Don't show this again": "これを再表示しない"
 };
 
 languages['ko']={
@@ -3324,6 +3348,10 @@ languages['ko']={
   "Please Login/connect your wallet to create a contract.": "로그인/지갑 연결하여 계약 생성",
   "You": "당신",
   "Counterparty": "상대방",
+  "Please enter a valid email address so you can automatically email users who share their email address.": "유효한 이메일 주소를 입력하여 이메일 주소를 공유하는 사용자에게 자동으로 이메일을 보낼 수 있습니다.",
+  "Registration Recommended": "등록 권장",
+  "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": "계약을 생성하기 전에 연락처 정보와 암호화 키를 등록하는 것이 좋습니다. 지금 등록하시겠습니까?",
+  "Don't show this again": "다시 표시하지 않기",
 };
 
 languages['po']={
@@ -3791,6 +3819,10 @@ languages['po']={
   "Please Login/connect your wallet to create a contract.": "Por favor, faça login/conecte sua carteira para criar um contrato.",
   "You": "Você",
   "Counterparty": "Contraparte",
+  "Please enter a valid email address so you can automatically email users who share their email address.": "Por favor, insira um endereço de e-mail válido para que você possa enviar e-mails automaticamente para os usuários que compartilham seu endereço de e-mail.",
+  "Registration Recommended": "Registro recomendado",
+  "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": "Recomendamos registrar suas informações de contato e chave de criptografia antes de criar um contrato. Gostaria de se registrar agora?",
+  "Don't show this again": "Não mostrar isso novamente",
 };
 
 languages['ru'] = {
@@ -4258,6 +4290,10 @@ languages['ru'] = {
   "Please Login/connect your wallet to create a contract.": "Пожалуйста, войдите в систему/подключите ваш кошелек для создания контракта.",
   "You": "Вы",
   "Counterparty": "Контрагент",
+  "Please enter a valid email address so you can automatically email users who share their email address.": "Пожалуйста, введите действительный адрес электронной почты, чтобы вы могли автоматически отправлять электронные письма пользователям, которые делятся своим адресом электронной почты.",
+  "Registration Recommended": "Рекомендуется регистрация",
+  "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": "Мы рекомендуем зарегистрировать вашу контактную информацию и ключ шифрования перед созданием контракта. Хотите зарегистрироваться сейчас?",
+  "Don't show this again": "Больше не показывать",
 };
 
 languages['sp'] = {
@@ -4725,4 +4761,8 @@ languages['sp'] = {
   "Please Login/connect your wallet to create a contract.": "Por favor, inicie sesión/conecte su billetera para crear un contrato.",
   "You": "Usted",
   "Counterparty": "Contraparte",
+  "Please enter a valid email address so you can automatically email users who share their email address.": "Por favor, ingrese una dirección de correo electrónico válida para que pueda enviar correos electrónicos automáticamente a los usuarios que comparten su dirección de correo electrónico.",
+  "Registration Recommended": "Registro recomendado",
+  "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": "Recomendamos registrar su información de contacto y clave de cifrado antes de crear un contrato. ¿Le gustaría registrarse ahora?",
+  "Don't show this again": "No mostrar esto de nuevo",
 };
