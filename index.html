@@ -7836,17 +7836,25 @@ function updateMessageCountIndicator(count) {
       var DDEcontract4 = new web3.eth.Contract(DDEabi, DDEaddy);
           // Fetch user data to check if encryption key and contact info are registered
       const datalen = DOMPurify.sanitize(await DDEcontract4.methods.getArrayLength(myaccounts, 3).call());
-    if (datalen > 0) {
+      const dontShowAgain = localStorage.getItem('dontShowRegistrationNotification') === 'true';
+      if (datalen > 0 && !dontShowAgain) {
         const contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract4.methods.userdata(myaccounts, datalen - 1).call()));
         if (!contact2.mycontact || !contact2.publickey) {
-            const response = await Swal.fire({
-                title: translateThis("Registration Required"),
-                text: translateThis("Please register your contact information and encryption key before creating a contract."),
-                icon: 'warning',
-                confirmButtonText: translateThis('Continue'),
+          const response = await Swal.fire({
+                title: translateThis("Registration Recommended"),
+                text: translateThis("We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?"),
+                icon: 'info',
+                confirmButtonText: translateThis('Yes'),
                 showCancelButton: true,
-                cancelButtonText: translateThis('Cancel')
-            }); 
+                cancelButtonText: translateThis('No'),
+                footer: '<label><input type="checkbox" id="dontShowAgain"> ' + translateThis("Don't show this again") + '</label>',
+            });
+
+            const dontShowAgainCheckbox = document.getElementById('dontShowAgain');
+            if (dontShowAgainCheckbox && dontShowAgainCheckbox.checked) {
+                localStorage.setItem('dontShowRegistrationNotification', 'true');
+            }
+
             if (response.isConfirmed) {
               await Swal.fire({
                 title: translateThis('Register Contact Information and Public Key'),
@@ -7871,19 +7879,24 @@ function updateMessageCountIndicator(count) {
                     await registerData(result.value.contactInfo);
                 }
             });
-            } else {
-                return;
             }
         }
-    } else {
-        const response = await Swal.fire({
-            title: translateThis("Registration Required"),
-            text: translateThis("No user data found. Please register your contact information and encryption key."),
-            icon: 'warning',
-            confirmButtonText: translateThis('Continue'),
+    } else if (!dontShowAgain) {
+      const response = await Swal.fire({
+            title: translateThis("Registration Recommended"),
+            text: translateThis("No user data found. We recommend registering your contact information and encryption key. Would you like to register now?"),
+            icon: 'info',
+            confirmButtonText: translateThis('Yes'),
             showCancelButton: true,
-            cancelButtonText: translateThis('Cancel')
+            cancelButtonText: translateThis('No'),
+            footer: '<label><input type="checkbox" id="dontShowAgain"> ' + translateThis("Don't show this again") + '</label>',
         });
+
+        const dontShowAgainCheckbox = document.getElementById('dontShowAgain');
+            if (dontShowAgainCheckbox && dontShowAgainCheckbox.checked) {
+            localStorage.setItem('dontShowRegistrationNotification', 'true');
+        }
+
         if (response.isConfirmed) {
           await Swal.fire({
               title: translateThis('Register Contact Information and Public Key'),
@@ -7908,9 +7921,7 @@ function updateMessageCountIndicator(count) {
                   await registerData(result.value.contactInfo);
               }
           });
-        } else {
-            return;
-        }
+        } 
     } 
       // showLoader();
       // Create the popup container
