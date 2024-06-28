@@ -495,7 +495,7 @@ h2 {
   background-color: #F5F5F5;
 }
 
-.popup-container {
+.popup-container, .popup-container2 {
   position: fixed;
   top: 0;
   left: 0;
@@ -506,7 +506,7 @@ h2 {
   justify-content: center;
   align-items: center;
 }
-.popup, .withdraw-swal-wrapper {
+.popup, .popup2, .withdraw-swal-wrapper {
   position: relative;
   background-color: white;
   padding: 30px;
@@ -514,7 +514,7 @@ h2 {
   width: 100%;
   border-radius: 6px;
 }
-.popup .close-button {
+.close-button, .close-button2 {
   font-size: 38px;
   color: #263886;
   position: absolute;
@@ -1830,7 +1830,7 @@ h2 {
     margin-bottom: 35px;
     font-size: 11px;
   }
-  .popup {
+  .popup, .popup2 {
     padding: 25px 20px;
     max-width: calc(540px - 25px);
   }
@@ -1924,7 +1924,7 @@ h2 {
   }
 }
 @media screen and (max-width: 575px) {
-  .popup {
+  .popup, .popup2 {
     max-width: 90%;
   }
   .input-wrapper-area {
@@ -4998,6 +4998,7 @@ body {
             } else {
                 await populateListings("", 1);
             }
+            updatePaginationControls(marketOffers.results.length);
             return;
           }
         } else {
@@ -5986,7 +5987,15 @@ body {
     async function searchListings(searchText, deep=0) {
       // filter the marketOffers array based on the searchText
       // and update the currentPage to 1
-      currentPage = 1;
+      if (searchText.trim() === "") {
+        currentPage = 1;
+        currentViewContext = '';
+        await loadMarkets(0, 5);
+        updatePaginationControls(marketOffers.indices.length);
+        return;
+      }
+        currentPage = 1;
+        currentViewContext = 'searchTag';
       if (deep == 1) {
         document.getElementById("loadingStatus").innerHTML = loader;
         await loadMarkets(0, 5, searchText);
@@ -6092,10 +6101,13 @@ body {
                 const userStoreKey = document.getElementById("searchText").value.split("userStore:")[1].trim();
                 totalItems = await getTotalItemsForUserStore(userStoreKey);
                 break;
-            default:
+            case 'searchTag':
                 totalItems = marketOffers.indices.length;
                 break;
-        }
+                default:
+                totalItems = marketOffers.indices.length;
+                break;
+          }
 
         if (currentPage > 1) {
             currentPage--;
@@ -6134,6 +6146,12 @@ body {
                 if (startIndex < totalItems) {
                     await loadMarkets(startIndex, Math.min(endIndex, totalItems), "userStore:" + userStoreKey);
                 }
+                break;
+            case 'searchTag':
+                totalItems = marketOffers.indices.length;
+                if (startIndex < totalItems) {
+                    await loadMarkets(startIndex, endIndex, document.getElementById("searchText").value);
+                 }
                 break;
             default:
                 totalItems = marketOffers.indices.length;
