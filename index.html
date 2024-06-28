@@ -2678,17 +2678,17 @@ body {
     }
 
     function validateContactInfo(contactInput) {
-    const warningSpan = document.getElementById('contactInfoWarning');
-    const emailClientCheckbox = document.getElementById('emailClient');
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email validation regex
+      const warningSpan = document.getElementById('contactInfoWarning');
+      const emailClientCheckbox = document.getElementById('emailClient');
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email validation regex
 
-    if (emailClientCheckbox.checked && (contactInput.value === '' || !emailRegex.test(contactInput.value))) {
-        warningSpan.style.display = 'block'; // Show warning if invalid
-        warningSpan.textContent = translateThis('Please enter a valid email address so you can automatically email users who share their email address.');
-    } else {
-        warningSpan.style.display = 'none'; // Hide warning if valid
+      if (emailClientCheckbox.checked && (contactInput.value === '' || !emailRegex.test(contactInput.value))) {
+          warningSpan.style.display = 'block'; // Show warning if invalid
+          warningSpan.textContent = translateThis('Please enter a valid email address so you can automatically email users who share their email address.');
+      } else {
+          warningSpan.style.display = 'none'; // Hide warning if valid
+      }
     }
-}
     document.querySelectorAll('button').forEach(button => {
       if (!button.classList.length && !button.closest('.sidebar')) {
         button.classList.add('square-button2');
@@ -2754,8 +2754,8 @@ body {
     populateLanguageSelect();
 
     function translate(text, lang, x) {
-        if(lang in languages && x in languages[lang]) {
-            return languages[lang][x]["#"+lang];
+      if(lang in languages && x in languages[lang]) {
+          return languages[lang][x]["#"+lang];
       } else {
         return text;
       }
@@ -3072,27 +3072,27 @@ body {
     var isFavoritesShown = false;
     var activeActions = {};
     const statusDescriptions = {
-    "0": "Pending",
-    "1": "Accepted",
-    "2": "Rejected",
-    "3": "Completed",
-    "4": "Cancelled",
-    "5": "Expired"
-};
+      "0": "Pending",
+      "1": "Accepted",
+      "2": "Rejected",
+      "3": "Completed",
+      "4": "Cancelled",
+      "5": "Expired"
+    };
 
-const combinedStatusDescriptions = {
-    "0,0": "Initial State, Pending Review",
-    "1,0": "Accepted by One Party, Awaiting Response",
-    "1,1": "Mutually Accepted",
-    "2,0": "Rejected by One Party",
-    "2,2": "Mutually Rejected",
-    "3,0": "Completed by One Party, Awaiting Closure",
-    "3,3": "Fully Completed",
-    "4,0": "Cancelled by Initiator",
-    "4,4": "Mutually Agreed Cancellation",
-    "5,0": "Expired, Not Finalized",
-    "5,5": "Expired and Closed"
-};
+    const combinedStatusDescriptions = {
+        "0,0": "Initial State, Pending Review",
+        "1,0": "Accepted by One Party, Awaiting Response",
+        "1,1": "Mutually Accepted",
+        "2,0": "Rejected by One Party",
+        "2,2": "Mutually Rejected",
+        "3,0": "Completed by One Party, Awaiting Closure",
+        "3,3": "Fully Completed",
+        "4,0": "Cancelled by Initiator",
+        "4,4": "Mutually Agreed Cancellation",
+        "5,0": "Expired, Not Finalized",
+        "5,5": "Expired and Closed"
+    };
     var loader = '<div class="site-loader"><div class="loader"></div></div>';
     var notifyFavorites = localStorage.getItem(myaccounts + DDEaddy + ":notifyFavorites");
     if(!notifyFavorites) {
@@ -3174,7 +3174,7 @@ const combinedStatusDescriptions = {
       userpubkey = "";
       userprivkey = "";
       accountprivkey = "";
-        gasOptions = [{},{}];
+      gasOptions = [{},{}];
       gasSetting = 1;
       baseFee = 0;
       myFavorites = [];
@@ -3182,112 +3182,11 @@ const combinedStatusDescriptions = {
     }
 
     async function login(clear = 0) {
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    const isMetaMaskInstalled = typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask;
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const isMetaMaskInstalled = typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask;
 
-    // Android device but not in MetaMask browser
-    if (isAndroid && !isMetaMaskInstalled) {
-        Swal.fire({
-            title: translateThis('Login using unique password'),
-            html:
-                '<select id="network" class="swal2-select">' +
-                '<option value="0">Ethereum</option>' +
-                '<option value="1" selected>Sepolia Testnet</option>' +
-                '</select>' +
-                '<input type="password" id="password" class="swal2-input" placeholder="' + translateThis('Enter Password') + '">' +
-                '<input type="password" id="confirmPassword" class="swal2-input" placeholder="' + translateThis('Confirm Password') + '">',
-            focusConfirm: false,
-            showCancelButton: true,
-            confirmButtonText: translateThis('Confirm'),
-            cancelButtonText: translateThis('Cancel'),
-            preConfirm: () => {
-                const network = document.getElementById('network').value;
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-
-                if (password !== confirmPassword) {
-                    Swal.showValidationMessage(translateThis('Passwords do not match'));
-                    return false;
-                }
-
-                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{16,}$/;
-
-                if (!password.match(passwordRegex)) {
-                    Swal.showValidationMessage(translateThis('Password must be 16 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character.'));
-                    return false;
-                }
-
-                return { network: network, confirmedPassword: password };
-            }
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const { network, confirmedPassword } = result.value;
-                showLoader();
-                var hashedPassword = Crypto.SHA256(confirmedPassword);
-                for (var i = 1; i < 50000; i++) {
-                    hashedPassword = Crypto.SHA256(hashedPassword);
-                }
-                accountprivkey = '0x' + hashedPassword;
-                userprivkey = cryptico.generateRSAKey(Crypto.SHA256(hashedPassword), 1024);
-                userpubkey = cryptico.publicKeyString(userprivkey);
-                document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
-                document.getElementById("myPasswordInput").disabled = true;
-                if (parseInt(network) === 0) {
-                    web3 = new Web3("https://rpc.ankr.com/eth");
-                } else {
-                    web3 = new Web3("https://rpc.ankr.com/eth_sepolia");
-                }
-                const account = await web3.eth.accounts.privateKeyToAccount(accountprivkey);
-                const wallet = web3.eth.accounts.wallet;
-                wallet.add(account);
-                hideLoader();
-                isConnected = true;
-                document.getElementById("connectionstatus").innerHTML = translateThis("Connected.");
-                document.getElementById("account").innerHTML = loader;
-                document.getElementById("loginButton").style.display = 'none'; // Hide login button
-                var offersContainer = document.getElementById("myoffers");
-                var contractsContainer = document.getElementById("mycontracts");
-                offersContainer.innerHTML = loader;
-                contractsContainer.innerHTML = loader;
-                await populateListings();
-            }
-        });
-        return;
-    }
-
-    // Non-Android or MetaMask is installed
-    await Swal.fire({
-        title: translateThis('Login/connect'),
-        text: translateThis('Please choose which way you want to log into this website.'),
-        showCancelButton: true,
-        confirmButtonText: isMetaMaskInstalled ? translateThis('Connect Using Metamask') : translateThis('Install MetaMask'),
-        cancelButtonText: translateThis('Create/access account using password'),
-    }).then(async (result) => {
-        if (result.isConfirmed) {
-            if (isMetaMaskInstalled) {
-                defaultvars();
-                console.log("connecting");
-                await window.ethereum.request({method: 'eth_requestAccounts'});
-                web3 = new Web3(window.ethereum);
-                console.log("success");
-                if (clear == 1) {
-                    marketOffers = {'indices': [], 'results': []};
-                }
-                isConnected = true;
-                document.getElementById("connectionstatus").innerHTML = translateThis("Connected.");
-                document.getElementById("account").innerHTML = loader;
-                document.getElementById("loginButton").style.display = 'none'; // Hide login button
-                var offersContainer = document.getElementById("myoffers");
-                var contractsContainer = document.getElementById("mycontracts");
-                offersContainer.innerHTML = loader;
-                contractsContainer.innerHTML = loader;
-                await loadUser(1);
-                await populateListings();
-            } else {
-                // Redirect to MetaMask installation page
-                window.location.href = 'https://metamask.io/download.html';
-            }
-        } else {
+        // Android device but not in MetaMask browser
+        if (isAndroid && !isMetaMaskInstalled) {
             Swal.fire({
                 title: translateThis('Login using unique password'),
                 html:
@@ -3295,8 +3194,8 @@ const combinedStatusDescriptions = {
                     '<option value="0">Ethereum</option>' +
                     '<option value="1" selected>Sepolia Testnet</option>' +
                     '</select>' +
-                    '<input type="password" id="password" class="swal2-input" placeholder="'+translateThis('Enter Password')+'">' +
-                    '<input type="password" id="confirmPassword" class="swal2-input" placeholder="'+translateThis('Confirm Password')+'">',
+                    '<input type="password" id="password" class="swal2-input" placeholder="' + translateThis('Enter Password') + '">' +
+                    '<input type="password" id="confirmPassword" class="swal2-input" placeholder="' + translateThis('Confirm Password') + '">',
                 focusConfirm: false,
                 showCancelButton: true,
                 confirmButtonText: translateThis('Confirm'),
@@ -3305,7 +3204,7 @@ const combinedStatusDescriptions = {
                     const network = document.getElementById('network').value;
                     const password = document.getElementById('password').value;
                     const confirmPassword = document.getElementById('confirmPassword').value;
-                    
+
                     if (password !== confirmPassword) {
                         Swal.showValidationMessage(translateThis('Passwords do not match'));
                         return false;
@@ -3325,7 +3224,7 @@ const combinedStatusDescriptions = {
                     const { network, confirmedPassword } = result.value;
                     showLoader();
                     var hashedPassword = Crypto.SHA256(confirmedPassword);
-                    for(var i=1; i<50000; i++) {
+                    for (var i = 1; i < 50000; i++) {
                         hashedPassword = Crypto.SHA256(hashedPassword);
                     }
                     accountprivkey = '0x' + hashedPassword;
@@ -3333,7 +3232,7 @@ const combinedStatusDescriptions = {
                     userpubkey = cryptico.publicKeyString(userprivkey);
                     document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
                     document.getElementById("myPasswordInput").disabled = true;
-                    if(parseInt(network) == 0) {
+                    if (parseInt(network) === 0) {
                         web3 = new Web3("https://rpc.ankr.com/eth");
                     } else {
                         web3 = new Web3("https://rpc.ankr.com/eth_sepolia");
@@ -3353,9 +3252,110 @@ const combinedStatusDescriptions = {
                     await populateListings();
                 }
             });
+            return;
         }
-    });
-}
+
+        // Non-Android or MetaMask is installed
+        await Swal.fire({
+            title: translateThis('Login/connect'),
+            text: translateThis('Please choose which way you want to log into this website.'),
+            showCancelButton: true,
+            confirmButtonText: isMetaMaskInstalled ? translateThis('Connect Using Metamask') : translateThis('Install MetaMask'),
+            cancelButtonText: translateThis('Create/access account using password'),
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                if (isMetaMaskInstalled) {
+                    defaultvars();
+                    console.log("connecting");
+                    await window.ethereum.request({method: 'eth_requestAccounts'});
+                    web3 = new Web3(window.ethereum);
+                    console.log("success");
+                    if (clear == 1) {
+                        marketOffers = {'indices': [], 'results': []};
+                    }
+                    isConnected = true;
+                    document.getElementById("connectionstatus").innerHTML = translateThis("Connected.");
+                    document.getElementById("account").innerHTML = loader;
+                    document.getElementById("loginButton").style.display = 'none'; // Hide login button
+                    var offersContainer = document.getElementById("myoffers");
+                    var contractsContainer = document.getElementById("mycontracts");
+                    offersContainer.innerHTML = loader;
+                    contractsContainer.innerHTML = loader;
+                    await loadUser(1);
+                    await populateListings();
+                } else {
+                    // Redirect to MetaMask installation page
+                    window.location.href = 'https://metamask.io/download.html';
+                }
+            } else {
+                Swal.fire({
+                    title: translateThis('Login using unique password'),
+                    html:
+                        '<select id="network" class="swal2-select">' +
+                        '<option value="0">Ethereum</option>' +
+                        '<option value="1" selected>Sepolia Testnet</option>' +
+                        '</select>' +
+                        '<input type="password" id="password" class="swal2-input" placeholder="'+translateThis('Enter Password')+'">' +
+                        '<input type="password" id="confirmPassword" class="swal2-input" placeholder="'+translateThis('Confirm Password')+'">',
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    confirmButtonText: translateThis('Confirm'),
+                    cancelButtonText: translateThis('Cancel'),
+                    preConfirm: () => {
+                        const network = document.getElementById('network').value;
+                        const password = document.getElementById('password').value;
+                        const confirmPassword = document.getElementById('confirmPassword').value;
+                        
+                        if (password !== confirmPassword) {
+                            Swal.showValidationMessage(translateThis('Passwords do not match'));
+                            return false;
+                        }
+
+                        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{16,}$/;
+
+                        if (!password.match(passwordRegex)) {
+                            Swal.showValidationMessage(translateThis('Password must be 16 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character.'));
+                            return false;
+                        }
+
+                        return { network: network, confirmedPassword: password };
+                    }
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        const { network, confirmedPassword } = result.value;
+                        showLoader();
+                        var hashedPassword = Crypto.SHA256(confirmedPassword);
+                        for(var i=1; i<50000; i++) {
+                            hashedPassword = Crypto.SHA256(hashedPassword);
+                        }
+                        accountprivkey = '0x' + hashedPassword;
+                        userprivkey = cryptico.generateRSAKey(Crypto.SHA256(hashedPassword), 1024);
+                        userpubkey = cryptico.publicKeyString(userprivkey);
+                        document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
+                        document.getElementById("myPasswordInput").disabled = true;
+                        if(parseInt(network) == 0) {
+                            web3 = new Web3("https://rpc.ankr.com/eth");
+                        } else {
+                            web3 = new Web3("https://rpc.ankr.com/eth_sepolia");
+                        }
+                        const account = await web3.eth.accounts.privateKeyToAccount(accountprivkey);
+                        const wallet = web3.eth.accounts.wallet;
+                        wallet.add(account);
+                        hideLoader();
+                        isConnected = true;
+                        document.getElementById("connectionstatus").innerHTML = translateThis("Connected.");
+                        document.getElementById("account").innerHTML = loader;
+                        document.getElementById("loginButton").style.display = 'none'; // Hide login button
+                        var offersContainer = document.getElementById("myoffers");
+                        var contractsContainer = document.getElementById("mycontracts");
+                        offersContainer.innerHTML = loader;
+                        contractsContainer.innerHTML = loader;
+                        await populateListings();
+                    }
+                });
+            }
+        });
+    }
 
 
     async function login2(clear = 0) {
@@ -3433,7 +3433,7 @@ const combinedStatusDescriptions = {
             decimals: "8"
           }
         ];
-            tokennames = {"0xA66857Da8d75BE2363968a3B01BfE1f417B28202":"ETH","0xD7567f0841Aae04833C8c004e8685cBF9F1a6b11":"WALRUS"}
+        tokennames = {"0xA66857Da8d75BE2363968a3B01BfE1f417B28202":"ETH","0xD7567f0841Aae04833C8c004e8685cBF9F1a6b11":"WALRUS"}
       }
       if (netname == "unknown") {
         document.getElementById("connectionstatus").innerHTML = isMobile? '' : translateThis("Unsupported network");
@@ -3445,10 +3445,10 @@ const combinedStatusDescriptions = {
         metabutton.textContent = translateThis('Connected');
       }
       if(accountprivkey != "") {
-          myaccounts = await web3.eth.accounts.privateKeyToAccount(accountprivkey).address;
-        } else {
-          myaccounts = DOMPurify.sanitize(myaccounts2[0]);
-        }
+        myaccounts = await web3.eth.accounts.privateKeyToAccount(accountprivkey).address;
+      } else {
+        myaccounts = DOMPurify.sanitize(myaccounts2[0]);
+      }
       var cached = await getContactInfo(myaccounts);
       document.getElementById("myContactInfo").value = cached;
       cached = await getExpirationInfo(myaccounts);
@@ -3465,73 +3465,72 @@ const combinedStatusDescriptions = {
       }
       loadAutoClearState();
       loadEmailClientState();
-        const theFavorites =  localStorage.getItem(myaccounts + DDEaddy + ":myFavorites");
-        if(theFavorites) {
+      const theFavorites =  localStorage.getItem(myaccounts + DDEaddy + ":myFavorites");
+      if(theFavorites) {
         myFavorites = JSON.parse(theFavorites);
         updatePaginationControls(myFavorites.length);
       }
       checkFavorites();        
-        if(document.getElementById("myPasswordInput").value != Crypto.SHA256("default") && newkey == 0 && accountprivkey == "") {
-          const newPassHash =  localStorage.getItem(myaccounts + ":mypassword");
-          if(!newPassHash) {
-            await Swal.fire({
-              title: translateThis('Create encryption key'),
-              text: translateThis('The program needs to create your encryption key. To do this it will ask you to sign a secret message using your wallet. Please follow the instructions so that encryption may be enabled.')
+      if(document.getElementById("myPasswordInput").value != Crypto.SHA256("default") && newkey == 0 && accountprivkey == "") {
+        const newPassHash =  localStorage.getItem(myaccounts + ":mypassword");
+        if(!newPassHash) {
+          await Swal.fire({
+            title: translateThis('Create encryption key'),
+            text: translateThis('The program needs to create your encryption key. To do this it will ask you to sign a secret message using your wallet. Please follow the instructions so that encryption may be enabled.')
+          });
+          var mysignature = "";
+          try {
+            mysignature = await window.ethereum.request({
+              method: 'personal_sign',
+              params: ["This message is used to generate your RSA key.", window.ethereum.selectedAddress],
             });
-            var mysignature = "";
-            try {
-              mysignature = await window.ethereum.request({
-                method: 'personal_sign',
-                params: ["This message is used to generate your RSA key.", window.ethereum.selectedAddress],
-              });
-              mysignature=Crypto.SHA256(mysignature);
-              localStorage.setItem(myaccounts + ":mypassword", mysignature);
-              userprivkey = mysignature;
-              showLoader();
-              for(var i=1; i<50000; i++) {
-                userprivkey=Crypto.SHA256(userprivkey);
-              }
-              userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
-              userpubkey = cryptico.publicKeyString(userprivkey);
-              document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
-              hideLoader();
-            } catch (error) {
-              await Swal.fire({
-                title: translateThis('Key creation failed'),
-                text: translateThis('You may choose to refresh the page to try again or you can attempt to create the key at a later date.')
-              });
-              hideLoader();
-            }
-            newkey = 1;
-        } else {
+            mysignature=Crypto.SHA256(mysignature);
+            localStorage.setItem(myaccounts + ":mypassword", mysignature);
+            userprivkey = mysignature;
             showLoader();
-            userprivkey = newPassHash;
             for(var i=1; i<50000; i++) {
               userprivkey=Crypto.SHA256(userprivkey);
+            }
+            userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
+            userpubkey = cryptico.publicKeyString(userprivkey);
+            document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
+            hideLoader();
+          } catch (error) {
+            await Swal.fire({
+              title: translateThis('Key creation failed'),
+              text: translateThis('You may choose to refresh the page to try again or you can attempt to create the key at a later date.')
+            });
+            hideLoader();
           }
-          console.log(userprivkey);
+          newkey = 1;
+        } else {
+          showLoader();
+          userprivkey = newPassHash;
+          for(var i=1; i<50000; i++) {
+            userprivkey=Crypto.SHA256(userprivkey);
+          }
           hideLoader();
           userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
           userpubkey = cryptico.publicKeyString(userprivkey);
           document.getElementById("myPasswordInput").value = Crypto.SHA256("default");
-            newkey = 1;
+          newkey = 1;
         }
       }
-         //const userPWHash = localStorage.getItem(myaccounts + ":password");
-        //if(userPWHash && document.getElementById("myPasswordInput").value != Crypto.SHA256("default")) {
-        //  const userPWHash2 = localStorage.getItem(myaccounts + ":savedpw");
-        //  if(!userPWHash2) {
-        //    await getUserPassword();
-        //  } else {
-        //    document.getElementById("myPasswordInput").value = userPWHash2;
-        //    userprivkey=userPWHash2;
-        //    for(var i=1; i<50000; i++) {
-        //      userprivkey=Crypto.SHA256(userprivkey);
-        //    }
-        //    userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
-        //    userpubkey = cryptico.publicKeyString(userprivkey);
-        //  }
-        //}
+      //const userPWHash = localStorage.getItem(myaccounts + ":password");
+      //if(userPWHash && document.getElementById("myPasswordInput").value != Crypto.SHA256("default")) {
+      //  const userPWHash2 = localStorage.getItem(myaccounts + ":savedpw");
+      //  if(!userPWHash2) {
+      //    await getUserPassword();
+      //  } else {
+      //    document.getElementById("myPasswordInput").value = userPWHash2;
+      //    userprivkey=userPWHash2;
+      //    for(var i=1; i<50000; i++) {
+      //      userprivkey=Crypto.SHA256(userprivkey);
+      //    }
+      //    userprivkey = cryptico.generateRSAKey(userprivkey, 1024);
+      //    userpubkey = cryptico.publicKeyString(userprivkey);
+      //  }
+      //}
       const gasSetting2 = localStorage.getItem(myaccounts + DDEaddy + ":gasOption");
         if(gasSetting2 && gasSetting2 == "1") {
         gasSetting = 1;
@@ -3542,7 +3541,7 @@ const combinedStatusDescriptions = {
       DDEcontract = new web3.eth.Contract(DDEabi, DDEaddy);
       balances = {};
       var btext = [];
-        await window.web3.eth.getBalance(myaccounts, function(err, result1) {
+      await window.web3.eth.getBalance(myaccounts, function(err, result1) {
         if (err) {
           console.log(err);
           return;
@@ -3553,71 +3552,71 @@ const combinedStatusDescriptions = {
         }
       });
       for (var i = 0; i < tokens.length; i++) {
-            await DDEcontract.methods.userBalance(myaccounts,tokens[i].address).call().then(function (liquid1) {
-              balances[tokens[i].address]=({token:tokens[i].token, decimals: tokens[i].decimals, amount: DOMPurify.sanitize(liquid1), amount2: "0", total: web3.utils.toBN(DOMPurify.sanitize(liquid1))});
-            });
-            if(accountprivkey != "") {
-              if(tokens[i].token == tokens[0].token) {
-                //balances[tokens[i].address].total=balances[tokens[i].address].total.add(web3.utils.toBN(baseBalance));
-              } else {
-                var tokenContract = new web3.eth.Contract(ERC20abi, tokens[i].address);
-                var base2 = DOMPurify.sanitize(await tokenContract.methods.balanceOf(myaccounts).call());
-                //balances[tokens[i].address].total=balances[tokens[i].address].total.add(web3.utils.toBN(base2));                
-                balances[tokens[i].address].amount2 = base2;
-                btext+="<br>"+balances[tokens[i].address].token+" <bdo>"+translateThis("wallet balance:")+"</bdo> "+displayDecimals(tokens[i].address, balances[tokens[i].address].amount2.toString());
-              }
+          await DDEcontract.methods.userBalance(myaccounts,tokens[i].address).call().then(function (liquid1) {
+            balances[tokens[i].address]=({token:tokens[i].token, decimals: tokens[i].decimals, amount: DOMPurify.sanitize(liquid1), amount2: "0", total: web3.utils.toBN(DOMPurify.sanitize(liquid1))});
+          });
+          if(accountprivkey != "") {
+            if(tokens[i].token == tokens[0].token) {
+              //balances[tokens[i].address].total=balances[tokens[i].address].total.add(web3.utils.toBN(baseBalance));
+            } else {
+              var tokenContract = new web3.eth.Contract(ERC20abi, tokens[i].address);
+              var base2 = DOMPurify.sanitize(await tokenContract.methods.balanceOf(myaccounts).call());
+              //balances[tokens[i].address].total=balances[tokens[i].address].total.add(web3.utils.toBN(base2));                
+              balances[tokens[i].address].amount2 = base2;
+              btext+="<br>"+balances[tokens[i].address].token+" <bdo>"+translateThis("wallet balance:")+"</bdo> "+displayDecimals(tokens[i].address, balances[tokens[i].address].amount2.toString());
             }
-            btext+="<br>"+balances[tokens[i].address].token+" <bdo>"+translateThis("balance deposited to markets:")+"</bdo> "+displayDecimals(tokens[i].address, balances[tokens[i].address].total.toString());
-        }
-        reputation = [0,0,0];
-        reputation = JSON.parse(DOMPurify.sanitize(JSON.stringify(await DDEcontract.methods.getCompleted(myaccounts).call())));
-        if((parseInt(reputation[0]) + parseInt(reputation[1])) > 0) {
-            btext+="<br><bdo>" + translateThis("Contracting success rate:") + "</bdo> " + (parseFloat(parseFloat(reputation[0]) / (parseFloat(reputation[0]) + parseFloat(reputation[1]))) * parseFloat(100)).toFixed(2) + "% (" + parseInt(reputation[0]) + "/" + (parseInt(reputation[0]) + parseInt(reputation[1])) + ")";
-        }
-        document.getElementById("account").innerHTML = "<bdo>" + DOMPurify.sanitize(translateThis("Current Network:") + "</bdo> " + netname + "<br>" + myaccounts + "<br>" + netname2 + " <bdo>" + translateThis("wallet balance:") + "</bdo> " + window.web3.utils.fromWei(baseBalance, "ether") + btext);
+          }
+          btext+="<br>"+balances[tokens[i].address].token+" <bdo>"+translateThis("balance deposited to markets:")+"</bdo> "+displayDecimals(tokens[i].address, balances[tokens[i].address].total.toString());
+      }
+      reputation = [0,0,0];
+      reputation = JSON.parse(DOMPurify.sanitize(JSON.stringify(await DDEcontract.methods.getCompleted(myaccounts).call())));
+      if((parseInt(reputation[0]) + parseInt(reputation[1])) > 0) {
+          btext+="<br><bdo>" + translateThis("Contracting success rate:") + "</bdo> " + (parseFloat(parseFloat(reputation[0]) / (parseFloat(reputation[0]) + parseFloat(reputation[1]))) * parseFloat(100)).toFixed(2) + "% (" + parseInt(reputation[0]) + "/" + (parseInt(reputation[0]) + parseInt(reputation[1])) + ")";
+      }
+      document.getElementById("account").innerHTML = "<bdo>" + DOMPurify.sanitize(translateThis("Current Network:") + "</bdo> " + netname + "<br>" + myaccounts + "<br>" + netname2 + " <bdo>" + translateThis("wallet balance:") + "</bdo> " + window.web3.utils.fromWei(baseBalance, "ether") + btext);
       try {
-        var afee = DOMPurify.sanitize(await DDEcontract.methods.affiliateFee().call());
-        var cfee = DOMPurify.sanitize(await DDEcontract.methods.customFee(myaccounts).call());
-        var atext = "<bdo>" + translateThis("Base referral fee paid to affiliates:") + "</bdo> " + (afee / 100).toFixed(2) + "%";
-        baseFee = afee;
-            if(cfee != 0) {
-          atext = "<bdo>" + translateThis("Custom referral fee paid to affiliates:") + "</bdo> " + (cfee / 100).toFixed(2) + "%";
-        }
-            if(reputation[2] >= 10) {
-          atext += "<br><bdo>" + translateThis("You are an affiliate! You may market this system using your affiliate link.") + "</bdo>";
-        } else {
-          var cooldown = DOMPurify.sanitize(await DDEcontract.methods.cooldown(myaccounts).call());
-              if(cooldown != 0 && (cooldown - CurrentTimeStamp) > 0) {
-            atext += "<br><bdo>" + translateThis("Cooldown between next deal to qualify as an affiliate:") + "</bdo> " + ((parseFloat(cooldown) - parseFloat(CurrentTimeStamp)) / 60 / 60 / 24).toFixed(2) + translateThis("(days)");
-          } else {
-            var threshold = DOMPurify.sanitize(await DDEcontract.methods.minimumFeeThreshold(tokens[0].address).call());
-            atext += "<br><bdo>" + translateThis("Minimum qualifying fee on next deal to become affiliate:") + "</bdo> " + displayDecimals(tokens[0].address, threshold);
+          var afee = DOMPurify.sanitize(await DDEcontract.methods.affiliateFee().call());
+          var cfee = DOMPurify.sanitize(await DDEcontract.methods.customFee(myaccounts).call());
+          var atext = "<bdo>" + translateThis("Base referral fee paid to affiliates:") + "</bdo> " + (afee / 100).toFixed(2) + "%";
+          baseFee = afee;
+          if(cfee != 0) {
+            atext = "<bdo>" + translateThis("Custom referral fee paid to affiliates:") + "</bdo> " + (cfee / 100).toFixed(2) + "%";
           }
-          atext += "<br><bdo>" + translateThis("Qualifying contracts remaining until you can become an affiliate:") + "</bdo> " + (10 - reputation[2]);
-        }
-        var referral2 = DOMPurify.sanitize(await DDEcontract.methods.referral(myaccounts).call());
-            if(referral2 == "0x0000000000000000000000000000000000000000" && referral == "0x0000000000000000000000000000000000000000") {
-          atext += "<br><bdo>" + translateThis("No affiliate assigned! It's recommended to assign one so the fee is not burned.") + "</bdo>";
-        }
-            if(referral2 != "0x0000000000000000000000000000000000000000") {
-          atext += "<br><bdo>" + translateThis("Current affiliate assigned to account:") + "</bdo> " + referral2;
-        }
-            if(referral != "0x0000000000000000000000000000000000000000") {
-          var arep = JSON.parse(DOMPurify.sanitize(JSON.stringify(await DDEcontract.methods.getCompleted(referral).call())));
-              if(arep[2]>=10) {
-            atext += "<br><bdo>" + translateThis("Future affiliate assigned on next contract:") + "</bdo> " + referral;
+          if(reputation[2] >= 10) {
+            atext += "<br><bdo>" + translateThis("You are an affiliate! You may market this system using your affiliate link.") + "</bdo>";
           } else {
-            atext += "<br><bdo>" + translateThis("Linked affiliate is not valid because they have not completed 10 qualified deals yet:") + "</bdo> " + referral;
+            var cooldown = DOMPurify.sanitize(await DDEcontract.methods.cooldown(myaccounts).call());
+                if(cooldown != 0 && (cooldown - CurrentTimeStamp) > 0) {
+              atext += "<br><bdo>" + translateThis("Cooldown between next deal to qualify as an affiliate:") + "</bdo> " + ((parseFloat(cooldown) - parseFloat(CurrentTimeStamp)) / 60 / 60 / 24).toFixed(2) + translateThis("(days)");
+            } else {
+              var threshold = DOMPurify.sanitize(await DDEcontract.methods.minimumFeeThreshold(tokens[0].address).call());
+              atext += "<br><bdo>" + translateThis("Minimum qualifying fee on next deal to become affiliate:") + "</bdo> " + displayDecimals(tokens[0].address, threshold);
+            }
+            atext += "<br><bdo>" + translateThis("Qualifying contracts remaining until you can become an affiliate:") + "</bdo> " + (10 - reputation[2]);
           }
-        }
-            if(parseInt(reputation[0]) + parseInt(reputation[1]) == 0) {
-              atext +=  "<br><br><bdo>" + translateThis("You are new to the markets! Welcome to BitBay.") + "</bdo>";
-        } else {
-          atext += "<br><br><bdo>" + translateThis("Contracting success rate:") + "</bdo> " + (parseFloat(parseFloat(reputation[0]) / (parseFloat(reputation[0]) + parseFloat(reputation[1]))) * parseFloat(100)).toFixed(2) + "%(" + parseInt(reputation[0]) + "/" + (parseInt(reputation[0]) + parseInt(reputation[1])) + ")";
-        }
-        document.getElementById("affiliateInfo").innerHTML = atext;
-        } catch(e) {
-        console.log(e);
+          var referral2 = DOMPurify.sanitize(await DDEcontract.methods.referral(myaccounts).call());
+          if(referral2 == "0x0000000000000000000000000000000000000000" && referral == "0x0000000000000000000000000000000000000000") {
+            atext += "<br><bdo>" + translateThis("No affiliate assigned! It's recommended to assign one so the fee is not burned.") + "</bdo>";
+          }
+          if(referral2 != "0x0000000000000000000000000000000000000000") {
+            atext += "<br><bdo>" + translateThis("Current affiliate assigned to account:") + "</bdo> " + referral2;
+          }
+          if(referral != "0x0000000000000000000000000000000000000000") {
+            var arep = JSON.parse(DOMPurify.sanitize(JSON.stringify(await DDEcontract.methods.getCompleted(referral).call())));
+            if(arep[2]>=10) {
+              atext += "<br><bdo>" + translateThis("Future affiliate assigned on next contract:") + "</bdo> " + referral;
+            } else {
+              atext += "<br><bdo>" + translateThis("Linked affiliate is not valid because they have not completed 10 qualified deals yet:") + "</bdo> " + referral;
+            }
+          }
+          if(parseInt(reputation[0]) + parseInt(reputation[1]) == 0) {
+            atext +=  "<br><br><bdo>" + translateThis("You are new to the markets! Welcome to BitBay.") + "</bdo>";
+          } else {
+            atext += "<br><br><bdo>" + translateThis("Contracting success rate:") + "</bdo> " + (parseFloat(parseFloat(reputation[0]) / (parseFloat(reputation[0]) + parseFloat(reputation[1]))) * parseFloat(100)).toFixed(2) + "%(" + parseInt(reputation[0]) + "/" + (parseInt(reputation[0]) + parseInt(reputation[1])) + ")";
+          }
+          document.getElementById("affiliateInfo").innerHTML = atext;
+      } catch(e) {
+          console.log(e);
       }
       var contact2 = '';
       var datalen = 0;
@@ -3625,21 +3624,21 @@ const combinedStatusDescriptions = {
       var datatext = '';
       try {
         datalen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, 3).call());
-            if(datalen > 0) {
-                contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(myaccounts, datalen-1).call()));
-                if("mycontact" in contact2) {
+        if(datalen > 0) {
+          contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(myaccounts, datalen-1).call()));
+          if("mycontact" in contact2) {
             datatext += "<bdo>" + translateThis("Registered contact information:") + "</bdo> " + contact2['mycontact'];
           }
-                if("publickey" in contact2) {
-                  if(datatext != '') {
+          if("publickey" in contact2) {
+            if(datatext != '') {
               datatext += '<br>';
             }
             shortPublicKey = contact2['publickey'].substring(0, 10) + '...<bdo><span id="showMore" style="color:blue">' + translateThis('(show more)') + '</span></bdo>';
             datatext += "<bdo>" + translateThis("Public key(for encryption):") + "</bdo> " + shortPublicKey;
             document.getElementById('publicemail').innerHTML = datatext;
-                  document.getElementById('showMore').addEventListener('click', function() {
+            document.getElementById('showMore').addEventListener('click', function() {
               var datatext2 = '';
-                    if("mycontact" in contact2) {
+              if("mycontact" in contact2) {
                 datatext2 += "<bdo>" + translateThis("Registered contact information:") + "</bdo> " + contact2['mycontact'];
                 datatext2 += '<br>';
               }
@@ -3651,17 +3650,17 @@ const combinedStatusDescriptions = {
         } else {
           document.getElementById('publicemail').innerHTML = "";
         }
-        } catch(e) {
+      } catch(e) {
         console.log(e);
       }
-        if(shortPublicKey == '' && userpubkey != '') {
+      if(shortPublicKey == '' && userpubkey != '') {
         shortPublicKey = userpubkey.substring(0, 10) + '...<bdo><span id="showMore">' + translateThis('(show more)') + '</span></bdo>';
         datatext += "<bdo>" + translateThis("Public key(for encryption):") + "</bdo> " + shortPublicKey;
         document.getElementById('publicemail').innerHTML = datatext;
-          document.getElementById('showMore').addEventListener('click', function() {
+        document.getElementById('showMore').addEventListener('click', function() {
           var datatext2 = '';
           try {
-              if("mycontact" in contact2) {
+            if("mycontact" in contact2) {
               datatext2 += "<bdo>" + translateThis("Registered contact information:") + "</bdo> " + contact2['mycontact'];
               datatext2 += '<br>';
             }
@@ -3670,7 +3669,7 @@ const combinedStatusDescriptions = {
           document.getElementById('publicemail').innerHTML = datatext2 + "<bdo>" + translateThis("Public key(for encryption):") + "</bdo> " + userpubkey;
         });
       }
-        if(login == 1) {
+      if(login == 1) {
         await getUserAPI(currentChainId);
         document.getElementById("loadingStatus").innerHTML = loader;
         await loadMarkets(0, 5);
@@ -3757,7 +3756,7 @@ const combinedStatusDescriptions = {
     }
 
     async function RefreshContracts() {
-        if(myaccounts != '') {
+      if(myaccounts != '') {
         localStorage.setItem(myaccounts + DDEaddy + ":readmessages3", JSON.stringify({}));
         await updateNotifications();
         await populateOffers();
@@ -3765,7 +3764,7 @@ const combinedStatusDescriptions = {
     }
 
     async function saveContactInfo(text) {
-        if(myaccounts != '') {
+      if(myaccounts != '') {
         localStorage.setItem(myaccounts + DDEaddy + ":contact", text);
       }
     }
@@ -3827,7 +3826,7 @@ const combinedStatusDescriptions = {
     });
 
     async function saveExpirationInfo(text) {
-        if(myaccounts != '') {
+      if(myaccounts != '') {
         localStorage.setItem(myaccounts + DDEaddy + ":expiration", text);
       }
     }
@@ -3997,8 +3996,8 @@ const combinedStatusDescriptions = {
       let custodianOptions = {};
 
       for (let index = 0; index < dataLength; index++) {
-        const custodianAddress = await DDEcontract.methods.custodianList(myaccounts, index).call();
-        const isActive = await DDEcontract.methods.isCustodian(myaccounts, custodianAddress).call();
+        const custodianAddress = DOMPurify.sanitize(await DDEcontract.methods.custodianList(myaccounts, index).call());
+        const isActive = DOMPurify.sanitize(await DDEcontract.methods.isCustodian(myaccounts, custodianAddress).call());
         if (isActive) {
           custodians.push(custodianAddress);
           custodianOptions[custodianAddress] = custodianAddress;
@@ -4189,10 +4188,10 @@ const combinedStatusDescriptions = {
                 jsondata.timeRemaining = timeRemaining;
                 var escrowInfo = '';
                 if (jsondata.status[0] != 4 && jsondata.status[1] != 4) {
-                    if(parseFloat(timeRemaining) < parseFloat(2)) {
+                  if(parseFloat(timeRemaining) < parseFloat(2)) {
                     escrowInfo += "<div>" + translateThis('WARNING: Funds are about to expire. Resolve the escrow with your counter-party or all funds risk being burned.') + "</div>";
                   }
-                    if(parseFloat(timeRemaining) <= parseFloat(0)) {
+                  if(parseFloat(timeRemaining) <= parseFloat(0)) {
                     escrowInfo += "<div>" + translateThis("The time limit has expired and the funds have been burned. This contract is no longer available.") + "</div>";
                     jsondata.expired = 2;
                   }
@@ -4522,7 +4521,7 @@ const combinedStatusDescriptions = {
       const ipfsHash = await pinToPinataIPFS(text);
       console.log("Offer posted to IPFS");
       console.log(ipfsHash);
-        if(ipfsHash == "error") {
+      if(ipfsHash == "error") {
         return "error";
       }
 
@@ -4730,7 +4729,7 @@ const combinedStatusDescriptions = {
         var mlength = 1;
         await DDEcontract3.methods.marketslength().call().then(async function (result) {
             currentMarketsLength = DOMPurify.sanitize(result);
-            mlength = result;
+            mlength = DOMPurify.sanitize(result);
         });
         var listlen = DOMPurify.sanitize(await DDEcontract3.methods.getArrayLength(tempCurator,3).call());
         var udata = {};
@@ -4773,8 +4772,8 @@ const combinedStatusDescriptions = {
                 } else {
                   jsondata = await getOrderHash(hash);
                   if(udata.hasOwnProperty(jsondata.sender) || udata.hasOwnProperty(jsondata.recipient)) {
-                      continue;
-                    }
+                    continue;
+                  }
                   if(parseInt(jsondata.timelimit[1]) != 0) {
                     if(parseInt(jsondata.timelimit[1]) > parseInt(CurrentTimeStamp)) {
                       if(!marketOffers.hasOwnProperty(offerID)) {
@@ -4844,6 +4843,9 @@ const combinedStatusDescriptions = {
                     added = 1;
                   } else {
                     jsondata = await getOrderHash(hash);
+                    if(udata.hasOwnProperty(jsondata.sender) || udata.hasOwnProperty(jsondata.recipient)) {
+                      continue;
+                    }
                     if(parseInt(jsondata.timelimit[1]) != 0) {
                       if(parseInt(jsondata.timelimit[1]) > parseInt(CurrentTimeStamp)) {
                         if(!marketOffers.hasOwnProperty(offerID)) {
@@ -5075,7 +5077,7 @@ const combinedStatusDescriptions = {
     async function getOrderHash(hash) {
       var jsondata = {};
       var DDEcontract3 = DDEcontract;
-        if(DDEcontract == '') {
+      if(DDEcontract == '') {
         DDEcontract3 = DDEcontract2;
       }
       await DDEcontract3.methods.getContract(DOMPurify.sanitize(hash)).call().then(async function (data) {
@@ -5087,24 +5089,24 @@ const combinedStatusDescriptions = {
           //}
           try {
             var testdata = JSON.parse(text);
-              if('recipient' in testdata && 'sender' in testdata) {
+            if('recipient' in testdata && 'sender' in testdata) {
               var cached = await getFile(Crypto.SHA256(text));
               if (!Array.isArray(cached)) {
                 text = cached;
               } else {
-                  if(DOMPurify.sanitize(data.sender) == myaccounts) {
+                if(DOMPurify.sanitize(data.sender) == myaccounts) {
                   var message = cryptico.decrypt(testdata['sender'].cipher, userprivkey).plaintext;
                   console.log(message)
                   var padding = message.split("#*#*#")[1];
-                    if(padding.length > 30) {
+                  if(padding.length > 30) {
                     text = message.split("#*#*#")[0];
                   } else {
                     throw new Error("Not enough padding");
                   }
-                  } else if(DOMPurify.sanitize(data.recipient) == myaccounts) {
+                } else if(DOMPurify.sanitize(data.recipient) == myaccounts) {
                   var message = cryptico.decrypt(testdata['recipient'].cipher, userprivkey).plaintext;
                   var padding = message.split("#*#*#")[1];
-                    if(padding.length > 30) {
+                  if(padding.length > 30) {
                     text = message.split("#*#*#")[0];
                   } else {
                     throw new Error("Not enough padding");
@@ -5141,15 +5143,15 @@ const combinedStatusDescriptions = {
             DOMPurify.sanitize(data.status[0]),
             DOMPurify.sanitize(data.status[1]),
           ],
-            message:DOMPurify.sanitize(text)
+          message:DOMPurify.sanitize(text)
         };
         try {
-              var reputation = [0,0,0];
-              if(jsondata.sender != "0x0000000000000000000000000000000000000000") {
+          var reputation = [0,0,0];
+          if(jsondata.sender != "0x0000000000000000000000000000000000000000") {
             reputation = JSON.parse(DOMPurify.sanitize(JSON.stringify(await DDEcontract3.methods.getCompleted(jsondata.sender).call())));
             jsondata.reputationSender = reputation;
           }
-              if(jsondata.recipient != "0x0000000000000000000000000000000000000000") {
+          if(jsondata.recipient != "0x0000000000000000000000000000000000000000") {
             reputation = JSON.parse(DOMPurify.sanitize(JSON.stringify(await DDEcontract3.methods.getCompleted(jsondata.recipient).call())));
             jsondata.reputationRecipient = reputation;
           }
@@ -5162,10 +5164,10 @@ const combinedStatusDescriptions = {
         } catch (e) {
           console.log("Error loading tags");
         }
-          if(text != '') {
+        if(text != '') {
           try {
             var messageData = JSON.parse(jsondata.message);
-                  if('recipient' in messageData && 'cipher' in messageData.recipient) {
+            if('recipient' in messageData && 'cipher' in messageData.recipient) {
               jsondata.image = [''];
               jsondata.message = DOMPurify.sanitize(text);
               jsondata.contact = '';
@@ -5509,10 +5511,10 @@ const combinedStatusDescriptions = {
           offerData3.timeRemaining = timeRemaining;
           var escrowInfo = '';
           if (offerData3.status[0] != 4 && offerData3.status[1] != 4) {
-              if(parseFloat(timeRemaining) < parseFloat(2)) {
+            if(parseFloat(timeRemaining) < parseFloat(2)) {
               escrowInfo += "<div>" + translateThis('WARNING: Funds are about to expire. Resolve the escrow with your counter-party or all funds risk being burned.') + "</div>";
             }
-              if(parseFloat(timeRemaining) <= parseFloat(0)) {
+            if(parseFloat(timeRemaining) <= parseFloat(0)) {
               escrowInfo += "<div>" + translateThis("The time limit has expired and the funds have been burned. This contract is no longer available.") + "</div>";
               offerData3.expired = 2;
             }
@@ -5608,53 +5610,52 @@ const combinedStatusDescriptions = {
       escrowContainer.appendChild(escrowOffersHeader);
       list3.setAttribute("style", "");
       if (list3.children.length === 0) {
-    // If no 'li' elements, append a message indicating no active contracts
-    const noContractsMsg = document.createElement("p");
-    noContractsMsg.textContent = translateThis("No active contracts");
-    list3.appendChild(noContractsMsg);
-    }
+        // If no 'li' elements, append a message indicating no active contracts
+        const noContractsMsg = document.createElement("p");
+        noContractsMsg.textContent = translateThis("No active contracts");
+        list3.appendChild(noContractsMsg);
+      }
       escrowContainer.appendChild(list3);
-
       // syncNotifications();
     }
+
     function openTab(evt, tabName) {
-    // Declare all variables
-    let i, tabcontent, tablinks;
-    // Get all elements with class="tabcontent"
-    tabcontent = document.getElementsByClassName("tabcontent");
-    let isCurrentlyVisible = document.getElementById(tabName).style.display === 'block';
+      // Declare all variables
+      let i, tabcontent, tablinks;
+      // Get all elements with class="tabcontent"
+      tabcontent = document.getElementsByClassName("tabcontent");
+      let isCurrentlyVisible = document.getElementById(tabName).style.display === 'block';
 
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].classList.remove("active");
-    }
+      // Get all elements with class="tablinks" and remove the class "active"
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].classList.remove("active");
+      }
 
-    // If the clicked tab is already visible, toggle the visibility of the other tabs
-    if (isCurrentlyVisible) {
-        for (i = 0; i < tabcontent.length; i++) {
-            if (tabcontent[i].id !== tabName) {
-                tabcontent[i].style.display = tabcontent[i].style.display === 'none' ? 'block' : 'none';
-            }
-        }
-    } else {
-        // Hide all tabs first
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        // Show the clicked tab
-        document.getElementById(tabName).style.display = 'block';
-        evt.currentTarget.classList.add("active");
+      // If the clicked tab is already visible, toggle the visibility of the other tabs
+      if (isCurrentlyVisible) {
+          for (i = 0; i < tabcontent.length; i++) {
+              if (tabcontent[i].id !== tabName) {
+                  tabcontent[i].style.display = tabcontent[i].style.display === 'none' ? 'block' : 'none';
+              }
+          }
+      } else {
+          // Hide all tabs first
+          for (i = 0; i < tabcontent.length; i++) {
+              tabcontent[i].style.display = "none";
+          }
+          // Show the clicked tab
+          document.getElementById(tabName).style.display = 'block';
+          evt.currentTarget.classList.add("active");
+      }
     }
-}
 
     function showMain(menu) {
-
       let sidebar = document.getElementById('sidebar');
-    // Check if sidebar is active on mobile devices and close it
-    if (window.innerWidth <= 991 && sidebar.classList.contains('active')) {
-        toggleSidebar();
-    }
+      // Check if sidebar is active on mobile devices and close it
+      if (window.innerWidth <= 991 && sidebar.classList.contains('active')) {
+          toggleSidebar();
+      }
       // hide all main divs
       var mains = document.querySelectorAll('.main');
       for (var i = 0; i < mains.length; i++) {
@@ -5683,14 +5684,14 @@ const combinedStatusDescriptions = {
     var listingsPerPage = 4 ;
 
     async function populateListings(searchText = "", sortHits = 0) {
-        if(sortHits == 1) {
+      if(sortHits == 1) {
         sortByHits();
       } else {
         var sortBy = document.getElementById("SortBy").value;
-            if(sortBy == "price-low") {
+        if(sortBy == "price-low") {
           sortByAmountLow();
         }
-            if(sortBy == "price-high") {
+        if(sortBy == "price-high") {
           sortByAmountHigh();
         }
       }
@@ -5721,8 +5722,8 @@ const combinedStatusDescriptions = {
           continue;
         }
         if (parseInt(marketOffers.indices[i]) >= parseInt(currentMarketsLength)) {
-                continue;
-            }
+          continue;
+        }
         if (searchText !== "") {
           if (i < marketOffers.results.length) {
             offer = marketOffers[marketOffers.results[i]];
@@ -5753,11 +5754,11 @@ const combinedStatusDescriptions = {
             continue;
           }
         } else {
-                if(marketOffers.results.length > 0 || sortHits == 2) {
+          if(marketOffers.results.length > 0 || sortHits == 2) {
             if (i < marketOffers.results.length) {
               offer = marketOffers[marketOffers.results[i]];
             } else {
-                        if(sortHits == 2) {
+              if(sortHits == 2) {
                 continue;
               }
               offer = marketOffers[marketOffers[marketOffers.indices[i]]];
@@ -5779,34 +5780,33 @@ const combinedStatusDescriptions = {
         var foundImage = false; 
 
         if (myimg.length > 0) {
-            const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+          const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
 
-            for (let i = 0; i < myimg.length; i++) {
-                const mimeType = myimg[i].match(/^data:(.*?);/)[1].toLowerCase();
+          for (let i = 0; i < myimg.length; i++) {
+              const mimeType = myimg[i].match(/^data:(.*?);/)[1].toLowerCase();
 
-                if (imageMimeTypes.includes(mimeType)) {
-                    tempimg = '<img src="' + myimg[i] + '" alt="./blank-image.jpg">';
-                    foundImage = true;
-                    break; 
-                }
-            }
+              if (imageMimeTypes.includes(mimeType)) {
+                  tempimg = '<img src="' + myimg[i] + '" alt="./blank-image.jpg">';
+                  foundImage = true;
+                  break; 
+              }
+          }
 
-            if (!foundImage) {
-                // If no image is found, display a document icon
-                tempimg = '<img src="./document-icon.png" alt="Document Placeholder">';
-            }
+          if (!foundImage) {
+              tempimg = '<img src="./blank-image.jpg" alt="Document Placeholder">';
+          }
         }
 
         gridItem.innerHTML = `
-                <div class="listing-image">${tempimg}</div>
-                <div class="listing-details">
-                    <div class="token-ammount-content">
-                      <div class="token">` + '<bdo class="theText">' + translateThis("Currency:") + '</bdo>' + ` ${tokennames[offer.token]}</div>
-                      <div class="amount">` + '<bdo class="theText">' + translateThis("Amount:") + '</bdo>'  + ` ${displayDecimals(offer.token, offer.amount)}</div>
-                    </div>
-                    <div class="message">` + '<bdo class="theText">' + translateThis("Details:") + '</bdo>' + ` ${offer.message.slice(0, 20) + (offer.message.length > 20 ? "..." : "")}</div>
+            <div class="listing-image">${tempimg}</div>
+            <div class="listing-details">
+                <div class="token-ammount-content">
+                  <div class="token">` + '<bdo class="theText">' + translateThis("Currency:") + '</bdo>' + ` ${tokennames[offer.token]}</div>
+                  <div class="amount">` + '<bdo class="theText">' + translateThis("Amount:") + '</bdo>'  + ` ${displayDecimals(offer.token, offer.amount)}</div>
                 </div>
-            `;
+                <div class="message">` + '<bdo class="theText">' + translateThis("Details:") + '</bdo>' + ` ${offer.message.slice(0, 20) + (offer.message.length > 20 ? "..." : "")}</div>
+            </div>
+        `;
 
         // create a closure to bind the offer variable to the onclick function
         (function (offer) {
@@ -5827,55 +5827,56 @@ const combinedStatusDescriptions = {
       document.head.appendChild(style);
     }
 
-async function updateNotifications() {
-    var notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
-    var readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages") || "{}");
+    async function updateNotifications() {
+        var notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
+        var readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages") || "{}");
 
-    await fetchOffersFromMethod('openOffers', notifications, readMessages);
-    await fetchOffersFromMethod('privateOffers', notifications, readMessages);
-    await fetchOffersFromMethod('escrows', notifications, readMessages);
+        await fetchOffersFromMethod('openOffers', notifications, readMessages);
+        await fetchOffersFromMethod('privateOffers', notifications, readMessages);
+        await fetchOffersFromMethod('escrows', notifications, readMessages);
 
-    localStorage.setItem(myaccounts + DDEaddy + ":unifiedNotifications", JSON.stringify(notifications));
-    displayNotifications();
-}
-async function fetchOffersFromMethod(methodName, notifications, readMessages) {
-    var mylen = 0;
-    try {
-        mylen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, methodName === 'escrows' ? 2 : (methodName === 'privateOffers' ? 1 : 0)).call());
-        for (var i = 0; i < mylen; i++) {
-            if (readMessages[i]) {
-                continue;
-            }
-            const offerHash = DOMPurify.sanitize(await DDEcontract.methods[methodName](myaccounts, i).call());
-            const offerData = await getOrderHash(offerHash);
-            const previousData = JSON.parse(localStorage.getItem(offerHash) || "{}");
-            localStorage.setItem(offerHash, JSON.stringify(offerData)); // Update the cache with the latest data
-
-            let mode = 0; 
-            if (methodName === 'openOffers') {
-                mode = 1;
-            } else if (methodName === 'privateOffers') {
-                mode = offerData.status[0] === 1 ? 1 : 2; 
-            } else if (methodName === 'escrows') {
-                mode = 4; 
-            }
-
-            let changes = detectChanges(offerData, previousData);
-            if (changes.length > 0) {
-                notifications[offerHash] = {
-                    type: methodName.replace('Offers', ''),
-                    title: offerData.message,
-                    message: changes.join(", "),
-                    timestamp: new Date().toISOString(),
-                    listing: offerData,
-                    mode: mode 
-                };
-            }
-        }
-    } catch (error) {
-        console.error("Error fetching offer data:", error);
+        localStorage.setItem(myaccounts + DDEaddy + ":unifiedNotifications", JSON.stringify(notifications));
+        displayNotifications();
     }
-}
+
+    async function fetchOffersFromMethod(methodName, notifications, readMessages) {
+        var mylen = 0;
+        try {
+            mylen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, methodName === 'escrows' ? 2 : (methodName === 'privateOffers' ? 1 : 0)).call());
+            for (var i = 0; i < mylen; i++) {
+                if (readMessages[i]) {
+                    continue;
+                }
+                const offerHash = DOMPurify.sanitize(await DDEcontract.methods[methodName](myaccounts, i).call());
+                const offerData = await getOrderHash(offerHash);
+                const previousData = JSON.parse(localStorage.getItem(offerHash) || "{}");
+                localStorage.setItem(offerHash, JSON.stringify(offerData)); // Update the cache with the latest data
+
+                let mode = 0; 
+                if (methodName === 'openOffers') {
+                    mode = 1;
+                } else if (methodName === 'privateOffers') {
+                    mode = offerData.status[0] === 1 ? 1 : 2; 
+                } else if (methodName === 'escrows') {
+                    mode = 4; 
+                }
+
+                let changes = detectChanges(offerData, previousData);
+                if (changes.length > 0) {
+                    notifications[offerHash] = {
+                        type: methodName.replace('Offers', ''),
+                        title: offerData.message,
+                        message: changes.join(", "),
+                        timestamp: new Date().toISOString(),
+                        listing: offerData,
+                        mode: mode 
+                    };
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching offer data:", error);
+        }
+    }
 
     function detectChanges(currentData, previousData) {
         let changes = [];
@@ -5918,7 +5919,7 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
     }
 
 
-      function displayNotifications() {
+    function displayNotifications() {
       const notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
       const notificationBox = document.getElementById("notification-box");
 
@@ -5929,34 +5930,30 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
       if (Object.keys(notifications).length === 0) {
           notificationBox.innerHTML = `<div class="notification-empty">${translateThis("No notifications")}</div>`;
       } else {
-          Object.entries(notifications).forEach(([hash, notification]) => {
-              const notificationContent = document.createElement('div');
-              notificationContent.className = 'notification-box-content';
+        Object.entries(notifications).forEach(([hash, notification]) => {
+            const notificationContent = document.createElement('div');
+            notificationContent.className = 'notification-box-content';
 
-              const notificationButton = document.createElement('button');
-              notificationButton.className = 'notification-box-content-button';
-              notificationButton.innerHTML = `
-                  <div class="notification-badge">
-                      <img src="telegram.png" alt="notification img"/>
-                  </div>
-                  <div class="notification-box-content-info">
-                      <h6>${notification.title || "Default Title"}</h6>
-                      <p>${translateThis(notification.message) || "No details available."}</p>
-                  </div>
-              `;
+            const notificationButton = document.createElement('button');
+            notificationButton.className = 'notification-box-content-button';
+            notificationButton.innerHTML = `
+              <div class="notification-badge">
+                  <img src="telegram.png" alt="notification img"/>
+              </div>
+              <div class="notification-box-content-info">
+                  <h6>${notification.title || "Default Title"}</h6>
+                  <p>${translateThis(notification.message) || "No details available."}</p>
+              </div>
+            `;
 
-              notificationButton.addEventListener('click', () => {
-                  showListing(notification.listing, notification.mode);
-              });
-              notificationContent.appendChild(notificationButton);
+            notificationButton.addEventListener('click', () => {
+                showListing(notification.listing, notification.mode);
+            });
+            notificationContent.appendChild(notificationButton);
 
-              notificationBox.appendChild(notificationContent);
-          });
+            notificationBox.appendChild(notificationContent);
+        });
       }
-  }
-
-    function fromWei(value) {
-        return (value / 1e18).toFixed(4);
     }
 
     function displayDecimals(token, amountString) {
@@ -5987,16 +5984,16 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
 
     // function for searching the listings
     async function searchListings(searchText, deep=0) {
-        // filter the marketOffers array based on the searchText
-        // and update the currentPage to 1
-        currentPage = 1;
+      // filter the marketOffers array based on the searchText
+      // and update the currentPage to 1
+      currentPage = 1;
       if (deep == 1) {
         document.getElementById("loadingStatus").innerHTML = loader;
         await loadMarkets(0, 5, searchText);
         document.getElementById("loadingStatus").innerHTML = "";
-        } else {
-          await populateListings(searchText);
-        }
+      } else {
+        await populateListings(searchText);
+      }
     }
 
     // async function searchFavorites() {
@@ -6006,19 +6003,19 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
     // }
 
     async function searchFavorites() {
-        document.getElementById("loadingStatus").innerHTML = loader;
-        
-        if (!isFavoritesShown) {
-            const favorites = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":myFavorites")) || [];
-            if (favorites.length === 0) {
-                document.getElementById("loadingStatus").innerHTML = translateThis("No favorites found.");
-               return;
-           }
-           currentViewContext = 'favorites';
-           await loadMarkets(0, 5, favorites);
-           updatePaginationControls(favorites.length);
-           isFavoritesShown = true;
-          //  document.getElementById("favorites-text").textContent = translateThis("Hide Favorites");
+      document.getElementById("loadingStatus").innerHTML = loader;
+      
+      if (!isFavoritesShown) {
+          const favorites = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":myFavorites")) || [];
+          if (favorites.length === 0) {
+              document.getElementById("loadingStatus").innerHTML = translateThis("No favorites found.");
+             return;
+         }
+         currentViewContext = 'favorites';
+         await loadMarkets(0, 5, favorites);
+         updatePaginationControls(favorites.length);
+         isFavoritesShown = true;
+        //  document.getElementById("favorites-text").textContent = translateThis("Hide Favorites");
        } else {
            currentViewContext = '';
            await loadMarkets(1, 5);
@@ -6065,15 +6062,15 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
         paginationNumbers.appendChild(pageButton);
       }
 
-    // populateListings();
+      // populateListings();
 
     }
 
     async function goToPage(pageNumber, totalItems){
-    currentPage = pageNumber;
+      currentPage = pageNumber;
       await populateListings();
       updatePaginationControls(totalItems);
-}
+    }
 
     // async function previousPage() {
     //   if (currentPage > 1) {
@@ -6084,95 +6081,95 @@ async function fetchOffersFromMethod(methodName, notifications, readMessages) {
     // }
 
     async function previousPage() {
-    var totalItems;
-    // Determine the total items based on the current context
-    switch (currentViewContext) {
-        case 'favorites':
-            const favorites = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":myFavorites")) || [];
-            totalItems = favorites.length;
-            break;
-        case 'userStore':
-            const userStoreKey = document.getElementById("searchText").value.split("userStore:")[1].trim();
-            totalItems = await getTotalItemsForUserStore(userStoreKey);
-            break;
-        default:
-            totalItems = marketOffers.indices.length;
-            break;
+        var totalItems;
+        // Determine the total items based on the current context
+        switch (currentViewContext) {
+            case 'favorites':
+                const favorites = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":myFavorites")) || [];
+                totalItems = favorites.length;
+                break;
+            case 'userStore':
+                const userStoreKey = document.getElementById("searchText").value.split("userStore:")[1].trim();
+                totalItems = await getTotalItemsForUserStore(userStoreKey);
+                break;
+            default:
+                totalItems = marketOffers.indices.length;
+                break;
+        }
+
+        if (currentPage > 1) {
+            currentPage--;
+            await populateListings();
+            updatePaginationControls(totalItems);
+        }
     }
 
-    if (currentPage > 1) {
-        currentPage--;
+    async function getTotalItemsForUserStore(userStoreKey) {
+        try {
+            const totalItems = await DDEcontract3.methods.getArrayLength(userStoreKey, 0).call();
+            return DOMPurify.sanitize(totalItems);
+        } catch (error) {
+            console.error("Error fetching total items for user store:", error);
+            return 0;
+        }
+    }
+
+    async function nextPage() {
+        var totalItems;
+        var startIndex = currentPage * listingsPerPage;
+        var endIndex = startIndex + listingsPerPage;
+
+        // Handle different contexts for loading markets
+        switch (currentViewContext) {
+            case 'favorites':
+                const favorites = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":myFavorites")) || [];
+                totalItems = favorites.length;
+                if (startIndex < totalItems) {
+                    await loadMarkets(startIndex, Math.min(endIndex, totalItems), favorites);
+                }
+                break;
+            case 'userStore':
+                const userStoreKey = document.getElementById("searchText").value.split("userStore:")[1].trim();
+                totalItems = await getTotalItemsForUserStore(userStoreKey);
+                if (startIndex < totalItems) {
+                    await loadMarkets(startIndex, Math.min(endIndex, totalItems), "userStore:" + userStoreKey);
+                }
+                break;
+            default:
+                totalItems = marketOffers.indices.length;
+                if (startIndex < totalItems) {
+                    await loadMarkets(startIndex, endIndex);
+                }
+                break;
+        }
+        console.log("totalItems", totalItems);
+        var totalPages = Math.ceil(totalItems / listingsPerPage);
+        currentPage = Math.min(currentPage + 1, totalPages); // Ensure currentPage does not exceed totalPages
+
+        document.getElementById("loadingStatus").innerHTML = "";
         await populateListings();
         updatePaginationControls(totalItems);
     }
-}
 
-    async function getTotalItemsForUserStore(userStoreKey) {
-    try {
-        const totalItems = await DDEcontract3.methods.getArrayLength(userStoreKey, 0).call();
-        return DOMPurify.sanitize(totalItems);
-    } catch (error) {
-        console.error("Error fetching total items for user store:", error);
-        return 0;
-    }
-}
+    //   async function nextPage() {
+    //   var totalItems = marketOffers.indices.length;
+    //   var totalPages = Math.ceil(totalItems / listingsPerPage);
 
-async function nextPage() {
-    var totalItems;
-    var startIndex = currentPage * listingsPerPage;
-    var endIndex = startIndex + listingsPerPage;
-
-    // Handle different contexts for loading markets
-    switch (currentViewContext) {
-        case 'favorites':
-            const favorites = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":myFavorites")) || [];
-            totalItems = favorites.length;
-            if (startIndex < totalItems) {
-                await loadMarkets(startIndex, Math.min(endIndex, totalItems), favorites);
-            }
-            break;
-        case 'userStore':
-            const userStoreKey = document.getElementById("searchText").value.split("userStore:")[1].trim();
-            totalItems = await getTotalItemsForUserStore(userStoreKey);
-            if (startIndex < totalItems) {
-                await loadMarkets(startIndex, Math.min(endIndex, totalItems), "userStore:" + userStoreKey);
-            }
-            break;
-        default:
-            totalItems = marketOffers.indices.length;
-            if (startIndex < totalItems) {
-                await loadMarkets(startIndex, endIndex);
-            }
-            break;
-    }
-    console.log("totalItems", totalItems);
-    var totalPages = Math.ceil(totalItems / listingsPerPage);
-    currentPage = Math.min(currentPage + 1, totalPages); // Ensure currentPage does not exceed totalPages
-
-    document.getElementById("loadingStatus").innerHTML = "";
-    await populateListings();
-    updatePaginationControls(totalItems);
-}
-
-  //   async function nextPage() {
-  //   var totalItems = marketOffers.indices.length;
-  //   var totalPages = Math.ceil(totalItems / listingsPerPage);
-
-  //   if (currentPage < totalPages) {
-  //       currentPage++;
-  //       await populateListings();
-  //       updatePaginationControls(totalItems);
-  //   } else {
-  //       document.getElementById("loadingStatus").innerHTML = loader;
-  //       await loadMarkets(totalItems, totalItems + 5); // Fetch next listings
-  //       document.getElementById("loadingStatus").innerHTML = "";
-  //       if (currentPage < totalPages) {
-  //           currentPage++;
-  //       }
-  //       await populateListings();
-  //       updatePaginationControls(totalItems + 5);
-  //   }
-  // }
+    //   if (currentPage < totalPages) {
+    //       currentPage++;
+    //       await populateListings();
+    //       updatePaginationControls(totalItems);
+    //   } else {
+    //       document.getElementById("loadingStatus").innerHTML = loader;
+    //       await loadMarkets(totalItems, totalItems + 5); // Fetch next listings
+    //       document.getElementById("loadingStatus").innerHTML = "";
+    //       if (currentPage < totalPages) {
+    //           currentPage++;
+    //       }
+    //       await populateListings();
+    //       updatePaginationControls(totalItems + 5);
+    //   }
+    // }
     // populateListings();
     // Function to show the details popup for a listing
     async function showListing(listing, mode = 0) {
@@ -6320,56 +6317,56 @@ async function nextPage() {
         if (slides[slideIndex - 1]) {
             slides[slideIndex - 1].style.display = 'block'; 
         }
-    }
-    const imageList = document.createElement('ul');
-    const arrowsContainer = document.createElement('div');
-    const downloadContainer = document.createElement('div');
-    downloadContainer.classList.add('download-container');
-    var myimgs = await getFile(listing.image);
-    var downloadLinks = [];
-    var imageCount = 0;
-    if (myimgs.length > 0) {
-      imageList.classList.add('image-list');
-      imageList.style.listStyle = 'none';
-      imageList.onclick = function() { plusSlides(1); };
-
-      for (let i = 0; i < myimgs.length; i++) {
-        const li = document.createElement('li');
-        const fileData = myimgs[i];
-        const [fileTypePrefix, base64Content] = fileData.split(';base64,');
-
-        // Check if the file type is an image
-        if (fileTypePrefix.startsWith('data:image')) {
-            const img = document.createElement('img');
-            img.src = fileTypePrefix + ';base64,' + base64Content;
-            img.classList.add('popup-image');
-            li.appendChild(img);
-            imageCount++;
-        } else {
-            downloadLinks.push(fileTypePrefix + ';base64,' + base64Content);
-        }
-
-        imageList.appendChild(li);
       }
+      const imageList = document.createElement('ul');
+      const arrowsContainer = document.createElement('div');
+      const downloadContainer = document.createElement('div');
+      downloadContainer.classList.add('download-container');
+      var myimgs = await getFile(listing.image);
+      var downloadLinks = [];
+      var imageCount = 0;
+      if (myimgs.length > 0) {
+        imageList.classList.add('image-list');
+        imageList.style.listStyle = 'none';
+        imageList.onclick = function() { plusSlides(1); };
 
-      if (imageCount > 0) {
-        arrowsContainer.classList.add('arrows-container');
-        arrowsContainer.style.position = 'relative';
+        for (let i = 0; i < myimgs.length; i++) {
+          const li = document.createElement('li');
+          const fileData = myimgs[i];
+          const [fileTypePrefix, base64Content] = fileData.split(';base64,');
 
-        if (imageCount > 1) {
-          arrowsContainer.appendChild(leftArrow);
-          arrowsContainer.appendChild(rightArrow);
+          // Check if the file type is an image
+          if (fileTypePrefix.startsWith('data:image')) {
+              const img = document.createElement('img');
+              img.src = fileTypePrefix + ';base64,' + base64Content;
+              img.classList.add('popup-image');
+              li.appendChild(img);
+              imageCount++;
+          } else {
+              downloadLinks.push(fileTypePrefix + ';base64,' + base64Content);
+          }
+
+          imageList.appendChild(li);
         }
 
-        imageContainer.appendChild(imageList);
-        imageContainer.appendChild(arrowsContainer);
+        if (imageCount > 0) {
+          arrowsContainer.classList.add('arrows-container');
+          arrowsContainer.style.position = 'relative';
+
+          if (imageCount > 1) {
+            arrowsContainer.appendChild(leftArrow);
+            arrowsContainer.appendChild(rightArrow);
+          }
+
+          imageContainer.appendChild(imageList);
+          imageContainer.appendChild(arrowsContainer);
+        } else {
+          imageContainer.style.display = 'none';
+        }
       } else {
         imageContainer.style.display = 'none';
       }
-    } else {
-      imageContainer.style.display = 'none';
-    }
-    popup.appendChild(imageContainer);
+      popup.appendChild(imageContainer);
       if (downloadLinks.length > 0 && mode !== 3) {
         const downloadAllLink = document.createElement('a');
         downloadAllLink.textContent = translateThis('Download Files');
@@ -6574,7 +6571,6 @@ async function nextPage() {
       message.innerHTML = '<bdo>' + translateThis('Details:') + '</bdo>' + listing.message;
       const message2 = document.createElement('p');
       if (typeof listing.contact !== 'undefined') {
-
         message2.innerHTML = '<bdo>' + translateThis('Contact information:') + '</bdo>' + listing.contact;
       }
       var contact2 = '';
@@ -6583,16 +6579,16 @@ async function nextPage() {
       if(theuser != listing.recipient && listing.recipient != "0x0000000000000000000000000000000000000000" && DDEcontract != '') {
         try {
           datalen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(listing.recipient, 3).call());
-            if(datalen > 0) {
-              contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(listing.recipient, datalen-1).call()));
-              if(typeof contact2 === 'object' && 'mycontact' in contact2) {
-                if(listing.contact != contact2['mycontact']) {
+          if(datalen > 0) {
+            contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(listing.recipient, datalen-1).call()));
+            if(typeof contact2 === 'object' && 'mycontact' in contact2) {
+              if(listing.contact != contact2['mycontact']) {
                 message.innerHTML += '<br><br><bdo>' + translateThis('Recipients contact information:') + '</bdo><br>' + contact2['mycontact'];
               }
             }
           }
           reputation = JSON.parse(DOMPurify.sanitize(JSON.stringify(await DDEcontract.methods.getCompleted(listing.recipient).call())));
-            if(reputation[0] == 0 && reputation[1] == 0) {
+          if(reputation[0] == 0 && reputation[1] == 0) {
             message.innerHTML += '<br><br>' + translateThis('Recipient is a new user of the markets.') + '<br>';
           } else {
             message.innerHTML += '<br><br>' + translateThis('Recipients success rate:') + '<br><br><bdo>' + translateThis('Completed:') + '</bdo> ' + reputation[0] + '<br><br><bdo>' + translateThis('Failed:') + '</bdo> ' + reputation[1];
@@ -6604,16 +6600,16 @@ async function nextPage() {
       if(theuser != listing.sender && listing.sender != "0x0000000000000000000000000000000000000000" && DDEcontract != '') {
         try {
           datalen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(listing.sender, 3).call());
-            if(datalen > 0) {
-              contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(listing.sender, datalen-1).call()));
-              if(typeof contact2 === 'object' && 'mycontact' in contact2) {
-                if(listing.contact != contact2['mycontact']) {
+          if(datalen > 0) {
+            contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(listing.sender, datalen-1).call()));
+            if(typeof contact2 === 'object' && 'mycontact' in contact2) {
+              if(listing.contact != contact2['mycontact']) {
                 message.innerHTML += '<br><br><bdo>' + translateThis('Senders contact information:') + '</bdo><br>' + contact2['mycontact'];
               }
             }
           }
           reputation = JSON.parse(DOMPurify.sanitize(JSON.stringify(await DDEcontract.methods.getCompleted(listing.sender).call())));
-            if(reputation[0] == 0 && reputation[1] == 0) {
+          if(reputation[0] == 0 && reputation[1] == 0) {
             message.innerHTML += '<br><br>' + translateThis('Sender is a new user of the markets.') + '<br>';
           } else {
             message.innerHTML += '<br><br>' + translateThis('Senders success rate:') + '<br><bdo>' + translateThis('Completed:') + '</bdo> ' + reputation[0] + '<br><bdo>' + translateThis('Failed:') + '</bdo> ' + reputation[1];
@@ -6630,42 +6626,42 @@ async function nextPage() {
         const acceptButton = document.createElement('button');
         acceptButton.classList.add('btn-filled');
         acceptButton.innerHTML = translateThis('Accept offer');
-          acceptButton.onclick = () => {acceptOffer(listing); popupContainer.remove();};
+        acceptButton.onclick = () => {acceptOffer(listing); popupContainer.remove();};
 
         const counterButton = document.createElement('button');
         counterButton.classList.add('btn-gray');
         counterButton.innerHTML = translateThis('Counter-offer');
-          counterButton.onclick = () => {counterOffer(listing); popupContainer.remove();};
+        counterButton.onclick = () => {counterOffer(listing); popupContainer.remove();};
 
         buttonContainer.appendChild(acceptButton);
-          if(parseInt(listing.status[0]) != 2 && parseInt(listing.status[0]) != 3) {
+        if(parseInt(listing.status[0]) != 2 && parseInt(listing.status[0]) != 3) {
           buttonContainer.appendChild(counterButton);
         }
       }
       if(mode == 1) {
-          if(listing.sender == "0x0000000000000000000000000000000000000000" || listing.recipient == "0x0000000000000000000000000000000000000000" ) {
+        if(listing.sender == "0x0000000000000000000000000000000000000000" || listing.recipient == "0x0000000000000000000000000000000000000000" ) {
           const quantityButton = document.createElement('button');
           quantityButton.classList.add("btn-gray");
           quantityButton.innerHTML = translateThis('Update Quantity');
-            quantityButton.onclick = async () => {await updateQuantity(listing); popupContainer.remove();};
+          quantityButton.onclick = async () => {await updateQuantity(listing); popupContainer.remove();};
           buttonContainer.appendChild(quantityButton);
           const feeButton = document.createElement('button');
           feeButton.classList.add("btn-gray");
           feeButton.innerHTML = translateThis('Edit referral fee');
-            feeButton.onclick = async () => {await updateFee(listing); popupContainer.remove();};
+          feeButton.onclick = async () => {await updateFee(listing); popupContainer.remove();};
           buttonContainer.appendChild(feeButton);
         }
         const cancelButton = document.createElement('button');
         cancelButton.classList.add("btn-gray");
         cancelButton.innerHTML = translateThis('Cancel offer');
-          cancelButton.onclick = async () => {await cancelOffer(listing); popupContainer.remove();};
+        cancelButton.onclick = async () => {await cancelOffer(listing); popupContainer.remove();};
         buttonContainer.appendChild(cancelButton);
       }
       if(mode == 2) {
         const cancelButton = document.createElement('button');
         cancelButton.classList.add("btn-gray");
         cancelButton.innerHTML = translateThis('Cancel offer');
-          cancelButton.onclick = async () => {await cancelOffer(listing, 1); popupContainer.remove();};
+        cancelButton.onclick = async () => {await cancelOffer(listing, 1); popupContainer.remove();};
         buttonContainer.appendChild(cancelButton);
       }
       if(mode == 3) {
@@ -6683,14 +6679,14 @@ async function nextPage() {
         buttonContainer.appendChild(cancelButton);
       }
       if(mode == 4) {
-          if(listing.expired == 1 || listing.expired == 2) {
+        if(listing.expired == 1 || listing.expired == 2) {
           const clearButton = document.createElement('button');
           clearButton.innerHTML = translateThis('Clear Contract');
           clearButton.id = 'clearButton';
           buttonContainer.appendChild(clearButton);
-              clearButton.onclick = async function() {
+          clearButton.onclick = async function() {
             var returnThis = 0;
-                if(listing.expired == 2 && listing.status[0] < 5) {
+            if(listing.expired == 2 && listing.status[0] < 5) {
               Swal.fire({
                 title: translateThis('Contract destroyed'),
                 text: translateThis('It seems like this deal timed out. If this was due to any disagreement then before you clear the order would you like to report the result to the blockchain for reputation tracking?'),
@@ -6703,11 +6699,11 @@ async function nextPage() {
                   try {
                     setActionActive(actionId, true);
                     if(accountprivkey != "") {
-                            const gasEstimate = 100000;
-                            var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
-                            if(!res) {
-                              return;
-                            }
+                      const gasEstimate = 100000;
+                      var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
+                      if(!res) {
+                        return;
+                      }
                     }
                     showLoader();
                     await DDEcontract.methods.expireEscrow(listing.hash, theuser).send({ "from": myaccounts, ...gasOptions[gasSetting] });
@@ -6725,10 +6721,10 @@ async function nextPage() {
                 }
               });
             }
-                if(returnThis==1) {
+            if(returnThis==1) {
               return;
             }
-                if(theuser == myaccounts) {
+            if(theuser == myaccounts) {
               const readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages3")) || {};
               readMessages[listing.index] = true;
               localStorage.setItem(myaccounts + DDEaddy + ":readmessages3", JSON.stringify(readMessages));
@@ -6738,23 +6734,23 @@ async function nextPage() {
           };
         } else {
           var skipthis = 0;
-              if(listing.timelimit[0] == listing.timelimit[1] && listing.timelimit[1] == listing.timelimit[2]) {
+          if(listing.timelimit[0] == listing.timelimit[1] && listing.timelimit[1] == listing.timelimit[2]) {
             skipthis = 1
           }
-              if(listing.timelimit[1] != 0 && skipthis != 1) {
-                if(theuser != listing.sender) {
+          if(listing.timelimit[1] != 0 && skipthis != 1) {
+            if(theuser != listing.sender) {
               const acceptTime = document.createElement('button');
               acceptTime.innerHTML = translateThis('Accept Time Extension Request');
               acceptTime.id = 'acceptTime';
-                  acceptTime.onclick = async function() {
+              acceptTime.onclick = async function() {
                 try {
                   setActionActive(actionId, true);
                   if(accountprivkey != "") {
-                        const gasEstimate = 70000;
-                        var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
-                        if(!res) {
-                          return;
-                        }
+                    const gasEstimate = 70000;
+                    var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
+                    if(!res) {
+                      return;
+                    }
                   }
                   showLoader();
                   await DDEcontract.methods.requestExtension(listing.hash, theuser, listing.timelimit[1]).send({ "from": myaccounts, ...gasOptions[gasSetting] });
@@ -6773,20 +6769,20 @@ async function nextPage() {
               buttonContainer.appendChild(acceptTime);
             }
           }
-              if(listing.timelimit[2] != 0 && skipthis != 1) {
-                if(theuser == listing.sender) {
+          if(listing.timelimit[2] != 0 && skipthis != 1) {
+            if(theuser == listing.sender) {
               const acceptTime = document.createElement('button');
               acceptTime.innerHTML = translateThis('Accept Time Extension Request');
               acceptTime.id = 'acceptTime';
-                  acceptTime.onclick = async function() {
+              acceptTime.onclick = async function() {
                 try {
                   setActionActive(actionId, true);
                   if(accountprivkey != "") {
-                        const gasEstimate = 70000;
-                        var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
-                        if(!res) {
-                          return;
-                        }
+                    const gasEstimate = 70000;
+                    var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
+                    if(!res) {
+                      return;
+                    }
                   }
                   showLoader();
                   await DDEcontract.methods.requestExtension(listing.hash, theuser, listing.timelimit[2]).send({ "from": myaccounts, ...gasOptions[gasSetting] });
@@ -6809,17 +6805,17 @@ async function nextPage() {
           extendTime.classList.add('btn-gray');
           extendTime.innerHTML = translateThis('Request Time Extension');
           extendTime.id = 'extendTime';
-              extendTime.onclick = async function() {
+          extendTime.onclick = async function() {
             try {
               const dialog = document.createElement("div");
               dialog.innerHTML = `
-                        <div>` + translateThis('Please enter the number of days you wish to extend:') + `<br></div>
-                          <input id="new-time" type="number" min="1"></input><br><br>
-                        <div>
-                          <button id="confirm-btn">` + translateThis('Confirm') + `</button>&nbsp;&nbsp;
-                          <button id="cancel-btn">` + translateThis('Cancel') + `</button>
-                        </div>
-                      `;
+                <div>` + translateThis('Please enter the number of days you wish to extend:') + `<br></div>
+                  <input id="new-time" type="number" min="1"></input><br><br>
+                <div>
+                  <button id="confirm-btn">` + translateThis('Confirm') + `</button>&nbsp;&nbsp;
+                  <button id="cancel-btn">` + translateThis('Cancel') + `</button>
+                </div>
+              `;
               dialog.style.display = "block";
               dialog.style.position = "fixed";
               dialog.style.zIndex = 999;
@@ -6844,11 +6840,11 @@ async function nextPage() {
                 dialog.remove();
                 setActionActive(actionId, true);
                 if(accountprivkey != "") {
-                          const gasEstimate = 70000;
-                          var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
-                          if(!res) {
-                            return;
-                          }
+                  const gasEstimate = 70000;
+                  var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
+                  if(!res) {
+                    return;
+                  }
                 }
                 showLoader();
                 await DDEcontract.methods.requestExtension(listing.hash, theuser, newtime).send({ "from": myaccounts, ...gasOptions[gasSetting] });
@@ -6870,26 +6866,26 @@ async function nextPage() {
           cancelButton.classList.add('btn-gray');
           cancelButton.innerHTML = translateThis('Cancel Contract');
           cancelButton.id = 'cancelButton';
-              cancelButton.onclick = async function() {
+          cancelButton.onclick = async function() {
             try {
-                  if(theuser == listing.sender) {
-                    if(listing.status[1] == 2) {
+              if(theuser == listing.sender) {
+                if(listing.status[1] == 2) {
                   await Swal.fire(translateThis("Contract cancellation request was already sent!"));
                   return;
                 }
               } else {
-                    if(listing.status[1] == 3) {
+                if(listing.status[1] == 3) {
                   await Swal.fire(translateThis("Contract cancellation request was already sent!"));
                   return;
                 }
               }
               setActionActive(actionId, true);
               if(accountprivkey != "") {
-                    const gasEstimate = 70000;
-                    var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
-                    if(!res) {
-                      return;
-                    }
+                const gasEstimate = 70000;
+                var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
+                if(!res) {
+                  return;
+                }
               }
               showLoader();
               await DDEcontract.methods.cancelEscrow(listing.hash, theuser).send({ "from": myaccounts, ...gasOptions[gasSetting] });
@@ -6914,7 +6910,7 @@ async function nextPage() {
           confirmButton.classList.add('btn-gray');
           confirmButton.innerHTML = translateThis('Complete Contract');
           confirmButton.id = 'confirmButton';
-              confirmButton.onclick = async function() {
+          confirmButton.onclick = async function() {
             try {
                   if(theuser == listing.sender) {
                     if(listing.status[0] == 2) {
@@ -7108,43 +7104,43 @@ async function nextPage() {
         this.style.cursor = 'auto';
       });
       notesButton.onclick = function() {
-      const existingNotes = localStorage.getItem(myaccounts + DDEaddy +'notes_' + listing.hash) || '';
-      Swal.fire({
-        title: translateThis('Enter your notes for this offer'),
-        input: 'textarea',
-        inputValue: existingNotes,
-        showCancelButton: true,
-        confirmButtonText: translateThis('Save'),
-        cancelButtonText: translateThis('Cancel'),
-      }).then((result) => {
-        if (result.isConfirmed && result.value !== undefined) {
-          localStorage.setItem(myaccounts + DDEaddy +'notes_' + listing.hash, result.value);
-          Swal.fire({
-            icon: 'success',
-            title: translateThis('Notes Saved'),
-            text: translateThis('Your notes have been saved successfully.'),
-          });
-        }
+        const existingNotes = localStorage.getItem(myaccounts + DDEaddy +'notes_' + listing.hash) || '';
+        Swal.fire({
+          title: translateThis('Enter your notes for this offer'),
+          input: 'textarea',
+          inputValue: existingNotes,
+          showCancelButton: true,
+          confirmButtonText: translateThis('Save'),
+          cancelButtonText: translateThis('Cancel'),
+        }).then((result) => {
+          if (result.isConfirmed && result.value !== undefined) {
+            localStorage.setItem(myaccounts + DDEaddy +'notes_' + listing.hash, result.value);
+            Swal.fire({
+              icon: 'success',
+              title: translateThis('Notes Saved'),
+              text: translateThis('Your notes have been saved successfully.'),
+            });
+          }
+        });
+      };
+
+      const messageButton = document.createElement('span');
+      messageButton.innerHTML = '&#9993;'; // Unicode for envelope (message icon)
+      messageButton.classList.add('message-button');
+      messageButton.style.fontSize = "20px";
+      messageButton.style.marginLeft = "10px";
+
+      const messageCountIndicator = document.createElement('span');
+      messageCountIndicator.classList.add('message-count-indicator');
+      messageCountIndicator.style.display = 'none'; // Hide initially
+      messageButton.appendChild(messageCountIndicator);
+
+      messageButton.addEventListener('mouseover', function() {
+        this.style.cursor = 'pointer';
       });
-    };
-
-    const messageButton = document.createElement('span');
-    messageButton.innerHTML = '&#9993;'; // Unicode for envelope (message icon)
-    messageButton.classList.add('message-button');
-    messageButton.style.fontSize = "20px";
-    messageButton.style.marginLeft = "10px";
-
-    const messageCountIndicator = document.createElement('span');
-    messageCountIndicator.classList.add('message-count-indicator');
-    messageCountIndicator.style.display = 'none'; // Hide initially
-    messageButton.appendChild(messageCountIndicator);
-
-    messageButton.addEventListener('mouseover', function() {
-      this.style.cursor = 'pointer';
-    });
-    messageButton.addEventListener('mouseout', function() {
-      this.style.cursor = 'auto';
-          });
+      messageButton.addEventListener('mouseout', function() {
+        this.style.cursor = 'auto';
+      });
       if(mode !== 3){
         topBar.appendChild(notesButton);
         topBar.appendChild(messageButton);
@@ -7161,80 +7157,83 @@ async function nextPage() {
       popupWrapper.appendChild(buttonContainer);
       popupContainer.appendChild(popup);
 
-
-
       document.body.appendChild(popupContainer);
 
-    if(mode !== 3){  
-      const user = myaccounts; // Current user's address
-      const hash = listing.hash;
-      const statusKey = listing.status.join(',');
+      if(mode !== 3) {
+        const hash = listing.hash;
+        const statusKey = listing.status.join(',');
 
-      const validStatusesForMessaging = ["1,1", "1,0", "3,0"];
-      const isStatusValid = validStatusesForMessaging.includes(statusKey);
+        const validStatusesForMessaging = ["1,0", "0,1", "1,1", "1,2", "2,1", "1,3", "3,1", "2,2", "2,3", "3,2", "3,3"];
+        const isStatusValid = validStatusesForMessaging.includes(statusKey);
 
-      // Simulate contract checks
-      const isParticipant = (listing.sender === user || listing.recipient === user);
-      const isContractActive = (listing.status[0] < 4 && listing.status[1] < 4);
-      const isLoggedIn = (myaccounts !== "");
+        // Simulate contract checks
+        const isParticipant = (listing.sender === theuser || listing.recipient === theuser);
+        const isContractActive = (listing.status[0] < 4 && listing.status[1] < 4);
+        const isLoggedIn = (myaccounts !== "");
 
-      if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
+        if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
           messageButton.style.display = 'inline-flex';
 
           const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + listing.hash + 'lastMessageIndex') || 0;
-          await fetchMessages(listing.hash, user, lastMessageIndex);
-      } else {
+          await fetchMessages(listing.hash, theuser, lastMessageIndex);
+        } else {
           messageButton.style.display = 'none';
-      }
-      messageButton.onclick = async function() {
-      const  recipientAddress = myaccounts === listing.sender ? listing.recipient : listing.sender;
-      const  senderAddress = myaccounts === listing.sender ? listing.sender : listing.recipient;
-      const { supportsEncryption: recipientSupportsEncryption, publicKey: recipientPublicKey } = await userSupportsEncryption(recipientAddress);
-      const { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(senderAddress);
-      
+        }
+        messageButton.onclick = async function() {
+          if(theuser == listing.sender) {
+            var recipientAddress = listing.recipient;
+            var senderAddress = listing.sender;
+          } else {
+            var senderAddress = listing.recipient;
+            var recipientAddress = listing.sender;
+          }
+          const { supportsEncryption: recipientSupportsEncryption, publicKey: recipientPublicKey } = await userSupportsEncryption(recipientAddress);
+          const { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(senderAddress);
+          
           if (!recipientSupportsEncryption && !senderSupportsEncryption) {
-          Swal.fire({
-            icon: 'warning',
-            title: translateThis('Encryption Not Supported by Both Parties'),
-            text: translateThis('Neither you nor the recipient support encryption. Any private messages sent will be visible to anyone.'),
-            showCancelButton: true,
-            confirmButtonText: translateThis('Send Anyway'),
-            cancelButtonText: translateThis('Cancel'),
-          }).then(async (result) => {
-            if (result.isConfirmed) {
-             await handleSendMessage(listing.hash, recipientAddress, false, null, listing.sender, listing.recipient);
-            }
-          });
-        } else if (!recipientSupportsEncryption) {
-        Swal.fire({
-          icon: 'warning',
-          title: translateThis('Recipient Does Not Support Encryption'),
-          text: translateThis('Please be aware, the recipient does not support encryption. Any private messages sent will be visible to anyone.'),
-          showCancelButton: true,
-          confirmButtonText: translateThis('Send Anyway'),
-          cancelButtonText: translateThis('Cancel'),
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            await handleSendMessage(listing.hash, recipientAddress, false, null, listing.sender, listing.recipient);
+            Swal.fire({
+              icon: 'warning',
+              title: translateThis('Encryption Not Supported by Both Parties'),
+              text: translateThis('Neither you nor the recipient support encryption. Any private messages sent will be visible to anyone.'),
+              showCancelButton: true,
+              confirmButtonText: translateThis('Send Anyway'),
+              cancelButtonText: translateThis('Cancel'),
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+               await handleSendMessage(listing.hash, recipientAddress, false, null, listing.sender, listing.recipient);
+              }
+            });
+          } else if (!recipientSupportsEncryption) {
+            Swal.fire({
+              icon: 'warning',
+              title: translateThis('Recipient Does Not Support Encryption'),
+              text: translateThis('Please be aware, the recipient does not support encryption. Any private messages sent will be visible to anyone.'),
+              showCancelButton: true,
+              confirmButtonText: translateThis('Send Anyway'),
+              cancelButtonText: translateThis('Cancel'),
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                await handleSendMessage(listing.hash, recipientAddress, false, null, listing.sender, listing.recipient);
+              }
+            });
+          } else if (!senderSupportsEncryption) {
+            Swal.fire({
+              icon: 'warning',
+              title: translateThis('Your Encryption Key is Not Registered'),
+              text: translateThis('Warning: your encryption key is not registered, messages you receive will be visible to everyone.'),
+              showCancelButton: true,
+              confirmButtonText: translateThis('Send Anyway'),
+              cancelButtonText: translateThis('Cancel'),
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                await handleSendMessage(listing.hash, recipientAddress, result.value, recipientPublicKey, listing.sender, listing.recipient);
+              }
+            });
+          } else {
+            await handleSendMessage(listing.hash, recipientAddress, true, recipientPublicKey, listing.sender, listing.recipient);
           }
-        });
-      } else if (!senderSupportsEncryption) {
-        Swal.fire({
-          icon: 'warning',
-          title: translateThis('Your Encryption Key is Not Registered'),
-          text: translateThis('Warning: your encryption key is not registered, messages you receive will be visible to everyone.'),
-          showCancelButton: true,
-          confirmButtonText: translateThis('Send Anyway'),
-          cancelButtonText: translateThis('Cancel'),
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            await handleSendMessage(listing.hash, recipientAddress, result.value, recipientPublicKey, listing.sender, listing.recipient);
-          }
-        });
-      } else {
-        await handleSendMessage(listing.hash, recipientAddress, true, recipientPublicKey, listing.sender, listing.recipient);
+        };
       }
-  }};
 
       // Add CSS rules
       const style = document.createElement('style');
@@ -7268,174 +7267,174 @@ async function nextPage() {
 
    
     async function handleSendMessage(hash, recipient, encrypt = false, recipientPublicKey = null, listingSender, listingRecipient) {
-    const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + hash + 'lastMessageIndex') || 0;
-    const existingMessages = await fetchMessages(hash, recipient, lastMessageIndex);
-    const { supportsEncryption: senderSupportsEncryption, publicKey: senderPublicKey } = await userSupportsEncryption(myaccounts);
-    const messagesContainer = createMessagePopup(existingMessages, senderSupportsEncryption, listingSender, listingRecipient);
+      const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + hash + 'lastMessageIndex') || 0;
+      const existingMessages = await fetchMessages(hash, recipient, lastMessageIndex);
+      const { supportsEncryption: senderSupportsEncryption, publicKey: senderPublicKey } = await userSupportsEncryption(myaccounts);
+      const messagesContainer = createMessagePopup(existingMessages, senderSupportsEncryption, listingSender, listingRecipient);
 
-    const messagePopup = document.querySelector('.popup-container');
-    messagePopup.appendChild(messagesContainer);
-    messagesContainer.style.display = 'block';
+      const messagePopup = document.querySelector('.popup-container');
+      messagePopup.appendChild(messagesContainer);
+      messagesContainer.style.display = 'block';
 
-    const input = messagesContainer.querySelector('textarea');
-    const sendButton = messagesContainer.querySelector('button');
+      const input = messagesContainer.querySelector('textarea');
+      const sendButton = messagesContainer.querySelector('button');
 
-    sendButton.onclick = async () => {
-      try {
-        const message = input.value;
-        let finalMessage = message;
-        let storedMessage = message; // Message to store locally in plaintext
+      sendButton.onclick = async () => {
+        try {
+          const message = input.value;
+          let finalMessage = message;
+          let storedMessage = message; // Message to store locally in plaintext
 
-        if (encrypt && recipientPublicKey) {
-          const timestamp = new Date().getTime();
-          const padding = Crypto.SHA256(timestamp).substring(0, 16);
-          finalMessage = "ENC:" + cryptico.encrypt(message + "#*#*#" + timestamp + padding, recipientPublicKey, userprivkey).cipher;
+          if (encrypt && recipientPublicKey) {
+            const timestamp = new Date().getTime();
+            const padding = Crypto.SHA256(timestamp).substring(0, 16);
+            finalMessage = "ENC:" + cryptico.encrypt(message + "#*#*#" + timestamp + padding, recipientPublicKey, userprivkey).cipher;
+          }
+
+          // Encrypt message for local storage if sender's public key is available
+          if (userpubkey != "") {
+            storedMessage = "ENC:" + cryptico.encrypt(message, userpubkey).cipher;
+          }
+
+          showLoader();
+          const sendResult = await DDEcontract.methods.sendMessage(hash, myaccounts, finalMessage).send({ from: myaccounts });
+          if (sendResult) {
+              const newMessage = {
+                  message: storedMessage,
+                  sender: myaccounts,
+                  timestamp: new Date().getTime()
+              };
+              if (!existingMessages.some(msg => msg.timestamp === newMessage.timestamp && msg.message === newMessage.message)) {
+                  existingMessages.push(newMessage);
+                  localStorage.setItem(myaccounts + DDEaddy + hash + recipient + 'messages', JSON.stringify(existingMessages));
+              }
+          }
+          hideLoader();
+          setActionActive('sendMessage', false);
+          Swal.fire({
+            icon: 'success',
+            title: translateThis('Message Sent'),
+            text: translateThis('Your message has been sent successfully.'),
+          });
+
+          input.value = '';
+          messagesContainer.remove();
+        } catch (error) {
+
+          hideLoader();
+          console.error(error);
+          await showError(error);
+          setActionActive('sendMessage', false);
+          messagesContainer.remove();
+          console.error('Failed to send message:', error);
+        } finally {
+          hideLoader();
+          setActionActive('sendMessage', false);
+          messagesContainer.remove();
         }
-
-        // Encrypt message for local storage if sender's public key is available
-        if (senderPublicKey) {
-          storedMessage = "ENC:" + cryptico.encrypt(message, senderPublicKey).cipher;
-        }
-
-        showLoader();
-        const sendResult = await DDEcontract.methods.sendMessage(hash, myaccounts, finalMessage).send({ from: myaccounts });
-        if (sendResult) {
-            const newMessage = {
-                message: storedMessage,
-                sender: myaccounts,
-                timestamp: new Date().getTime()
-            };
-            if (!existingMessages.some(msg => msg.timestamp === newMessage.timestamp && msg.message === newMessage.message)) {
-                existingMessages.push(newMessage);
-                localStorage.setItem(myaccounts + DDEaddy + hash + recipient + 'messages', JSON.stringify(existingMessages));
-            }
-        }
-        hideLoader();
-        setActionActive('sendMessage', false);
-        Swal.fire({
-          icon: 'success',
-          title: translateThis('Message Sent'),
-          text: translateThis('Your message has been sent successfully.'),
-        });
-
-        input.value = '';
-        messagesContainer.remove();
-      } catch (error) {
-
-        hideLoader();
-        console.error(error);
-        await showError(error);
-        setActionActive('sendMessage', false);
-        messagesContainer.remove();
-        console.error('Failed to send message:', error);
-      } finally {
-        hideLoader();
-        setActionActive('sendMessage', false);
-        messagesContainer.remove();
       }
     }
-}
 
 
-function createMessagePopup(messages, userSupportsEncryption, sender, recipient) {
-    const decryptedMessages = messages.map(msg => {
-        if (userSupportsEncryption && msg.message.startsWith("ENC:")) {
-            const encryptedPart = msg.message.substring(4);
-            const decryptionResult = cryptico.decrypt(encryptedPart, userprivkey);
-            if (decryptionResult.status === "success") {
-                const messageParts = decryptionResult.plaintext.split("#*#*#");
-                return { ...msg, message: messageParts[0] }; // Only return the actual message part
-            } else {
-                console.error("Decryption failed:", decryptionResult.status);
-                return { ...msg, message: "Failed to decrypt message" };
-            }
-        } else {
-            return msg; // Return the plaintext message if not encrypted
-        }
-    });
+    function createMessagePopup(messages, userSupportsEncryption, sender, recipient) {
+      const decryptedMessages = messages.map(msg => {
+          if (userSupportsEncryption && msg.message.startsWith("ENC:")) {
+              const encryptedPart = msg.message.substring(4);
+              const decryptionResult = cryptico.decrypt(encryptedPart, userprivkey);
+              if (decryptionResult.status === "success") {
+                  const messageParts = decryptionResult.plaintext.split("#*#*#");
+                  return { ...msg, message: messageParts[0] }; // Only return the actual message part
+              } else {
+                  console.error("Decryption failed:", decryptionResult.status);
+                  return { ...msg, message: "Failed to decrypt message" };
+              }
+          } else {
+              return msg; // Return the plaintext message if not encrypted
+          }
+      });
 
-    const popup = document.createElement('div');
-    popup.className = 'message-popup';
-    popup.innerHTML = `
-        <div class="message-header">
-          ${translateThis('Messages')}
-          <span class="close-btn">&times;</span>
-        </div>
-        <div class="message-body">
-          <div class="message-body-inner">
-            ${decryptedMessages.sort((a, b) => a.timestamp - b.timestamp).map(msg => {
-                const isCurrentUser = msg.sender === myaccounts;
-                const messageClass = isCurrentUser ? 'message-sender' : 'message-receiver';
-                const displayName = isCurrentUser 
-                    ? (sender === myaccounts ? translateThis('Sender (You)') : translateThis('Recipient (You)')) 
-                    : (sender === msg.sender ? translateThis('Sender') : translateThis('Recipient'));
-                return `<p class="${messageClass}"><b>${displayName}:</b> ${msg.message}</p>`;
-            }).join('')}
+      const popup = document.createElement('div');
+      popup.className = 'message-popup';
+      popup.innerHTML = `
+          <div class="message-header">
+            ${translateThis('Messages')}
+            <span class="close-btn">&times;</span>
           </div>
-          <textarea placeholder="${translateThis('Type your message here...')}"></textarea>
-          <button>${translateThis('Send')}</button>
-        </div>
-    `;
+          <div class="message-body">
+            <div class="message-body-inner">
+              ${decryptedMessages.sort((a, b) => a.timestamp - b.timestamp).map(msg => {
+                  const isCurrentUser = msg.sender === myaccounts;
+                  const messageClass = isCurrentUser ? 'message-sender' : 'message-receiver';
+                  const displayName = isCurrentUser 
+                      ? (sender === myaccounts ? translateThis('Sender (You)') : translateThis('Recipient (You)')) 
+                      : (sender === msg.sender ? translateThis('Sender') : translateThis('Recipient'));
+                  return `<p class="${messageClass}"><b>${displayName}:</b> ${msg.message}</p>`;
+              }).join('')}
+            </div>
+            <textarea placeholder="${translateThis('Type your message here...')}"></textarea>
+            <button>${translateThis('Send')}</button>
+          </div>
+      `;
 
-    // Close button functionality
-    popup.querySelector('.close-btn').onclick = function() {
-        popup.remove();
-    };
+      // Close button functionality
+      popup.querySelector('.close-btn').onclick = function() {
+          popup.remove();
+      };
 
-    return popup;
-}
-
-
-async function fetchMessages(hash, user, startIndex) {
-    let storedMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + hash + user + 'messages') || '[]');
-    let index = parseInt(startIndex);
-    let newMessagesFetched = false;
-    let unreadMessageCount = 0;
-
-    try {
-        while (true) {
-            const message = DOMPurify.sanitize(await DDEcontract.methods.messages(hash, user, index).call());
-            if (!message) break;
-
-            let decryptedMessage = message;
-            if (message.startsWith("ENC:")) {
-                const decryptionResult = cryptico.decrypt(message.substring(4), userprivkey);
-                if (decryptionResult.status === "success") {
-                    decryptedMessage = decryptionResult.plaintext.split("#*#*#")[0];
-                } else {
-                    console.error("Decryption failed:", decryptionResult.status);
-                    decryptedMessage = "Failed to decrypt message";
-                }
-            }
-
-            if (!storedMessages.some(msg => msg.index === index)) {
-                storedMessages.push({ message: decryptedMessage, sender: user, timestamp: new Date().getTime(), index: index });
-                newMessagesFetched = true;
-                unreadMessageCount++;
-            }
-            index++;
-        }
-    } catch (error) {
-        console.error('Error fetching messages:', error);
-    } finally {
-        if (newMessagesFetched) {
-            localStorage.setItem(myaccounts + DDEaddy + hash + user + 'messages', JSON.stringify(storedMessages));
-            localStorage.setItem(myaccounts + DDEaddy + hash + user + 'lastMessageIndex', index.toString());
-            updateMessageCountIndicator(unreadMessageCount);
-        }
+      return popup;
     }
-    return storedMessages;
-}
 
-function updateMessageCountIndicator(count) {
-    const indicator = document.querySelector('.message-count-indicator');
-    if (count > 0) {
+
+    async function fetchMessages(hash, user, startIndex) {
+      let storedMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + hash + user + 'messages') || '[]');
+      let index = parseInt(startIndex);
+      let newMessagesFetched = false;
+      let unreadMessageCount = 0;
+
+      try {
+          while (true) {
+              const message = DOMPurify.sanitize(await DDEcontract.methods.messages(hash, user, index).call());
+              if (!message) break;
+
+              let decryptedMessage = message;
+              if (message.startsWith("ENC:")) {
+                  const decryptionResult = cryptico.decrypt(message.substring(4), userprivkey);
+                  if (decryptionResult.status === "success") {
+                      decryptedMessage = decryptionResult.plaintext.split("#*#*#")[0];
+                  } else {
+                      console.error("Decryption failed:", decryptionResult.status);
+                      decryptedMessage = "Failed to decrypt message";
+                  }
+              }
+
+              if (!storedMessages.some(msg => msg.index === index)) {
+                  storedMessages.push({ message: decryptedMessage, sender: user, timestamp: new Date().getTime(), index: index });
+                  newMessagesFetched = true;
+                  unreadMessageCount++;
+              }
+              index++;
+          }
+      } catch (error) {
+          console.error('Error fetching messages:', error);
+      } finally {
+          if (newMessagesFetched) {
+              localStorage.setItem(myaccounts + DDEaddy + hash + user + 'messages', JSON.stringify(storedMessages));
+              localStorage.setItem(myaccounts + DDEaddy + hash + user + 'lastMessageIndex', index.toString());
+              updateMessageCountIndicator(unreadMessageCount);
+          }
+      }
+      return storedMessages;
+    }
+
+    function updateMessageCountIndicator(count) {
+      const indicator = document.querySelector('.message-count-indicator');
+      if (count > 0) {
         indicator.textContent = count;
         indicator.style.display = 'inline-block';
-    } else {
+      } else {
         indicator.style.display = 'none';
+      }
     }
-}
    
     function removeListingFromView(listing) {
       const listingElement = document.querySelector(`#listing-${listing.hash}`); // Assuming listings have an ID based on their hash
@@ -7535,26 +7534,26 @@ function updateMessageCountIndicator(count) {
       }
       // Create the popup container
       const popupContainer = document.createElement('div');
-      popupContainer.classList.add('popup-container');
+      popupContainer.classList.add('popup-container2');
       //popupContainer.onclick = function() { popupContainer.remove(); };
 
       const popup = document.createElement('div');
-      popup.classList.add('popup');
+      popup.classList.add('popup2');
 
       const closeButton = document.createElement('span');
       closeButton.innerHTML = '&times;';
-      closeButton.classList.add('close-button');
+      closeButton.classList.add('close-button2');
       closeButton.onclick = function() { popupContainer.remove(); };
 
       // Create the form element
       var form = document.createElement('form');
-      form.classList.add('popup-form');
+      form.classList.add('popup-form2');
       form.innerHTML = `
       <div class="account-withdraw-popup">
         <h2>` + translateThis('Deposit tokens to your balance') + `</h2>
         <div class="form-group">
-          <label for="token-select">` + translateThis('Select token:') + `</label>
-          <select id="token-select" name="token-select"></select>
+          <label for="token-select2">` + translateThis('Select token:') + `</label>
+          <select id="token-select2" name="token-select2"></select>
         </div>
         <div class="form-group">
           <label for="amount-input-deposit">` + translateThis('Amount:') + `</label>
@@ -7567,7 +7566,7 @@ function updateMessageCountIndicator(count) {
       `;
 
       // Populate the token select dropdown
-      var tokenSelect = form.querySelector('#token-select');
+      var tokenSelect = form.querySelector('#token-select2');
       for (var i = 0; i < tokens.length; i++) {
         var option = document.createElement('option');
         option.value = i;
@@ -7664,10 +7663,11 @@ function updateMessageCountIndicator(count) {
         if (web3.utils.toBN(allowance).lt(web3.utils.toBN(value))) {
           await Swal.fire(translateThis("Waiting for approval..."));
           await tokenContract.methods.approve(DDEaddy, web3.utils.toHex(web3.utils.toBN(2).pow(web3.utils.toBN(256)).sub(web3.utils.toBN(1)))).send({"from":myaccounts,...gasOptions[gasSetting]});
+        }
       }
-    }}
+    }
       
-      async function confirmTransaction(gasEstimate, value, tokenAddress) {
+    async function confirmTransaction(gasEstimate, value, tokenAddress) {
       var mybase = web3.utils.toBN(balances['base'].amount);
       var glimit = web3.utils.toBN(gasOptions[gasSetting].gasLimit).mul(web3.utils.toBN(gasPrice));
       if(mybase.lt(glimit)) {
@@ -7704,18 +7704,18 @@ function updateMessageCountIndicator(count) {
         customClass: "withdraw-swal-wrapper",
         title: translateThis('Withdraw tokens from your balance'),
         html:
-          `<select id="token-select" class="swal2-input">
+          `<select id="token-select3" class="swal2-input">
              ${tokenOptions.map(option => `<option value="${option.value}">${option.text}</option>`).join('')}
            </select>
-           <input id="amount-input" class="swal2-input" placeholder=${translateThis('Amount:')}>
+           <input id="amount-input3" class="swal2-input" placeholder=${translateThis('Amount:')}>
            <input id="destination-input" class="swal2-input" placeholder=${translateThis('Recipient:')}>`,
         focusConfirm: false,
         showCancelButton: true,
         confirmButtonText: translateThis('Withdraw'),
         cancelButtonText: translateThis('Cancel'),
         preConfirm: () => {
-          const selectedIndex = document.getElementById('token-select').value;
-          const amount = parseFloat(document.getElementById('amount-input').value);
+          const selectedIndex = document.getElementById('token-select3').value;
+          const amount = parseFloat(document.getElementById('amount-input3').value);
           const destination = document.getElementById('destination-input').value;
           // Validate destination is not blank, amount is a valid number, and amount is greater than zero
           if (destination.trim() === '' || isNaN(amount) || amount <= 0 || !(/^(0x)?[0-9a-fA-F]{40}$/.test(destination))) {
@@ -7881,8 +7881,8 @@ function updateMessageCountIndicator(count) {
             });
             }
         }
-    } else if (!dontShowAgain) {
-      const response = await Swal.fire({
+      } else if (!dontShowAgain) {
+        const response = await Swal.fire({
             title: translateThis("Registration Recommended"),
             text: translateThis("No user data found. We recommend registering your contact information and encryption key. Would you like to register now?"),
             icon: 'info',
@@ -7921,8 +7921,8 @@ function updateMessageCountIndicator(count) {
                   await registerData(result.value.contactInfo);
               }
           });
-        } 
-    } 
+        }
+      } 
       // showLoader();
       // Create the popup container
       const popupContainer = document.createElement('div');
@@ -7935,7 +7935,7 @@ function updateMessageCountIndicator(count) {
       const closeButton = document.createElement('span');
       closeButton.innerHTML = '&times;';
       closeButton.classList.add('close-button');
-        closeButton.onclick = function() { popupContainer.remove(); };
+      closeButton.onclick = function() { popupContainer.remove(); };
 
       var myterms = [];
       var expiration = 0;
@@ -8283,7 +8283,7 @@ function updateMessageCountIndicator(count) {
         counterPartyAddressField.style.display = 'block';
         auto.style.display = 'none';
         allowcounters.style.display = 'none';
-          if(myaccounts === counterdata.recipient) {
+        if(myaccounts === counterdata.recipient) {
           form.querySelector("#senderReceiver").selectedIndex = 0;
           form.querySelector("#counterPartyInput").value = counterdata.sender;
         } else {
@@ -8319,7 +8319,7 @@ function updateMessageCountIndicator(count) {
           popupContainer.remove();
           return;
         }
-          image = await(getFile(counterdata.image));
+        image = await(getFile(counterdata.image));
         form.querySelector("#contractImage").style.display = 'none';
         const changefile = form.querySelector("#changefile")
         changefile.style.display = 'block';
@@ -8330,12 +8330,12 @@ function updateMessageCountIndicator(count) {
         }
       }
 
-        addWord.onclick = async function() {
+      addWord.onclick = async function() {
         myterms = await addWords(myterms);
       }
 
       // Add the form submit event listener
-        form.addEventListener('submit', async function(event) {
+      form.addEventListener('submit', async function(event) {
           event.preventDefault();          
           var selectedIndex = parseInt(tokenSelect.value);
           var tokenAddress = tokens[selectedIndex].address;
@@ -8370,95 +8370,95 @@ function updateMessageCountIndicator(count) {
           if(returnMe == 1) {
             return false;
           }
-        // Get form values
+          // Get form values
 
-        var counterPartyInput = document.getElementById("counterPartyInput").value;
-        var sender = "0x0000000000000000000000000000000000000000";
-        var recipient = "0x0000000000000000000000000000000000000000";
-        const currentBlockNumber = await web3.eth.getBlockNumber();
-        const currentBlock = await web3.eth.getBlock(currentBlockNumber);
-        const blockTimestamp = DOMPurify.sanitize(currentBlock.timestamp);
-        if (contractType.value === 'private') {
-          sender = counterPartyInput;
-          recipient = myaccounts;
-          var offerExpirationSelect = document.getElementById("offerExpiration");
-          var selectedValue = offerExpirationSelect.value;
-          if (selectedValue === "never") {
-            expiration = 0; // Set the time limit to 0 seconds for "Never" option
-          } else if (selectedValue === "two-weeks") {
-            expiration = parseInt(blockTimestamp + (2 * 7 * 24 * 60 * 60)); // Set the time limit to 2 weeks in seconds
-          } else if (selectedValue === "one-month") {
-            expiration = parseInt(blockTimestamp + (30 * 24 * 60 * 60)); // Set the time limit to 1 month in seconds
+          var counterPartyInput = document.getElementById("counterPartyInput").value;
+          var sender = "0x0000000000000000000000000000000000000000";
+          var recipient = "0x0000000000000000000000000000000000000000";
+          const currentBlockNumber = await web3.eth.getBlockNumber();
+          const currentBlock = await web3.eth.getBlock(currentBlockNumber);
+          const blockTimestamp = DOMPurify.sanitize(currentBlock.timestamp);
+          if (contractType.value === 'private') {
+            sender = counterPartyInput;
+            recipient = myaccounts;
+            var offerExpirationSelect = document.getElementById("offerExpiration");
+            var selectedValue = offerExpirationSelect.value;
+            if (selectedValue === "never") {
+              expiration = 0; // Set the time limit to 0 seconds for "Never" option
+            } else if (selectedValue === "two-weeks") {
+              expiration = parseInt(blockTimestamp + (2 * 7 * 24 * 60 * 60)); // Set the time limit to 2 weeks in seconds
+            } else if (selectedValue === "one-month") {
+              expiration = parseInt(blockTimestamp + (30 * 24 * 60 * 60)); // Set the time limit to 1 month in seconds
+            }
+          } else {
+            expiration = 0;
+            recipient = myaccounts;
           }
-        } else {
-          expiration = 0;
-          recipient = myaccounts;
-        }
-        var senderReceiver = document.getElementById("senderReceiver").value;
-        var quantity = parseInt(document.getElementById('order-quantity').value);
-        var maximum = parseInt(document.getElementById('order-maximum').value);
-        var amount = document.getElementById("amount-input").value;
-        var depositType = form.querySelector("#depositSettings").value;
-        var depositSender = document.getElementById("sender-deposit-input").value;
-        var depositRecipient = document.getElementById("recipient-deposit-input").value;
-        var timeLimit = document.getElementById("timeLimit").value;
-        var contactinfo = document.getElementById("contactInfo").value;
-        var message = JSON.stringify({message: document.getElementById("contractDetails").value, contact: contactinfo, image: image});
-        if (contactinfo != '') {
-          document.getElementById("myContactInfo").value = contactinfo;
-          await saveContactInfo(contactinfo);
-        }
+          var senderReceiver = document.getElementById("senderReceiver").value;
+          var quantity = parseInt(document.getElementById('order-quantity').value);
+          var maximum = parseInt(document.getElementById('order-maximum').value);
+          var amount = document.getElementById("amount-input").value;
+          var depositType = form.querySelector("#depositSettings").value;
+          var depositSender = document.getElementById("sender-deposit-input").value;
+          var depositRecipient = document.getElementById("recipient-deposit-input").value;
+          var timeLimit = document.getElementById("timeLimit").value;
+          var contactinfo = document.getElementById("contactInfo").value;
+          var message = JSON.stringify({message: document.getElementById("contractDetails").value, contact: contactinfo, image: image});
+          if (contactinfo != '') {
+            document.getElementById("myContactInfo").value = contactinfo;
+            await saveContactInfo(contactinfo);
+          }
           if(message == "error") {
-          await Swal.fire(translateThis("Error posting IPFS data, please try again later"));
-          return false;
-        }
-        if (amount === "") {
-          await Swal.fire(translateThis("Please enter the amount"));
-          return false;
-        }
-        if (depositType === "custom") {
-          if (depositSender === "" || depositRecipient === "") {
-            await Swal.fire(translateThis("Please enter the custom deposits"));
+            await Swal.fire(translateThis("Error posting IPFS data, please try again later"));
             return false;
           }
-        }
-        if (timeLimit === "") {
-          await Swal.fire(translateThis("Please enter the time limit"));
-          return false;
-        }
-        timeLimit = parseInt(timeLimit);
-        if (timeLimit === 0) {
-          await Swal.fire(translateThis("Time limit must be greater than zero"));
-        }
-        if (document.getElementById("contractDetails").value === "") {
-          await Swal.fire(translateThis("Please enter the description"));
-          return false;
-        }
-        var sender2 = (senderReceiver === "receiver" ? sender : recipient);
-        var recipient2 = (senderReceiver === "receiver" ? recipient : sender);
+          if (amount === "") {
+            await Swal.fire(translateThis("Please enter the amount"));
+            return false;
+          }
+          if (depositType === "custom") {
+            if (depositSender === "" || depositRecipient === "") {
+              await Swal.fire(translateThis("Please enter the custom deposits"));
+              return false;
+            }
+          }
+          if (timeLimit === "") {
+            await Swal.fire(translateThis("Please enter the time limit"));
+            return false;
+          }
+          timeLimit = parseInt(timeLimit);
+          if (timeLimit === 0) {
+            await Swal.fire(translateThis("Time limit must be greater than zero"));
+          }
+          if (document.getElementById("contractDetails").value === "") {
+            await Swal.fire(translateThis("Please enter the description"));
+            return false;
+          }
+          var sender2 = (senderReceiver === "receiver" ? sender : recipient);
+          var recipient2 = (senderReceiver === "receiver" ? recipient : sender);
 
-        amount = (new BigNumber(amount.toString()).times(new BigNumber(10).pow(decimals))).toFixed(0);
-        depositSender = (depositType === "recommended" ? amount : (new BigNumber(depositSender.toString()).times(new BigNumber(10).pow(decimals))).toFixed(0));
-        depositRecipient = (depositType === "recommended" ? amount : (new BigNumber(depositRecipient.toString()).times(new BigNumber(10).pow(decimals))).toFixed(0));
-        var style = 0;
+          amount = (new BigNumber(amount.toString()).times(new BigNumber(10).pow(decimals))).toFixed(0);
+          depositSender = (depositType === "recommended" ? amount : (new BigNumber(depositSender.toString()).times(new BigNumber(10).pow(decimals))).toFixed(0));
+          depositRecipient = (depositType === "recommended" ? amount : (new BigNumber(depositRecipient.toString()).times(new BigNumber(10).pow(decimals))).toFixed(0));
+          var style = 0;
           if(publicoffer) {
             if(document.getElementById("autoaccept").checked == false) {
-            style = 1;
-          } else {
-            style = 0;
-          }
+              style = 1;
+            } else {
+              style = 0;
+            }
             if(document.getElementById("allowcounters").checked == false) {
-            style += 2;
+              style += 2;
+            }
           }
-        }
-        var multiplier = 1;
+          var multiplier = 1;
           if(style == 0 || style == 2) {
-          multiplier = maximum;
+            multiplier = maximum;
             if(maximum > quantity) {
-            multiplier = quantity;
+              multiplier = quantity;
+            }
           }
-        }
-        var mytotal = web3.utils.toBN(amount).add(web3.utils.toBN(depositSender)).mul(web3.utils.toBN(multiplier));          
+          var mytotal = web3.utils.toBN(amount).add(web3.utils.toBN(depositSender)).mul(web3.utils.toBN(multiplier));          
           var mybal = web3.utils.toBN(balances[tokenAddress].amount);
           if(accountprivkey != "") {
             if(tokennames[tokenAddress] == tokens[0].token) {
@@ -8469,223 +8469,223 @@ function updateMessageCountIndicator(count) {
           }
           if(myaccounts == sender2) {
             if (mybal.lt(mytotal)) {
-            await Swal.fire(translateThis("You don't have enough funds if someone were to accept this offer. Please deposit funds first before proceeding."));
-            return false;
+              await Swal.fire(translateThis("You don't have enough funds if someone were to accept this offer. Please deposit funds first before proceeding."));
+              return false;
+            }
           }
-        }
           if(myaccounts == recipient2) {
             mytotal = web3.utils.toBN(depositRecipient).mul(web3.utils.toBN(multiplier));
             if (mybal.lt(mytotal)) {
-            await Swal.fire(translateThis("You don't have enough funds if someone were to accept this offer. Please deposit funds first before proceeding."));
+              await Swal.fire(translateThis("You don't have enough funds if someone were to accept this offer. Please deposit funds first before proceeding."));
+              return false;
+            }
+          }
+          var datalen = 0;
+          var contact2 = '';
+          var otherparty = '';
+          try {
+            if(myaccounts == sender2) {
+              otherparty = recipient2;
+            } else {
+              otherparty = sender2;
+            }
+            var returnThis = 0;
+            if(otherparty != "0x0000000000000000000000000000000000000000") {
+              datalen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(otherparty, 3).call());
+              if(datalen > 0) {
+                contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(otherparty, datalen-1).call()));
+                if('publickey' in contact2 && userprivkey != '') {
+                  var paddedMessage = message + "#*#*#" + (new Date().getTime()) + Crypto.SHA256(new Date().getTime());
+                  if(myaccounts == sender2) {
+                    message = JSON.stringify({'recipient':cryptico.encrypt(paddedMessage, contact2['publickey'], userprivkey),'sender':cryptico.encrypt(paddedMessage, userpubkey, userprivkey)});
+                  }
+                  if(myaccounts == recipient2) {
+                    message = JSON.stringify({'sender':cryptico.encrypt(paddedMessage, contact2['publickey'], userprivkey),'recipient':cryptico.encrypt(paddedMessage, userpubkey, userprivkey)});
+                  }
+                  console.log(message)
+                } else if ('publickey' in contact2 && userprivkey == '') {
+                  await Swal.fire({
+                    title: translateThis('Encrypt offer'),
+                    text: translateThis('Your counterparty has listed a key for encryption. If you would like your order be encrypted you should set a password for your account. Would you like to do that before proceeding?'),
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: translateThis('Yes'),
+                    cancelButtonText: translateThis('No'),
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      popupContainer.remove();
+                      returnThis = 1;
+                      return;
+                    }
+                  });
+                }
+              }
+            }
+            if(returnThis == 1) {
+              return false;
+            }
+          } catch(e) {
+            console.log(e);
+          }
+          const byteLength = new TextEncoder().encode(message).length;
+          if (byteLength > parseInt(maxFileSize * .97)) {
+            await Swal.fire(translateThis("Message exceeds maximum byte size:") + " " + maxFileSize);
             return false;
           }
-        }
-        var datalen = 0;
-        var contact2 = '';
-        var otherparty = '';
-        try {
-              if(myaccounts == sender2) {
-            otherparty = recipient2;
-          } else {
-            otherparty = sender2;
+          var result = await postOfferData(message);
+          if(result == "error") {
+            await Swal.fire(translateThis("Error posting message data to IPFS."));
+            return false;
           }
-          var returnThis = 0;
-              if(otherparty != "0x0000000000000000000000000000000000000000") {
-            datalen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(otherparty, 3).call());
-                if(datalen > 0) {
-                  contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(otherparty, datalen-1).call()));
-                  if('publickey' in contact2 && userprivkey != '') {
-                var paddedMessage = message + "#*#*#" + (new Date().getTime()) + Crypto.SHA256(new Date().getTime());
-                    if(myaccounts == sender2) {
-                      message = JSON.stringify({'recipient':cryptico.encrypt(paddedMessage, contact2['publickey'], userprivkey),'sender':cryptico.encrypt(paddedMessage, userpubkey, userprivkey)});
-                }
-                    if(myaccounts == recipient2) {
-                      message = JSON.stringify({'sender':cryptico.encrypt(paddedMessage, contact2['publickey'], userprivkey),'recipient':cryptico.encrypt(paddedMessage, userpubkey, userprivkey)});
-                }
-                console.log(message)
-              } else if ('publickey' in contact2 && userprivkey == '') {
+          if(result.length > 100) {
+            await Swal.fire(translateThis("Error message length was unusually long. Please check IPFS hash result."));
+            return false;
+          }
+          message = result;
+          // Construct data object
+          const data = {
+            sender: sender2,
+            recipient: recipient2,
+            token: tokenAddress,
+            amount: amount,
+            depositSender: depositSender,
+            depositRecipient: depositRecipient,
+            quantity: [quantity.toString(), maximum.toString()],
+            timelimit: parseInt(timeLimit * 7 * 24 * 60 * 60),
+            message: message
+          };
+          data2 = JSON.parse(JSON.stringify(data));
+          data2.image = [];
+          data2.message = "IPFS link: " + data2.message;
+          data2.timelimit = [data2.timelimit];
+          data2.rfee = baseFee;
+          data2.referred = referral;
+          if(Object.keys(counterdata).length !== 0) {
+            data2.referred = counterdata.referred;
+            if(myaccounts == sender2) {
+              data2.referred = referral;
+              const rfee2 = parseInt(DOMPurify.sanitize(await DDEcontract.methods.customFee(otherparty).call()));
+              if(rfee2 > baseFee) {
+                data2.rfee = rfee2;
+              }
+              style = 4;
+            }
+          }
+          //if(Object.keys(counterdata).length !== 0) {
+          //  data2.amount *= quantity;
+          //  data2.depositSender *= quantity;
+          //  data2.depositRecipient *= quantity;
+          //}          
+          console.log("data2",data2);
+          //May eventually want to check for duplicate contract hash submission
+          var result = await showListing(data2, 3)
+          if(result == false) {
+            popupContainer.remove();
+            return;
+          }
+          try {
+            var returnThis2 = false;
+            if(publicoffer) {
+              if(myterms.length == 0) {
                 await Swal.fire({
-                  title: translateThis('Encrypt offer'),
-                  text: translateThis('Your counterparty has listed a key for encryption. If you would like your order be encrypted you should set a password for your account. Would you like to do that before proceeding?'),
+                  title: translateThis('Hashtags'),
+                  text: translateThis('You did not include any keywords. Without these it could make your offer hard to find. It is recommended to add some keywords related to your open offer. Would you like to submit your offer without keywords?'),
                   icon: 'question',
                   showCancelButton: true,
                   confirmButtonText: translateThis('Yes'),
                   cancelButtonText: translateThis('No'),
                 }).then((result) => {
-                  if (result.isConfirmed) {
+                      if(!result.isConfirmed) {
                     popupContainer.remove();
-                    returnThis = 1;
+                    returnThis2 = true;
                     return;
                   }
                 });
               }
             }
-          }
-              if(returnThis == 1) {
-            return false;
-          }
-          } catch(e) {
-          console.log(e);
-        }
-        const byteLength = new TextEncoder().encode(message).length;
-        if (byteLength > parseInt(maxFileSize * .97)) {
-          await Swal.fire(translateThis("Message exceeds maximum byte size:") + " " + maxFileSize);
-          return false;
-        }
-        var result = await postOfferData(message);
-          if(result == "error") {
-          await Swal.fire(translateThis("Error posting message data to IPFS."));
-          return false;
-        }
-          if(result.length > 100) {
-          await Swal.fire(translateThis("Error message length was unusually long. Please check IPFS hash result."));
-          return false;
-        }
-        message = result;
-        // Construct data object
-        const data = {
-          sender: sender2,
-          recipient: recipient2,
-          token: tokenAddress,
-          amount: amount,
-          depositSender: depositSender,
-          depositRecipient: depositRecipient,
-          quantity: [quantity.toString(), maximum.toString()],
-          timelimit: parseInt(timeLimit * 7 * 24 * 60 * 60),
-          message: message
-        };
-        data2 = JSON.parse(JSON.stringify(data));
-        data2.image = [];
-        data2.message = "IPFS link: " + data2.message;
-        data2.timelimit = [data2.timelimit];
-        data2.rfee = baseFee;
-        data2.referred = referral;
-          if(Object.keys(counterdata).length !== 0) {
-          data2.referred = counterdata.referred;
-            if(myaccounts == sender2) {
-            data2.referred = referral;
-            const rfee2 = parseInt(DOMPurify.sanitize(await DDEcontract.methods.customFee(otherparty).call()));
-              if(rfee2 > baseFee) {
-              data2.rfee = rfee2;
+            if(returnThis2) {
+              return;
             }
-            style = 4;
-          }
-        }
-        //if(Object.keys(counterdata).length !== 0) {
-        //  data2.amount *= quantity;
-        //  data2.depositSender *= quantity;
-        //  data2.depositRecipient *= quantity;
-        //}          
-        console.log("data2",data2);
-        //May eventually want to check for duplicate contract hash submission
-        var result = await showListing(data2, 3)
-          if(result == false) {
-          popupContainer.remove();
-          return;
-        }
-        try {
-          var returnThis2 = false;
-              if(publicoffer) {
-                if(myterms.length == 0) {
-              await Swal.fire({
-                title: translateThis('Hashtags'),
-                text: translateThis('You did not include any keywords. Without these it could make your offer hard to find. It is recommended to add some keywords related to your open offer. Would you like to submit your offer without keywords?'),
+            var cHash = web3.utils.keccak256(web3.utils.encodePacked({value: data.sender, type: 'address'},{value: data.recipient, type: 'address'},{value: data.token, type: 'address'},{value: data.amount, type: 'uint256'},{value: data.depositSender, type: 'uint256'},{value: data.depositRecipient, type: 'uint256'},{value: data.timelimit.toString(), type: 'uint256'},{value: expiration.toString(), type: 'uint256'},{value: data.message, type: 'string'},{value: blockTimestamp, type: 'uint256'}));
+            console.log(cHash);
+            if(DOMPurify.sanitize(await DDEcontract.methods.initialized(cHash).call()) == "true") {
+              await Swal.fire(translateThis("Duplicate contract detected! This contract has already been created in the past. Please modify the description slightly so it may be submitted again."));
+              popupContainer.remove();
+              return;
+            }
+            setActionActive(actionId, true);
+            // Call solidity function to create contract
+            if(accountprivkey == "") {
+              showLoader();
+              await DDEcontract.methods.createContract(
+                [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,...gasOptions[gasSetting]});
+              hideLoader();
+            } else {
+              mytotal = mytotal.toString();
+              if(web3.utils.toBN(mytotal).lte(web3.utils.toBN(balances[data.token].amount))) {
+                const gasEstimate = 700000;
+                var res = await confirmTransaction(gasEstimate, mytotal, data.token);
+                if(!res) {
+                  return;
+                }
+                showLoader();
+                await DDEcontract.methods.createContract(
+                  [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,...gasOptions[gasSetting]});
+                  hideLoader();
+              } else {
+                const gasEstimate = 750000;
+                var res = await confirmTransaction(gasEstimate, mytotal, data.token);
+                if(!res) {
+                  return;
+                }
+                showLoader();
+                await getApproval(data.token, mytotal);
+                hideLoader();
+                var myval = "0";
+                var difference = web3.utils.toBN(mytotal).sub(web3.utils.toBN(balances[data.token].amount));
+                if(tokennames[data.token] == tokens[0].token) {
+                  var mybase = web3.utils.toBN(balances['base'].amount);
+                  var glimit = web3.utils.toBN(gasOptions[gasSetting].gasLimit).mul(web3.utils.toBN(gasPrice));
+                  if(mybase.lt(difference.add(glimit))) {
+                    await Swal.fire(translateThis("Not enough funds"));
+                    return;
+                  }
+                  myval = difference.toString();
+                }
+                showLoader();
+                await DDEcontract.methods.depositAndCreateContract(data.token, difference.toString(), [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]});
+                hideLoader();
+              }
+            }
+            setActionActive(actionId, false);
+            hideLoader();
+            await Swal.fire(translateThis("Contract creation success!"));
+            await loadUser();
+            if(emailClient.checked && sender2 != "0x0000000000000000000000000000000000000000" && recipient2 != "0x0000000000000000000000000000000000000000" && contact2 != '' && typeof contact2 === 'object' && 'mycontact' in contact2 && contact2['mycontact'].includes("@")) {
+              Swal.fire({
+                title: translateThis('Notify Counterparty'),
+                text: translateThis('Would you like to email the counterparty to notify them of your offer?'),
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: translateThis('Yes'),
                 cancelButtonText: translateThis('No'),
               }).then((result) => {
-                    if(!result.isConfirmed) {
-                  popupContainer.remove();
-                  returnThis2 = true;
-                  return;
+                if (result.isConfirmed) {
+                  var emailSubject = encodeURIComponent('You have received an offer on the BitBay marketplace');
+                  var emailBody = encodeURIComponent(translateThis('Hello, this email was automatically composed to let you know that I have sent you an offer on the BitBay marketplace. For safety reasons, do not click any links from this email however you may log in to the official website on your own. Also for your safety, please only contact users at the email officially registered to their contracts. If you have any questions about my offer please let me know. Thank you and have a nice day.'));
+                  const mailtoLink = `mailto:${contact2['mycontact']}?subject=${emailSubject}&body=${emailBody}`;
+                  window.location.href = mailtoLink;
                 }
               });
             }
-          }
-              if(returnThis2) {
-            return;
-          }
-              var cHash = web3.utils.keccak256(web3.utils.encodePacked({value: data.sender, type: 'address'},{value: data.recipient, type: 'address'},{value: data.token, type: 'address'},{value: data.amount, type: 'uint256'},{value: data.depositSender, type: 'uint256'},{value: data.depositRecipient, type: 'uint256'},{value: data.timelimit.toString(), type: 'uint256'},{value: expiration.toString(), type: 'uint256'},{value: data.message, type: 'string'},{value: blockTimestamp, type: 'uint256'}));
-          console.log(cHash);
-              if(DOMPurify.sanitize(await DDEcontract.methods.initialized(cHash).call()) == "true") {
-            await Swal.fire(translateThis("Duplicate contract detected! This contract has already been created in the past. Please modify the description slightly so it may be submitted again."));
             popupContainer.remove();
-            return;
+          } catch (error) {
+            console.error(error);
+            await showError(error);
+          } finally {
+            setActionActive(actionId, false);
+            hideLoader();
           }
-          setActionActive(actionId, true);
-          // Call solidity function to create contract
-          if(accountprivkey == "") {
-                  showLoader();
-                  await DDEcontract.methods.createContract(
-                    [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,...gasOptions[gasSetting]});
-                  hideLoader();
-                  } else {
-                  mytotal = mytotal.toString();
-                  if(web3.utils.toBN(mytotal).lte(web3.utils.toBN(balances[data.token].amount))) {
-                    const gasEstimate = 700000;
-                    var res = await confirmTransaction(gasEstimate, mytotal, data.token);
-                    if(!res) {
-                      return;
-                    }
-                    showLoader();
-                    await DDEcontract.methods.createContract(
-                      [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,...gasOptions[gasSetting]});
-                      hideLoader();
-                    } else {
-                    const gasEstimate = 750000;
-                    var res = await confirmTransaction(gasEstimate, mytotal, data.token);
-                    if(!res) {
-                      return;
-                    }
-                    showLoader();
-                    await getApproval(data.token, mytotal);
-                    hideLoader();
-                    var myval = "0";
-                    var difference = web3.utils.toBN(mytotal).sub(web3.utils.toBN(balances[data.token].amount));
-                    if(tokennames[data.token] == tokens[0].token) {
-                      var mybase = web3.utils.toBN(balances['base'].amount);
-                      var glimit = web3.utils.toBN(gasOptions[gasSetting].gasLimit).mul(web3.utils.toBN(gasPrice));
-                      if(mybase.lt(difference.add(glimit))) {
-                        await Swal.fire(translateThis("Not enough funds"));
-                        return;
-                      }
-                      myval = difference.toString();
-                    }
-                    showLoader();
-                    await DDEcontract.methods.depositAndCreateContract(data.token, difference.toString(), [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]});
-                    hideLoader();
-                  }
-                }
-          setActionActive(actionId, false);
-          hideLoader();
-          await Swal.fire(translateThis("Contract creation success!"));
-          await loadUser();
-                if(emailClient.checked && sender2 != "0x0000000000000000000000000000000000000000" && recipient2 != "0x0000000000000000000000000000000000000000" && contact2 != '' && typeof contact2 === 'object' && 'mycontact' in contact2 && contact2['mycontact'].includes("@")) {
-            Swal.fire({
-              title: translateThis('Notify Counterparty'),
-              text: translateThis('Would you like to email the counterparty to notify them of your offer?'),
-              icon: 'question',
-              showCancelButton: true,
-              confirmButtonText: translateThis('Yes'),
-              cancelButtonText: translateThis('No'),
-            }).then((result) => {
-              if (result.isConfirmed) {
-                var emailSubject = encodeURIComponent('You have received an offer on the BitBay marketplace');
-                var emailBody = encodeURIComponent(translateThis('Hello, this email was automatically composed to let you know that I have sent you an offer on the BitBay marketplace. For safety reasons, do not click any links from this email however you may log in to the official website on your own. Also for your safety, please only contact users at the email officially registered to their contracts. If you have any questions about my offer please let me know. Thank you and have a nice day.'));
-                const mailtoLink = `mailto:${contact2['mycontact']}?subject=${emailSubject}&body=${emailBody}`;
-                window.location.href = mailtoLink;
-              }
-            });
-          }
-          popupContainer.remove();
-        } catch (error) {
-          console.error(error);
-          await showError(error);
-        } finally {
-          setActionActive(actionId, false);
-          hideLoader();
-        }
       });
 
       // Append the form to the popup container
@@ -8826,22 +8826,22 @@ function updateMessageCountIndicator(count) {
     }
     
     async function readFileAsDataURL(file) {
-    return new Promise((resolve, reject) => {
-        let reader = new FileReader();
-        reader.onload = () => {
-            const resultParts = reader.result.split(',');
-            if (resultParts.length < 2) {
-                reject(new Error("Invalid file data"));
-                return;
-            }
-            const base64Data = resultParts[1];
-            const fileTypePrefix = `data:${file.type};base64,`;
-            resolve(fileTypePrefix + base64Data);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
+      return new Promise((resolve, reject) => {
+          let reader = new FileReader();
+          reader.onload = () => {
+              const resultParts = reader.result.split(',');
+              if (resultParts.length < 2) {
+                  reject(new Error("Invalid file data"));
+                  return;
+              }
+              const base64Data = resultParts[1];
+              const fileTypePrefix = `data:${file.type};base64,`;
+              resolve(fileTypePrefix + base64Data);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+      });
+    }
 
     async function acceptOffer(listing) {
       const actionId = generateActionId(listing.hash, "acceptOffer");
@@ -8865,55 +8865,55 @@ function updateMessageCountIndicator(count) {
         } else if (selectedValue === "one-month") {
           accepttimelimit = parseInt(blockTimestamp + (30 * 24 * 60 * 60)); // Set the time limit to 1 month in seconds
         }
-          var returnMe = 0;
-          var depnotice = 0;
-          if(tokennames[mylisting.token] == tokens[0].token) {
-            if(parseInt(balances['base'].amount) != 0 && parseInt(balances[mylisting.token].amount) == 0) {
-              depnotice = 1;
-            }
-          } else {
-            if(parseInt(balances[mylisting.token].amount2) != 0 && parseInt(balances[mylisting.token].amount) == 0) {
-              depnotice = 1;
-            }
-          }          
-          if(depnotice == 1 && accountprivkey != "") {
-            await Swal.fire({
-              title: translateThis('Deposit'),
-              text: translateThis("You have funds in your wallet but you should move some to your markets/trading account in order to interact with offers like this. Would you like to do that now?"),
-              icon: 'question',
-              showCancelButton: true,
-              confirmButtonText: translateThis('Yes'),
-              cancelButtonText: translateThis('No'),
-            }).then(async (result) => {
-              if (result.isConfirmed) {
-                returnMe = 1;
-                await deposit(1);
-                return;
-              }
-            });
+        var returnMe = 0;
+        var depnotice = 0;
+        if(tokennames[mylisting.token] == tokens[0].token) {
+          if(parseInt(balances['base'].amount) != 0 && parseInt(balances[mylisting.token].amount) == 0) {
+            depnotice = 1;
           }
-          if(returnMe == 1) {
-            return false;
+        } else {
+          if(parseInt(balances[mylisting.token].amount2) != 0 && parseInt(balances[mylisting.token].amount) == 0) {
+            depnotice = 1;
           }
-              if(mylisting.sender == "0x0000000000000000000000000000000000000000" || mylisting.recipient == "0x0000000000000000000000000000000000000000" ) {
+        }          
+        if(depnotice == 1 && accountprivkey != "") {
+          await Swal.fire({
+            title: translateThis('Deposit'),
+            text: translateThis("You have funds in your wallet but you should move some to your markets/trading account in order to interact with offers like this. Would you like to do that now?"),
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: translateThis('Yes'),
+            cancelButtonText: translateThis('No'),
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              returnMe = 1;
+              await deposit(1);
+              return;
+            }
+          });
+        }
+        if(returnMe == 1) {
+          return false;
+        }
+        if(mylisting.sender == "0x0000000000000000000000000000000000000000" || mylisting.recipient == "0x0000000000000000000000000000000000000000" ) {
           const offerID = DOMPurify.sanitize(await DDEcontract.methods.userMarketID(mylisting.hash).call());
-                if(offerID == 0) {
+          if(offerID == 0) {
             await Swal.fire(translateThis("Offer no longer available!"));
             return;
           }
-                if(listing.status[0]==0 || listing.status[1]==0) {
+          if(listing.status[0]==0 || listing.status[1]==0) {
             const dialog = document.createElement("div");
             dialog.classList.add("modal-shade-bg")
             dialog.innerHTML = `
-                    <div class="category-purchase-popup">
-                      <div class="detail-content">` + translateThis('Please enter the quantity you wish to purchase:') + `<br></div>
-                        <input id="new-quantity" type="number" min="1"></input><br><br>
-                      <div>
-                        <button id="confirm-btn" class="btn-filled">` + translateThis('Confirm') + `</button>&nbsp;&nbsp;
-                        <button id="cancel-btn" class="btn-gray">` + translateThis('Cancel') + `</button>
-                      </div>
+                  <div class="category-purchase-popup">
+                    <div class="detail-content">` + translateThis('Please enter the quantity you wish to purchase:') + `<br></div>
+                      <input id="new-quantity" type="number" min="1"></input><br><br>
+                    <div>
+                      <button id="confirm-btn" class="btn-filled">` + translateThis('Confirm') + `</button>&nbsp;&nbsp;
+                      <button id="cancel-btn" class="btn-gray">` + translateThis('Cancel') + `</button>
                     </div>
-                  `;
+                  </div>
+                `;
 
             document.body.appendChild(dialog);
 
@@ -8933,7 +8933,7 @@ function updateMessageCountIndicator(count) {
               mylisting.quantity[0] = quantity.toString();
               var counterparty = mylisting.sender;
               if(mylisting.sender == "0x0000000000000000000000000000000000000000") {
-                  counterparty = mylisting.recipient;
+                counterparty = mylisting.recipient;
               }
               var counterbalance = "";
               await DDEcontract.methods.userBalance(counterparty,mylisting.token).call().then(function (bal) {            
@@ -8951,33 +8951,33 @@ function updateMessageCountIndicator(count) {
               if(mylisting.sender == "0x0000000000000000000000000000000000000000") {
                 mytotal = web3.utils.toBN(mylisting.amount).add(web3.utils.toBN(mylisting.depositSender)).mul(web3.utils.toBN(quantity));
                 if (web3.utils.toBN(mybal).lt(mytotal)) {
-                    await Swal.fire(translateThis("You don't have enough funds. Please deposit funds first before proceeding."));
-                    return false;
+                  await Swal.fire(translateThis("You don't have enough funds. Please deposit funds first before proceeding."));
+                  return false;
                 }
                 if (web3.utils.toBN(counterbalance).lt(web3.utils.toBN(mylisting.depositRecipient).mul(web3.utils.toBN(quantity)))) {
-                    await Swal.fire(translateThis("The counter-party does not have enough funds in their account to proceed. Please notify the counter-party."));
-                    return false;
+                  await Swal.fire(translateThis("The counter-party does not have enough funds in their account to proceed. Please notify the counter-party."));
+                  return false;
                 }
               }
               if(mylisting.recipient == "0x0000000000000000000000000000000000000000") {
                 mytotal = web3.utils.toBN(mylisting.depositRecipient).mul(web3.utils.toBN(quantity));
                 if (web3.utils.toBN(mybal).lt(mytotal)) {
-                    await Swal.fire(translateThis("You don't have enough funds. Please deposit funds first before proceeding."));
-                    return false;
+                  await Swal.fire(translateThis("You don't have enough funds. Please deposit funds first before proceeding."));
+                  return false;
                 }
                 if (web3.utils.toBN(counterbalance).lt(web3.utils.toBN(mylisting.amount).add(web3.utils.toBN(mylisting.depositSender)).mul(web3.utils.toBN(quantity)))) {
-                    await Swal.fire(translateThis("The counter-party does not have enough funds in their account to proceed. Please notify the counter-party."));
-                    return false;
+                  await Swal.fire(translateThis("The counter-party does not have enough funds in their account to proceed. Please notify the counter-party."));
+                  return false;
                 }
               }
               var datalen = 0;
               var contact2 = '';
               try {
                 datalen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(counterparty, 3).call());
-                        if(datalen > 0) {
-                            contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(counterparty, datalen-1).call()));
+                if(datalen > 0) {
+                  contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(counterparty, datalen-1).call()));
                 }
-                    } catch(e) {
+              } catch(e) {
                 console.log(e);
               }
               //If one wants to show a grand total
@@ -8985,25 +8985,60 @@ function updateMessageCountIndicator(count) {
               //mylisting.depositSender *= quantity;
               //mylisting.depositRecipient *= quantity;
               var result = await showListing(mylisting, 3)
-                    if(result == false) {
+              if(result == false) {
                 return;
               }
               if (!web3.utils.isAddress(referral)) {
                 referral = "0x0000000000000000000000000000000000000000";
               }
               try {
-                setActionActive(actionId, true);
-                showLoader();
-                await DDEcontract.methods.acceptOffer(
-                  mylisting.hash,
-                  quantity.toString(),
-                  accepttimelimit.toString(),
-                  referral
-                ).send({ "from": myaccounts, ...gasOptions[gasSetting] });
-                hideLoader();
+                setActionActive(actionId, true);                
+                if (accountprivkey == "") {
+                  showLoader();
+                  await DDEcontract.methods.acceptOffer(
+                    mylisting.hash,
+                    quantity.toString(),
+                    accepttimelimit.toString(),
+                    referral
+                  ).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+                  hideLoader();
+                } else {
+                  mytotal = mytotal.toString();
+                  if(web3.utils.toBN(mytotal).lte(web3.utils.toBN(balances[mylisting.token].amount))) {
+                    const gasEstimate = 500000;
+                    var res = await confirmTransaction(gasEstimate, mytotal, mylisting.token);
+                    if(!res) {
+                      return;
+                    }
+                    showLoader();
+                    await DDEcontract.methods.acceptOffer(mylisting.hash, quantity.toString(), accepttimelimit.toString(), referral).send({"from":myaccounts,...gasOptions[gasSetting]});
+                    hideLoader();
+                  } else {
+                    const gasEstimate = 550000;
+                    var res =  await confirmTransaction(gasEstimate, mytotal, mylisting.token);;
+                    if(!res) {
+                      return;
+                    }
+                    await getApproval(mylisting.token, mytotal);
+                    var myval = "0";
+                    var difference = web3.utils.toBN(mytotal).sub(web3.utils.toBN(balances[mylisting.token].amount));
+                    if(tokennames[mylisting.token] == tokens[0].token) {
+                      var mybase = web3.utils.toBN(balances['base'].amount);
+                      var glimit = web3.utils.toBN(gasOptions[gasSetting].gasLimit).mul(web3.utils.toBN(gasPrice));
+                      if(mybase.lt(difference.add(glimit))) {
+                        await Swal.fire(translateThis("Not enough funds"));
+                        return;
+                      }
+                      myval = difference.toString();
+                    }
+                    showLoader();
+                    await DDEcontract.methods.depositAndAcceptOffer(mylisting.token, difference.toString(), mylisting.hash, quantity.toString(), accepttimelimit.toString(), referral).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]});
+                    hideLoader();
+                  }
+                }
                 await Swal.fire(translateThis("Contract accepted!"));
                 await loadUser();
-                      if(emailClient.checked && contact2 != '' && typeof contact2 === 'object' && 'mycontact' in contact2 && contact2['mycontact'].includes("@")) {
+                if(emailClient.checked && contact2 != '' && typeof contact2 === 'object' && 'mycontact' in contact2 && contact2['mycontact'].includes("@")) {
                   Swal.fire({
                     title: translateThis('Notify Counterparty'),
                     text: translateThis('Would you like to email the counterparty to notify them of your offer?'),
@@ -9032,11 +9067,11 @@ function updateMessageCountIndicator(count) {
         } else {
           quantity = mylisting.quantity[0];
           var counterparty = mylisting.sender;
-                if(mylisting.sender == myaccounts) {
+          if(mylisting.sender == myaccounts) {
             counterparty = mylisting.recipient;
           }
           var counterbalance = "";
-                await DDEcontract.methods.userBalance(counterparty,mylisting.token).call().then(function (bal) {            
+          await DDEcontract.methods.userBalance(counterparty,mylisting.token).call().then(function (bal) {            
             counterbalance = DOMPurify.sanitize(bal);
           });
           var mytotal = "0";
@@ -9048,8 +9083,9 @@ function updateMessageCountIndicator(count) {
               mybal = mybal.add(web3.utils.toBN(balances[mylisting.token].amount2));
             }
           }
-                if(mylisting.sender == myaccounts) {
-            if (web3.utils.toBN(balances[mylisting.token].amount).lt(web3.utils.toBN(mylisting.amount).add(web3.utils.toBN(mylisting.depositSender)).mul(web3.utils.toBN(quantity)))) {
+          if(mylisting.sender == myaccounts) {
+            mytotal = web3.utils.toBN(mylisting.amount).add(web3.utils.toBN(mylisting.depositSender)).mul(web3.utils.toBN(quantity));
+            if (web3.utils.toBN(mybal).lt(mytotal)) {
               await Swal.fire(translateThis("You don't have enough funds. Please deposit funds first before proceeding."));
               return false;
             }
@@ -9058,8 +9094,9 @@ function updateMessageCountIndicator(count) {
               return false;
             }
           }
-                if(mylisting.recipient == myaccounts) {
-            if (web3.utils.toBN(balances[mylisting.token].amount).lt(web3.utils.toBN(mylisting.depositRecipient).mul(web3.utils.toBN(quantity)))) {
+          if(mylisting.recipient == myaccounts) {
+            mytotal = web3.utils.toBN(mylisting.depositRecipient).mul(web3.utils.toBN(quantity));
+            if (web3.utils.toBN(mybal).lt(mytotal)) {
               await Swal.fire(translateThis("You don't have enough funds. Please deposit funds first before proceeding."));
               return false;
             }
@@ -9072,10 +9109,10 @@ function updateMessageCountIndicator(count) {
           var contact2 = '';
           try {
             datalen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(counterparty, 3).call());
-                    if(datalen > 0) {
-                        contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(counterparty, datalen-1).call()));
+            if(datalen > 0) {
+              contact2 = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(counterparty, datalen-1).call()));
             }
-                } catch(e) {
+          } catch(e) {
             console.log(e);
             hideLoader();
           }
@@ -9084,16 +9121,16 @@ function updateMessageCountIndicator(count) {
           //mylisting.depositSender *= quantity;
           //mylisting.depositRecipient *= quantity;
           var result = await showListing(mylisting, 3)
-                if(result == false) {
+          if(result == false) {
             return;
           }
           if (!web3.utils.isAddress(referral)) {
             referral = "0x0000000000000000000000000000000000000000";
           }
           try {
-            setActionActive(actionId, true);
-            showLoader();
+            setActionActive(actionId, true);            
             if(accountprivkey == "") {
+              showLoader();
               await DDEcontract.methods.acceptOffer(
                 mylisting.hash,
                 quantity.toString(),
@@ -9139,7 +9176,7 @@ function updateMessageCountIndicator(count) {
             }
             await Swal.fire(translateThis("Contract accepted!"));
             await loadUser();
-                  if(emailClient.checked && contact2 != '' && typeof contact2 === 'object' && 'mycontact' in contact2 && contact2['mycontact'].includes("@")) {
+            if(emailClient.checked && contact2 != '' && typeof contact2 === 'object' && 'mycontact' in contact2 && contact2['mycontact'].includes("@")) {
               Swal.fire({
                 title: translateThis('Notify Counterparty'),
                 text: translateThis('Would you like to email the counterparty to notify them of your offer?'),
@@ -9479,7 +9516,7 @@ function updateMessageCountIndicator(count) {
     }
     async function getAPI(index) {
       await DDEcontract.methods.publicdata(index).call().then(function (data) {
-                data=JSON.parse(DOMPurify.sanitize(CryptoJS.AES.decrypt(data, AESkey).toString(CryptoJS.enc.Utf8)));
+        data=JSON.parse(CryptoJS.AES.decrypt(DOMPurify.sanitize(data), AESkey).toString(CryptoJS.enc.Utf8));
         if (data.length === 2) { //using public gateway
           pinataApiKey = data[0];
           pinataSecretApiKey = data[1];
@@ -9488,7 +9525,7 @@ function updateMessageCountIndicator(count) {
           if (!Array.isArray(data)) {
             data = JSON.parse(data);
           }
-                    if(data.length === 3) {
+          if(data.length === 3) {
             pinataApiKey = data[0];
             pinataSecretApiKey = data[1];
             pinataGateway = data[2];
@@ -9571,10 +9608,10 @@ function updateMessageCountIndicator(count) {
       accHD[i].addEventListener('click', toggleItem, false);
     }
      // my js
-     function toggleSidebar() {
+    function toggleSidebar() {
       let sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('active');
-      }
+    }
     // end js
     function toggleItem() {
       var itemClass = this.parentNode.className;
