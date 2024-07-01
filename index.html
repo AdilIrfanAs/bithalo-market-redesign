@@ -2652,10 +2652,10 @@ body {
       <div id="abount-container">
       </div>
     </div>
-    <a href="#" class="notification-lottie-file" onclick="notifications()">
+    <a href="#" class="notification-lottie-file">
       <lottie-player
           src="https://lottie.host/ef562761-9dbd-49d2-8caa-39438d4ee918/p99FGDA20q.json"
-          background="transparent" speed="1" loop autoplay></lottie-player>
+          background="transparent" speed="1" loop></lottie-player>
     </a>
     <div id="notification-box" class="notification-box-wrapper">
       <div class="site-loader"><div class="loader"></div></div>
@@ -5831,13 +5831,24 @@ body {
     async function updateNotifications() {
         var notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
         var readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages") || "{}");
-
-        await fetchOffersFromMethod('openOffers', notifications, readMessages);
-        await fetchOffersFromMethod('privateOffers', notifications, readMessages);
-        await fetchOffersFromMethod('escrows', notifications, readMessages);
-
+        if (myaccounts !== "") {
+          await fetchOffersFromMethod('openOffers', notifications, readMessages);
+          await fetchOffersFromMethod('privateOffers', notifications, readMessages);
+          await fetchOffersFromMethod('escrows', notifications, readMessages);
+        }
         localStorage.setItem(myaccounts + DDEaddy + ":unifiedNotifications", JSON.stringify(notifications));
         displayNotifications();
+        updateBellIcon(notifications);
+    }
+
+    function updateBellIcon(notifications){
+      const notificationBell = document.querySelector(".notification-lottie-file lottie-player");
+      const unreadNotifications = Object.keys(notifications).filter(hash => !notifications[hash].isRead).length;
+      if (myaccounts === "" || unreadNotifications ===  0) {
+        notificationBell.stop();
+      } else {
+        notificationBell.play();
+      }
     }
 
     async function fetchOffersFromMethod(methodName, notifications, readMessages) {
@@ -5870,7 +5881,8 @@ body {
                         message: changes.join(", "),
                         timestamp: new Date().toISOString(),
                         listing: offerData,
-                        mode: mode 
+                        mode: mode,
+                        isRead: false
                     };
                 }
             }
@@ -5926,37 +5938,81 @@ body {
 
       // Clear existing notifications
       notificationBox.innerHTML = '';
-
-      // Check if there are any notifications
-      if (Object.keys(notifications).length === 0) {
-          notificationBox.innerHTML = `<div class="notification-empty">${translateThis("No notifications")}</div>`;
+      if (myaccounts === "") {
+        notificationBox.innerHTML = `<div class="notification-empty">${translateThis("Login to see notifications")}</div>`;
       } else {
-        Object.entries(notifications).forEach(([hash, notification]) => {
-            const notificationContent = document.createElement('div');
-            notificationContent.className = 'notification-box-content';
+        const unreadNotifications = Object.entries(notifications).filter(([hash, notification]) => !notification.isRead);
+          if (Object.keys(unreadNotifications).length === 0) {
+            notificationBox.innerHTML = `<div class="notification-empty">${translateThis("You have no unread notifications")}</div>`;
+          } else {
+              unreadNotifications.forEach(([hash, notification]) => {
+              const notificationContent = document.createElement('div');
+              notificationContent.className = 'notification-box-content';
 
-            const notificationButton = document.createElement('button');
-            notificationButton.className = 'notification-box-content-button';
-            notificationButton.innerHTML = `
-              <div class="notification-badge">
-                  <img src="telegram.png" alt="notification img"/>
-              </div>
-              <div class="notification-box-content-info">
-                  <h6>${notification.title || "Default Title"}</h6>
-                  <p>${translateThis(notification.message) || "No details available."}</p>
-              </div>
-            `;
+              const notificationButton = document.createElement('button');
+              notificationButton.className = 'notification-box-content-button';
+              notificationButton.innerHTML = `
+                <div class="notification-badge">
+                    <img src="telegram.png" alt="notification img"/>
+                </div>
+                <div class="notification-box-content-info">
+                    <h6>${notification.title || "Default Title"}</h6>
+                    <p>${translateThis(notification.message) || "No details available."}</p>
+                </div>
+              `;
 
-            notificationButton.addEventListener('click', () => {
-                showListing(notification.listing, notification.mode);
+              notificationButton.addEventListener('click', () => {
+                  showListing(notification.listing, notification.mode);
+              });
+              notificationContent.appendChild(notificationButton);
+
+              notificationBox.appendChild(notificationContent);
             });
-            notificationContent.appendChild(notificationButton);
-
-            notificationBox.appendChild(notificationContent);
-        });
+          }
+        }
       }
+
+    function markAllNotificationsAsRead() {
+      const notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
+      const readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages") || "{}");
+
+      Object.keys(notifications).forEach(hash => {
+        readMessages[hash] = true;
+        notifications[hash].isRead = true;
+      });
+
+      localStorage.setItem(myaccounts + DDEaddy + ":readmessages", JSON.stringify(readMessages));
+      localStorage.setItem(myaccounts + DDEaddy + ":unifiedNotifications", JSON.stringify(notifications));
+      updateBellIcon(notifications);
+      displayNotifications();
     }
 
+    document.querySelector(".notification-lottie-file").addEventListener('click', () => {
+      const notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
+      const notificationBox = document.getElementById("notification-box");
+      const notificationBell = document.querySelector(".notification-lottie-file lottie-player");
+      if (myaccounts === "") {
+        notificationBox.innerHTML = `<div class="notification-empty">${translateThis("Login to see notifications")}</div>`;
+      } else {
+          const unreadNotifications = Object.entries(notifications).filter(([hash, notification]) => !notification.isRead);
+          if (unreadNotifications.length === 0) {
+            notificationBox.innerHTML = `<div class="notification-empty">${translateThis("You have no unread notifications")}</div>`;
+          } else {
+            displayNotifications();
+            notificationBell.stop();
+          }
+      }
+      notificationsToggle();
+    });
+
+    function notificationsToggle() {
+      const notificationBox = document.getElementById('notification-box');
+      const isActive = notificationBox.classList.toggle('active');
+      if (!isActive) {
+        markAllNotificationsAsRead();
+      }
+    }
+    
     function displayDecimals(token, amountString) {
       var formattedAmount = '';
       for (var i = 0; i < tokens.length; i++) {
@@ -6102,7 +6158,7 @@ body {
                 totalItems = await getTotalItemsForUserStore(userStoreKey);
                 break;
             case 'searchTag':
-                totalItems = marketOffers.indices.length;
+                totalItems = marketOffers.indices.length; // Adjust this based on your data structure
                 break;
                 default:
                 totalItems = marketOffers.indices.length;
@@ -9654,11 +9710,6 @@ body {
       }
       document.getElementById(cityName).style.display = "block";
       evt.currentTarget.className += " active";
-    }
-    // notification
-    function notifications() {
-      let sidebar = document.getElementById('notification-box');
-      sidebar.classList.toggle('active');
     }
 
     //Notes:

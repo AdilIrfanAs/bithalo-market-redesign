@@ -451,4 +451,7 @@
   "We recommend registering your contact information and encryption key before creating a contract. Would you like to register now?": true,
   "Don't show this again": true
 }
-
+{
+  "Login to see notifications": true,
+  "You have no unread notifications": true,
+}
