@@ -7482,10 +7482,8 @@ body {
           if (userpubkey != "" && msg.message.startsWith("ENC:")) {
               const encryptedPart = msg.message.substring(4);
               const decryptionResult = cryptico.decrypt(encryptedPart, userprivkey);
-              console.log("decryptionResult", decryptionResult)
               if (decryptionResult.status === "success") {
                   const messageParts = decryptionResult.plaintext.split("#*#*#");
-                  console.log("messageParts", messageParts);
                   if (messageParts.length === 2) {
                     const timestampAndPadding = messageParts[1];
                     const timestamp = timestampAndPadding.slice(0, 13);
