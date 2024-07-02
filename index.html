@@ -7409,7 +7409,7 @@ body {
       const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + hash + 'lastMessageIndex') || 0;
       const existingMessages = await fetchMessages(hash, recipient, lastMessageIndex);
       const { supportsEncryption: senderSupportsEncryption, publicKey: senderPublicKey } = await userSupportsEncryption(myaccounts);
-      const messagesContainer = createMessagePopup(existingMessages, senderSupportsEncryption, listingSender, listingRecipient);
+      const messagesContainer = createMessagePopup(existingMessages, listingSender, listingRecipient);
 
       const messagePopup = document.querySelector('.popup-container');
       messagePopup.appendChild(messagesContainer);
@@ -7432,7 +7432,9 @@ body {
 
           // Encrypt message for local storage if sender's public key is available
           if (userpubkey != "") {
-            storedMessage = "ENC:" + cryptico.encrypt(message, userpubkey).cipher;
+            const timestamp = new Date().getTime();
+            const padding = Crypto.SHA256(timestamp).substring(0, 16);
+            storedMessage = "ENC:" + cryptico.encrypt(message + "#*#*#" + timestamp + padding, userpubkey).cipher;
           }
 
           showLoader();
@@ -7475,14 +7477,29 @@ body {
     }
 
 
-    function createMessagePopup(messages, userSupportsEncryption, sender, recipient) {
+    function createMessagePopup(messages, sender, recipient) {
       const decryptedMessages = messages.map(msg => {
-          if (userSupportsEncryption && msg.message.startsWith("ENC:")) {
+          if (userpubkey != "" && msg.message.startsWith("ENC:")) {
               const encryptedPart = msg.message.substring(4);
               const decryptionResult = cryptico.decrypt(encryptedPart, userprivkey);
+              console.log("decryptionResult", decryptionResult)
               if (decryptionResult.status === "success") {
                   const messageParts = decryptionResult.plaintext.split("#*#*#");
-                  return { ...msg, message: messageParts[0] }; // Only return the actual message part
+                  console.log("messageParts", messageParts);
+                  if (messageParts.length === 2) {
+                    const timestampAndPadding = messageParts[1];
+                    const timestamp = timestampAndPadding.slice(0, 13);
+                    const padding = timestampAndPadding.slice(13);
+                    if (padding.length === 16 && !isNaN(timestamp)) {
+                      return { ...msg, message: messageParts[0] }; // Only return the actual message part
+                    } else {
+                      console.error("Invalid padding or timestamp length");
+                      return { ...msg, message: "Failed to decrypt message" };
+                    }
+                  } else {
+                    console.error("Invalid padding length");
+                    return { ...msg, message: "Failed to decrypt message" };
+                  }
               } else {
                   console.error("Decryption failed:", decryptionResult.status);
                   return { ...msg, message: "Failed to decrypt message" };
@@ -7539,11 +7556,25 @@ body {
               if (message.startsWith("ENC:")) {
                   const decryptionResult = cryptico.decrypt(message.substring(4), userprivkey);
                   if (decryptionResult.status === "success") {
-                      decryptedMessage = decryptionResult.plaintext.split("#*#*#")[0];
-                  } else {
-                      console.error("Decryption failed:", decryptionResult.status);
-                      decryptedMessage = "Failed to decrypt message";
-                  }
+                    const messageParts = decryptionResult.plaintext.split("#*#*#");
+                    if (messageParts.length === 2) {
+                        const timestampAndPadding = messageParts[1];
+                        const timestamp = timestampAndPadding.slice(0, 13);
+                        const padding = timestampAndPadding.slice(13);
+                        if (padding.length === 16 && !isNaN(timestamp)) {
+                            decryptedMessage = messageParts[0];
+                        } else {
+                            console.error("Invalid padding or timestamp length");
+                            decryptedMessage = "Failed to decrypt message";
+                        }
+                    } else {
+                        console.error("Invalid message format");
+                        decryptedMessage = "Failed to decrypt message";
+                    }
+                } else {
+                    console.error("Decryption failed:", decryptionResult.status);
+                    decryptedMessage = "Failed to decrypt message";
+                }
               }
 
               if (!storedMessages.some(msg => msg.index === index)) {
