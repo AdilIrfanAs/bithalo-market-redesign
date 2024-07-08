@@ -3742,7 +3742,7 @@ body {
       } else {
         await checkMarketUpdate();
       }
-      await updateNotifications();
+      // await updateNotifications();
       await populateOffers();
     }
 
@@ -3823,7 +3823,7 @@ body {
     async function RefreshContracts() {
       if(myaccounts != '') {
         localStorage.setItem(myaccounts + DDEaddy + ":readmessages3", JSON.stringify({}));
-        await updateNotifications();
+        // await updateNotifications();
         await populateOffers();
       }
     }
@@ -5335,12 +5335,14 @@ body {
           myhash = web3.utils.keccak256(li.innerHTML);
           if(offerHash in notifications) {
             if(notifications[offerHash] != myhash) {
+              updateNotifications(notifications[offerHash], myhash, offerHash, offerData, 1);
               notifications[offerHash] = myhash;
               notify = 1;
             }
           } else {
             notifications[offerHash] = myhash;
             notify = 1;
+            updateNotifications(notifications[offerHash], myhash, offerData, 1);
           }
           li.onclick = function() {
             document.getElementById("offersButton").style.backgroundColor = "#f2f2f2";
@@ -5429,13 +5431,28 @@ body {
           `;
           myhash = web3.utils.keccak256(li2.innerHTML);
           if(offerHash2 in notifications) {
+            let mode;
+            if(myaccounts == offerData2.sender && offerData2.status[0] == 1) {
+              mode = 1;
+            }
+            if(myaccounts == offerData2.sender && offerData2.status[0] == 0) {
+              mode = 2;
+            }
+            if(myaccounts == offerData2.recipient && offerData2.status[1] == 1) {
+              mode = 1;
+            }
+            if(myaccounts == offerData2.recipient && offerData2.status[1] == 0) {
+              mode = 2;
+            }
             if(notifications[offerHash2] != myhash) {
+              updateNotifications(notifications[offerHash2], myhash, offerHash2, offerData2, mode);
               notifications[offerHash2] = myhash;
               notify = 1;
             }
           } else {
             notifications[offerHash2] = myhash;
             notify = 1;
+            updateNotifications(notifications[offerHash2], myhash, offerHash2, offerData2, mode);
           }
           offerData2.index = i;
           if(myaccounts == offerData2.sender && offerData2.status[0] == 1) {
@@ -5645,12 +5662,15 @@ body {
           myhash = web3.utils.keccak256(inputString);
           if(offerHash3 in notifications) {
             if(notifications[offerHash3] != myhash) {
+              updateNotifications(notifications[offerHash3], myhash, offerHash3, offerData3, 4);
               notifications[offerHash3] = myhash;
               notify = 1;
+              
             }
           } else {
             notifications[offerHash3] = myhash;
             notify = 1;
+            updateNotifications(notifications[offerHash3], myhash, offerHash3, offerHash3, 4);
           }
           offerData3.index = i;
           li3.onclick = function() {
@@ -5893,17 +5913,75 @@ body {
       document.head.appendChild(style);
     }
 
-    async function updateNotifications() {
-        var notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
-        var readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages") || "{}");
-        if (myaccounts !== "") {
-          await fetchOffersFromMethod('openOffers', notifications, readMessages);
-          await fetchOffersFromMethod('privateOffers', notifications, readMessages);
-          await fetchOffersFromMethod('escrows', notifications, readMessages);
+    function updateNotifications(oldHash, newHash, offerHash, newOfferData, mode) {
+      try {
+        if (oldHash === undefined || newHash === undefined) {
+          console.log("One or both hashes are undefined. No action taken.");
+          return;
         }
-        localStorage.setItem(myaccounts + DDEaddy + ":unifiedNotifications", JSON.stringify(notifications));
-        displayNotifications();
-        updateBellIcon(notifications);
+
+        var notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications")) || {};
+        var oldOfferData = notifications[offerHash] ? notifications[offerHash].listing : null;
+
+        if (oldHash !== newHash) {
+          let message = generateNotificationMessage(oldOfferData, newOfferData);
+
+          notifications[offerHash] = {
+            isRead: false,
+            message: message,
+            listing: newOfferData,
+            timestamp: new Date().toISOString(),
+            mode
+          };
+
+          localStorage.setItem(myaccounts + DDEaddy + ":unifiedNotifications", JSON.stringify(notifications));
+
+          displayNotifications();
+          updateBellIcon(notifications);
+        }
+      } catch (error) {
+        console.error("Error processing notification update:", error);
+      }
+    }
+
+    function generateNotificationMessage(oldOfferData, newOfferData) {
+      if (!oldOfferData) return ["New Offer", "A new offer has been posted."];
+
+      let title = "Offer Update";
+      let details = [];
+
+      // Check for changes in message content
+      if (oldOfferData.message !== newOfferData.message) {
+        title = "New Message";
+        details.push(`"${newOfferData.message}"`);
+      }
+
+      // Check for changes in the status
+      if (oldOfferData.status.join(',') !== newOfferData.status.join(',')) {
+        let statusKey = newOfferData.status.join(',');
+        let statusMessage = combinedStatusDescriptions[statusKey] || "Status updated";
+        title = "Notification on Offer";
+        details.push(statusMessage);
+      }
+
+      // Check for changes in time remaining
+      if (oldOfferData.timeRemaining !== newOfferData.timeRemaining) {
+        title = "Time Update";
+        details.push(`Time remaining updated to ${newOfferData.timeRemaining} days.`);
+      }
+
+      // Check for changes in escrow information
+      if (oldOfferData.escrowInfo !== newOfferData.escrowInfo) {
+        title = "Escrow Update";
+        details.push(newOfferData.escrowInfo);
+      }
+
+      // Default message if no specific changes are detected
+      if (details.length === 0) {
+        details.push("Changes detected in the offer details.");
+      }
+
+      return [title, details.join(' ')];
     }
 
     function updateBellIcon(notifications){
@@ -5916,88 +5994,7 @@ body {
       }
     }
 
-    async function fetchOffersFromMethod(methodName, notifications, readMessages) {
-        var mylen = 0;
-        try {
-            mylen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, methodName === 'escrows' ? 2 : (methodName === 'privateOffers' ? 1 : 0)).call());
-            for (var i = 0; i < mylen; i++) {
-                if (readMessages[i]) {
-                    continue;
-                }
-                const offerHash = DOMPurify.sanitize(await DDEcontract.methods[methodName](myaccounts, i).call());
-                const offerData = await getOrderHash(offerHash);
-                const previousData = JSON.parse(localStorage.getItem(offerHash) || "{}");
-                localStorage.setItem(offerHash, JSON.stringify(offerData)); // Update the cache with the latest data
-
-                let mode = 0; 
-                if (methodName === 'openOffers') {
-                    mode = 1;
-                } else if (methodName === 'privateOffers') {
-                    mode = offerData.status[0] === 1 ? 1 : 2; 
-                } else if (methodName === 'escrows') {
-                    mode = 4; 
-                }
-
-                let changes = detectChanges(offerData, previousData);
-                if (changes.length > 0) {
-                    notifications[offerHash] = {
-                        type: methodName.replace('Offers', ''),
-                        title: offerData.message,
-                        message: changes.join(", "),
-                        timestamp: new Date().toISOString(),
-                        listing: offerData,
-                        mode: mode,
-                        isRead: false
-                    };
-                }
-            }
-        } catch (error) {
-            console.error("Error fetching offer data:", error);
-        }
-    }
-
-    function detectChanges(currentData, previousData) {
-        let changes = [];
-
-        // Determine default status based on the context or type of data
-        let defaultStatus = "Offer"; // Default fallback
-        if (currentData.type && currentData.type === "escrow") {
-            defaultStatus = "Escrow";
-        } else if (currentData.type && currentData.type === "contract") {
-            defaultStatus = "Contract";
-        }
-
-        // Ensure previousData has default values if undefined
-        if (!previousData || Object.keys(previousData).length === 0) {
-            previousData = { status: [defaultStatus, defaultStatus], amount: "0" };
-        }
-
-        // Ensure currentData has default values if undefined
-        if (!currentData.status) {
-            currentData.status = [defaultStatus, defaultStatus];
-        }
-        if (!previousData.status) {
-            previousData.status = [defaultStatus, defaultStatus];
-        }
-
-        // Construct status keys
-        const prevStatusKey = `${previousData.status[0]},${previousData.status[1]}`;
-        const currStatusKey = `${currentData.status[0]},${currentData.status[1]}`;
-
-        // Fetch status descriptions based on the keys
-        const oldStatus = combinedStatusDescriptions[prevStatusKey] || `${statusDescriptions[previousData.status[0]] || defaultStatus}, ${statusDescriptions[previousData.status[1]] || defaultStatus}`;
-        const newStatus = combinedStatusDescriptions[currStatusKey] || `${statusDescriptions[currentData.status[0]] || defaultStatus}, ${statusDescriptions[currentData.status[1]] || defaultStatus}`;
-
-        // Check if status has changed and push the new status description
-        if (prevStatusKey !== currStatusKey) {
-            changes.push(newStatus);
-        }
-
-        return changes;
-    }
-
-
-    function displayNotifications() {
+    async function displayNotifications() {
       const notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
       const notificationBox = document.getElementById("notification-box");
 
@@ -6010,43 +6007,63 @@ body {
           if (Object.keys(unreadNotifications).length === 0) {
             notificationBox.innerHTML = `<div class="notification-empty">${translateThis("You have no unread notifications")}</div>`;
           } else {
-              unreadNotifications.forEach(([hash, notification]) => {
-              const notificationContent = document.createElement('div');
-              notificationContent.className = 'notification-box-content';
+            unreadNotifications.forEach(async ([hash, notification]) => {
+            const notificationContent = document.createElement('div');
+            notificationContent.className = 'notification-box-content';
 
-              const notificationButton = document.createElement('button');
-              notificationButton.className = 'notification-box-content-button';
-              notificationButton.innerHTML = `
-                <div class="notification-badge">
-                    <img src="telegram.png" alt="notification img"/>
-                </div>
-                <div class="notification-box-content-info">
-                    <h6>${notification.title || "Default Title"}</h6>
-                    <p>${translateThis(notification.message) || "No details available."}</p>
-                </div>
-              `;
+            const notificationButton = document.createElement('button');
+            notificationButton.className = 'notification-box-content-button';
 
-              notificationButton.addEventListener('click', () => {
-                  showListing(notification.listing, notification.mode);
-              });
-              notificationContent.appendChild(notificationButton);
+            let myimg = await getFile(notification.listing.image);
+            let tempimg = '<img src="./blank-image.jpg" alt="No image available">'; 
+            let foundImage = false;
 
-              notificationBox.appendChild(notificationContent);
+            // Check if there are any images returned and process them
+            if (myimg && myimg.length > 0) {
+              const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+
+              for (let i = 0; i < myimg.length; i++) {
+                const mimeTypeMatch = myimg[i].match(/^data:(.*?);/);
+                if (mimeTypeMatch && imageMimeTypes.includes(mimeTypeMatch[1].toLowerCase())) {
+                  tempimg = `<img src="${myimg[i]}" alt="Notification image">`;
+                  foundImage = true;
+                  break;
+                }
+              }
+
+              if (!foundImage) {
+                tempimg = '<img src="./blank-image.jpg" alt="Document Placeholder">';
+              }
+            }
+
+            notificationButton.innerHTML = `
+              <div class="notification-badge">
+                ${tempimg}
+              </div>
+              <div class="notification-box-content-info">
+                <h6>${notification.message[0] || "Default Title"}</h6>
+                <p>${translateThis(notification.message[1]) || "No details available."}</p>
+              </div>
+            `;
+
+            notificationButton.addEventListener('click', () => {
+              showListing(notification.listing, notification.mode);
             });
-          }
+            notificationContent.appendChild(notificationButton);
+
+            notificationBox.appendChild(notificationContent);
+          });
         }
       }
+    }
 
     function markAllNotificationsAsRead() {
       const notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications") || "{}");
-      const readMessages = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":readmessages") || "{}");
 
       Object.keys(notifications).forEach(hash => {
-        readMessages[hash] = true;
         notifications[hash].isRead = true;
       });
 
-      localStorage.setItem(myaccounts + DDEaddy + ":readmessages", JSON.stringify(readMessages));
       localStorage.setItem(myaccounts + DDEaddy + ":unifiedNotifications", JSON.stringify(notifications));
       updateBellIcon(notifications);
       displayNotifications();
@@ -6059,13 +6076,13 @@ body {
       if (myaccounts === "") {
         notificationBox.innerHTML = `<div class="notification-empty">${translateThis("Login to see notifications")}</div>`;
       } else {
-          const unreadNotifications = Object.entries(notifications).filter(([hash, notification]) => !notification.isRead);
-          if (unreadNotifications.length === 0) {
-            notificationBox.innerHTML = `<div class="notification-empty">${translateThis("You have no unread notifications")}</div>`;
-          } else {
-            displayNotifications();
-            notificationBell.stop();
-          }
+        const unreadNotifications = Object.entries(notifications).filter(([hash, notification]) => !notification.isRead);
+        if (unreadNotifications.length === 0) {
+          notificationBox.innerHTML = `<div class="notification-empty">${translateThis("You have no unread notifications")}</div>`;
+        } else {
+          displayNotifications();
+          notificationBell.stop();
+        }
       }
       notificationsToggle();
     });
@@ -7310,15 +7327,16 @@ body {
         const isContractActive = (listing.status[0] < 4 && listing.status[1] < 4);
         const isLoggedIn = (myaccounts !== "");
 
-        if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
-          messageButton.style.display = 'inline-flex';
-
-          const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + listing.hash + 'lastMessageIndex') || 0;
-          await fetchMessages(listing.hash, theuser, lastMessageIndex);
-        } else {
-          messageButton.style.display = 'none';
-        }
         messageButton.onclick = async function() {
+          if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
+            messageButton.style.display = 'inline-flex';
+
+            const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + listing.hash + 'lastMessageIndex') || 0;
+            await fetchMessages(listing.hash, theuser, lastMessageIndex);
+          } else {
+            messageButton.style.display = 'none';
+          }
+
           if(theuser == listing.sender) {
             var recipientAddress = listing.recipient;
             var senderAddress = listing.sender;
@@ -7574,7 +7592,6 @@ body {
                     decryptedMessage = "Failed to decrypt message";
                 }
               }
-
               if (!storedMessages.some(msg => msg.index === index)) {
                   storedMessages.push({ message: decryptedMessage, sender: user, timestamp: new Date().getTime(), index: index });
                   newMessagesFetched = true;
@@ -8163,9 +8180,8 @@ body {
                 <textarea id="contractDetails"></textarea>
               </div>
               <div class="input-wrapper-content">
-                  <label for="contractImage">` + translateThis('Contract Images:') + `</label>
+                  <label for="contractImage">` + translateThis('Contract Images/files:') + `</label>
                   <input type="file" id="contractImage" multiple">
-                  <span style="color: black;" id="fileNames"></span>
                   <div id="fileDisplayArea"></div>
                   <button type="button" id="changefile" style="display:none;">` + translateThis('Change Images') + `</button>
                   <p style="color: grey; font-size: 0.8em;">` + translateThis('Maximum file size: 10 MB per file.') + `</p>
@@ -8371,16 +8387,18 @@ body {
         
         const fileElement = document.createElement('div');
         fileElement.className = 'file-display';
-
+        const truncatedFileName = file.name.length > 9 ? file.name.substring(0, 9) + '...' : file.name;
         if (isImage) {
           fileElement.innerHTML = `
-            <img src="${imgSrc}" alt="Uploaded File">
+            <img src="${imgSrc}" alt="${file.name}">
+            <span class="file-name">${truncatedFileName}</span>
             <span class="remove-file" data-index="${index}">&times;</span>
           `;
         } else {
           // Use a generic document icon for non-image files
           fileElement.innerHTML = `
             <img src="document-icon.png" alt="${file.name}">
+            <span class="file-name">${truncatedFileName}</span>
             <span class="remove-file" data-index="${index}">&times;</span>
           `;
         }
