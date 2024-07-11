@@ -455,4 +455,6 @@
   "Login to see notifications": true,
   "You have no unread notifications": true,
   "Contract Images/files:":  true,
+  "Please Login/Connect to Continue.": true,
+  "Please wait for your account data to load." true, 
 }

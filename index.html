@@ -7634,6 +7634,15 @@ body {
         await Swal.fire(translateThis("Action is already in progress for this contract."));
         return;
       }
+
+      if (!isConnected) {
+        await Swal.fire(translateThis("Please Login/Connect to Continue."));
+        return;
+      }
+      if (!myaccounts || myaccounts.length === 0 || balances['base'] === undefined) {
+        await Swal.fire(translateThis("Please wait for your account data to load."));
+        return;
+      }
       if(accountprivkey != "" && skipthis == 0) {
         var depOptions = 0;
         const tokenNames = tokens.map(token => token.token);
@@ -7758,10 +7767,12 @@ body {
           // If the selected token is ETH/BASE, deposit WETH instead
           try {
             var value = web3.utils.toWei(amount.toString(), 'ether');
-            const gasEstimate = 90000;
-            var res = await confirmTransaction(gasEstimate, value, tokenAddress);
-            if(!res) {
-              return;
+            if(accountprivkey != "") {
+              const gasEstimate = 90000;
+              var res = await confirmTransaction(gasEstimate, value, tokenAddress);
+              if(!res) {
+                return;
+              }
             }
             setActionActive(actionId, true);
             showLoader();
@@ -7784,10 +7795,12 @@ body {
             var value = (new BigNumber(amount.toString()).times(new BigNumber(10).pow(decimals))).toString()
             setActionActive(actionId, true);
             await getApproval(tokenAddress, value);
-            const gasEstimate = 90000;
-            var res = await confirmTransaction(gasEstimate, value, tokenAddress);
-            if(!res) {
-              return;
+            if(accountprivkey != "") {
+                const gasEstimate = 90000;
+                var res = await confirmTransaction(gasEstimate, value, tokenAddress);
+                if(!res) {
+                  return;
+              }
             }
             showLoader();
             await DDEcontract.methods.deposit(tokenAddress, value).send({ "from": myaccounts, ...gasOptions[gasSetting] });
@@ -7843,6 +7856,14 @@ body {
       const actionId = generateActionId("withdrawFunds");
       if (isActionActive(actionId)) {
         await Swal.fire(translateThis("Action is already in progress for this contract."));
+        return;
+      }
+      if (!isConnected) {
+        await Swal.fire(translateThis("Please Login/Connect to Continue."));
+        return;
+      }
+      if (!myaccounts || myaccounts.length === 0 || balances['base'] === undefined) {
+        await Swal.fire(translateThis("Please wait for your account data to load."));
         return;
       }
       // Populate the token select dropdown for Swal
