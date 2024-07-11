@@ -4812,7 +4812,7 @@ body {
             mlength = high;
         }
         var jsondata = {};
-        var sortHits = 0;
+        var sortHits = 0;           
         marketOffers['results'] = [];
         if(showOrder == false) {
           var qpar = getQueryParam("o") || "default";
@@ -5790,8 +5790,8 @@ body {
         endIndex = marketOffers.indices.length;
       }
       searchText = searchText.toLowerCase();
-      if (searchText !== "") {
-        endIndex = marketOffers.indices.length;
+      if (searchText !== "" || currentViewContext !== "") {
+        endIndex = marketOffers.results.length;
       }
       var shown = 0;
       var offer;
@@ -6293,18 +6293,19 @@ body {
                 break;
             default:
                 totalItems = marketOffers.indices.length;
-                if (startIndex < totalItems) {
-                    await loadMarkets(startIndex, endIndex);
+                if (currentPage * listingsPerPage >= marketOffers.indices.length) {
+                  document.getElementById("loadingStatus").innerHTML = loader;
+                  await loadMarkets(startIndex, endIndex);
                 }
                 break;
         }
-        console.log("totalItems", totalItems);
+        // console.log("totalItems", totalItems);
         var totalPages = Math.ceil(totalItems / listingsPerPage);
         currentPage = Math.min(currentPage + 1, totalPages); // Ensure currentPage does not exceed totalPages
 
         document.getElementById("loadingStatus").innerHTML = "";
         await populateListings();
-        updatePaginationControls(totalItems);
+        updatePaginationControls();
     }
 
     //   async function nextPage() {
