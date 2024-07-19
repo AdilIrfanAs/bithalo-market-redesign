@@ -661,7 +661,7 @@ h2 {
   font-size: 16px;
   font-weight: bold;
 }
-.btn-filled:hover, .withdraw-swal-wrapper .swal2-actions button:hover {
+.btn-filled:hover, .withdraw-swal-wrapper .swal2-actions button:hover, .transaction-confirm-popup #confirm-btn:hover, #pending-transactions-dropdown .confirm-btn:hover {
   background-color: transparent;
   color: #7066E0;
 }
@@ -669,7 +669,7 @@ h2 {
   background-color: #858585;
   border: 2px solid #858585;
 }
-.btn-gray:hover, .withdraw-swal-wrapper .swal2-actions button.swal2-cancel:hover {
+.btn-gray:hover, .withdraw-swal-wrapper .swal2-actions button.swal2-cancel:hover, .transaction-confirm-popup #cancel-btn:hover, #pending-transactions-dropdown .cancel-btn:hover {
   background-color: transparent;
   color: #858585;
 }
@@ -1491,11 +1491,6 @@ h2 {
   margin: 0;
   margin-bottom: 6px;
 }
-.notification-box-content-info p {
-  font-size: 14px;
-  line-height: 20px;
-  margin: 0;
-}
 #myoffers .tabcontent {
   display: block;
 }
@@ -1555,6 +1550,65 @@ h2 {
 .message-receiver {
   text-align: left;
   background-color: #D3E8EE;
+}
+.transaction-confirm-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 4px;
+  z-index: 999;
+  padding: 20px;
+  box-shadow: 1px 1px 11px 3px #80808080;
+  max-width: 345px;
+  text-align: center;
+  width: 100%;
+}
+.transaction-confirm-popup .transaction-popup-heading {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.transaction-confirm-popup input {
+  width: 100%;
+  border: 1px solid #00000057;
+  height: 35px;
+  border-radius: 4px;
+  outline: none;
+  padding: 8px;
+}
+.transaction-confirm-popup button, #pending-transactions-dropdown button {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  height: 32px;
+  min-width: 100px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: all ease-in-out 0.6s;
+}
+.transaction-confirm-popup #confirm-btn, #pending-transactions-dropdown .confirm-btn {
+  background-color: #7066E0;
+  border: 1px solid #7066E0;
+  margin-right: 8px;
+}
+.transaction-confirm-popup #cancel-btn, #pending-transactions-dropdown .cancel-btn{
+  background-color: #858585;
+  border: 1px solid #858585;
+}
+#pending-transactions-dropdown .notification-box-content-info {
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+  box-shadow: 1px 1px 11px 3px #80808080;
+}
+#pending-transactions-dropdown .notification-box-content-info p {
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
+  margin-bottom: 10px;
 }
 
 @media screen and (max-width: 1600px) {
@@ -2239,10 +2293,10 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-          width: 0; /* Minimize the modal's size */
-          height: 0; /* Minimize the modal's size */
-          overflow: visible; /* Allow the child elements to be shown */
-          display: none; /* Initially hidden */
+  width: 0; /* Minimize the modal's size */
+  height: 0; /* Minimize the modal's size */
+  overflow: visible; /* Allow the child elements to be shown */
+  display: none; /* Initially hidden */
   z-index: 1500;
 }
 .loader-content {
@@ -2272,10 +2326,10 @@ body {
 }
 @keyframes spin {
   0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+    100% { transform: rotate(360deg); }
 }
 .loader-minimized {
-          display: none; /* Initially hidden */
+  display: none; /* Initially hidden */
   position: fixed;
   bottom: 10px;
   right: 10px;
@@ -2411,6 +2465,35 @@ body {
     cursor: pointer;
   }
 
+  .pending-transactions-indicator {
+  position: fixed;
+  top: 20%;
+  right: 20px;
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 50px;
+  cursor: pointer;
+  z-index: 1500;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.pending-transactions-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  display: none;
+}
+
 </style>
 </head>
 <body>
@@ -2462,6 +2545,14 @@ body {
         Transaction in progress...
       </div>
     </div>
+
+    <div id="pending-transactions-indicator" class="pending-transactions-indicator" style="display: none;" onclick="togglePendingTransactionsDropdown()">
+      Pending Transactions
+      <div id="pending-transactions-dropdown" class="pending-transactions-dropdown" style="display: none;">
+          <!-- Dynamic content for pending transactions will be loaded here -->
+      </div>
+    </div>
+
     <!-- End: Loader-Modal -->
     <div class="sidebar-background">
     </div>
@@ -2949,6 +3040,238 @@ body {
       document.getElementById('loader-minimized').style.display = 'none';
     }
 
+    function togglePendingTransactionsDropdown() {
+      const dropdown = document.getElementById('pending-transactions-dropdown');
+      dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      updatePendingTransactionsUI();
+    }
+
+    function showPendingTransactionsIndicator() {
+      const indicator = document.getElementById('pending-transactions-indicator');
+      indicator.style.display = 'block';
+    }
+
+    function updatePendingTransactionsUI() {
+      const dropdown = document.getElementById('pending-transactions-dropdown');
+      const indicator = document.getElementById('pending-transactions-indicator');
+      dropdown.innerHTML = '';
+      const pendingTransactions = getPendingTransactions();
+
+      if (pendingTransactions.length > 0) {
+        indicator.style.display = 'block';
+        pendingTransactions.forEach(txHash => {
+          const truncatedHash = truncateHash(txHash);
+          const transactionDiv = document.createElement('div');
+          transactionDiv.className = 'notification-box-content';
+          transactionDiv.innerHTML = `
+            <div class="notification-box-content-info">
+              <h6>${translateThis("Transaction Pending")}</h6>
+              <p>${translateThis("Hash:")} ${truncatedHash} <a href="https://sepolia.etherscan.io/tx/${txHash}" target="_blank">&#128279;</a></p>
+              <button class="confirm-btn" onclick="increaseGas('${txHash}')">${translateThis("Increase Gas")}</button>
+              <button class="cancel-btn" onclick="cancelTransaction('${txHash}')">${translateThis("Cancel Transaction")}</button>
+            </div>
+            `;
+          dropdown.appendChild(transactionDiv);
+        });
+      } else {
+        indicator.style.display = 'none';
+        dropdown.innerHTML = '<div class="notification-empty">' + translateThis("No pending transactions.") + '</div>';
+      }
+    }
+
+    function truncateHash(hash) {
+      if (hash.length <= 12) return hash;
+      const start = hash.substring(0, 6);
+      const end = hash.substring(hash.length - 6);
+      return `${start}...${end}`;
+    }
+
+    async function increaseGas(txHash) {
+      const originalTx = await web3.eth.getTransaction(txHash);
+      if (!originalTx) {
+        return;
+      }
+
+      if (originalTx.blockNumber) {
+        return;
+      }
+
+      const currentGasPrice = await web3.eth.getGasPrice();
+      const nonce = originalTx.nonce;
+      const gasLimit = originalTx.gas;
+
+      const { value: formValues } = await Swal.fire({
+        title: translateThis("Adjust Transaction Gas"),
+        html: `<input id="swal-input1" class="swal2-input" value="${web3.utils.fromWei(currentGasPrice, 'gwei')}" placeholder=${translateThis("Gas Price (Gwei)")}>` +
+          `<input id="swal-input2" class="swal2-input" value="${gasLimit}" placeholder=${translateThis("Gas Limit")}>`,
+        focusConfirm: false,
+        preConfirm: () => {
+          return [
+            document.getElementById('swal-input1').value,
+            document.getElementById('swal-input2').value
+          ]
+        }
+      });
+
+      if (formValues) {
+        const newGasPrice = web3.utils.toWei(formValues[0], 'gwei');
+        const newGasLimit = formValues[1];
+        const estimatedCost = web3.utils.toBN(newGasPrice).mul(web3.utils.toBN(newGasLimit));
+
+        const balance = await web3.eth.getBalance(originalTx.from);
+        if (web3.utils.toBN(balance).lt(estimatedCost)) {
+          await Swal.fire(`${translateThis('Not enough funds')}`, `${translateThis('Your balance is too low to cover the gas fees for this transaction.')}`, 'error');
+          return;
+        }
+
+        const confirmation = await Swal.fire({
+          title: translateThis('Confirm Transaction'),
+          html: `${translateThis("Estimated gas cost:")} ${web3.utils.fromWei(estimatedCost.toString(), 'ether')} ETH<br>` +
+              `${translateThis("Gas limit:")} ${newGasLimit}<br>` +
+              `${translateThis("Gas price:")} ${web3.utils.fromWei(newGasPrice, 'gwei')} Gwei<br>` +
+              `${translateThis("Total cost:")} ${web3.utils.fromWei(estimatedCost.toString(), 'ether')} ETH`,
+          showCancelButton: true,
+          confirmButtonText: translateThis('Submit'),
+          cancelButtonText: translateThis('Cancel'),
+        });
+
+        if (confirmation.isConfirmed) {
+          try {
+            const newTx = {
+              from: originalTx.from,
+              to: originalTx.to,
+              value: originalTx.value,
+              data: originalTx.input,
+              gas: newGasLimit,
+              gasPrice: newGasPrice,
+              nonce: nonce
+            };
+
+            const signedTx = await web3.eth.accounts.signTransaction(newTx, accountprivkey);
+            const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+            .on('transactionHash', function(hash){
+              console.log("Transaction Updated Hash", hash);
+              updatePendingTransactionHash(txHash, hash);
+            });
+            console.log('Transaction sent with new gas settings, txHash:', receipt.transactionHash);
+          } catch (error) {
+            console.error('Error sending transaction:', error);
+            await Swal.fire(`${translateThis('Transaction Error')}`, `${translateThis('There was an error sending the transaction.')}`, 'error');
+          }
+        }
+      }
+    }
+
+    function updatePendingTransactionHash(oldHash, newHash) {
+      let pendingTransactions = getPendingTransactions();
+      const index = pendingTransactions.indexOf(oldHash);
+      if (index !== -1) {
+        pendingTransactions[index] = newHash;
+        localStorage.setItem(myaccounts + DDEaddy + 'pendingTransactions', JSON.stringify(pendingTransactions));
+        updatePendingTransactionsUI();
+      }
+    }
+
+    async function cancelTransaction(txHash) {
+      const originalTx = await web3.eth.getTransaction(txHash);
+      if (!originalTx) {
+        return;
+      }
+
+      if (originalTx.blockNumber) {
+        console.log('Transaction is already mined and cannot be cancelled.');
+        return;
+      }
+
+      const currentGasPrice = await web3.eth.getGasPrice();
+      const increasedGasPrice = web3.utils.toBN(currentGasPrice).mul(web3.utils.toBN(2)); // Increase gas price by 2x for faster cancellation
+      const gasLimit = originalTx.gas;
+      const estimatedCost = web3.utils.toBN(increasedGasPrice).mul(web3.utils.toBN(gasLimit));
+
+      const balance = await web3.eth.getBalance(originalTx.from);
+      if (web3.utils.toBN(balance).lt(estimatedCost)) {
+        await Swal.fire(`${translateThis('Not enough funds')}`, `${translateThis('Your balance is too low to cover the gas fees for this cancellation.')}`, 'error');
+        return;
+      }
+
+      const confirmation = await Swal.fire({
+        title: translateThis('Confirm Cancellation'),
+        html: `${translateThis("Estimated gas cost for cancellation:")} ${web3.utils.fromWei(estimatedCost.toString(), 'ether')} ETH<br>` +
+            `${translateThis("Gas limit:")} ${gasLimit}<br>` +
+            `${translateThis("Increased gas price:")} ${web3.utils.fromWei(increasedGasPrice.toString(), 'gwei')} Gwei<br>` +
+            `${translateThis("Total cost:")} ${web3.utils.fromWei(estimatedCost.toString(), 'ether')} ETH`,
+        showCancelButton: true,
+        confirmButtonText: translateThis('Confirm Cancellation'),
+        cancelButtonText: translateThis('Cancel'),
+      });
+
+    if (confirmation.isConfirmed) {
+      try{  
+        const cancelTx = {
+          from: originalTx.from,
+          to: originalTx.from, // Sending to self
+          value: '0',
+          gas: gasLimit,
+          gasPrice: increasedGasPrice.toString(),
+          nonce: originalTx.nonce
+          };
+
+          const signedTx = await web3.eth.accounts.signTransaction(cancelTx, accountprivkey);
+          web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+          .on('transactionHash', function(newHash){
+            updatePendingTransactionHash(txHash, newHash);
+          });
+        } catch (error) {
+          console.error('Error sending transaction:', error);
+          await Swal.fire(`${translateThis('Transaction Error')}`, `${translateThis('There was an error sending the transaction.')}`, 'error');
+        }
+      }
+    }
+
+    function storeTransactionHash(hash) {
+      if(accountprivkey !== ""){
+        pendingTransactions.push(hash);
+        localStorage.setItem(myaccounts + DDEaddy + 'pendingTransactions', JSON.stringify(pendingTransactions));
+      }
+    }
+
+    function getPendingTransactions() {
+      return JSON.parse(localStorage.getItem(myaccounts + DDEaddy + 'pendingTransactions') || '[]');
+    }
+
+    async function checkTransactionStatus() {
+      let pendingTransactions = getPendingTransactions();
+      let updatedTransactions = [];
+
+      for (let hash of pendingTransactions) {
+        const receipt = await web3.eth.getTransactionReceipt(hash);
+        if (!receipt) {
+          const transaction = await web3.eth.getTransaction(hash);
+          if (transaction === null) {
+            console.log(`Transaction with hash ${hash} not found, likely dropped or replaced.`);
+          } else {
+            showTransactionManagementUI(hash);
+            updatedTransactions.push(hash); 
+          }
+        } else {
+          console.log(`Transaction with hash ${hash} is confirmed or failed.`);
+        }
+      }
+      localStorage.setItem(myaccounts + DDEaddy + 'pendingTransactions', JSON.stringify(updatedTransactions));
+    }
+
+    function showTransactionManagementUI(hash) {
+      const pendingTransactions = getPendingTransactions();
+      const dropdown = document.getElementById('pending-transactions-dropdown');
+      const indicator = document.getElementById('pending-transactions-indicator');
+      if (pendingTransactions.length > 0) {
+        showPendingTransactionsIndicator();
+      } else {
+        indicator.style.display = 'none'; // Hide the indicator when there are no pending transactions
+        dropdown.innerHTML = '<div class="notification-empty">' + translateThis("No pending transactions.") + '</div>';
+      }
+    }
+
     // Function to open the IndexedDB database
     async function openDatabase() {
       return new Promise(function(resolve, reject) {
@@ -3120,6 +3443,7 @@ body {
     var isFavoritesShown = false;
     var locked = false;
     var activeActions = {};
+    let pendingTransactions = [];
     const statusDescriptions = {
       "0": "",
       "1": "",
@@ -4115,7 +4439,10 @@ body {
               }
             }
             showLoader();
-            await DDEcontract.methods.authorizeCustodian(result.value, false).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+            await DDEcontract.methods.authorizeCustodian(result.value, false).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
             Swal.fire(translateThis("Cosigner removal successful."));
           } catch (e) {
@@ -4158,7 +4485,10 @@ body {
               }
             }
             showLoader();
-            await DDEcontract.methods.authorizeCustodian(result.value, true, false).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+            await DDEcontract.methods.authorizeCustodian(result.value, true, false).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
             Swal.fire(translateThis("Cosigner designation successful. Now you will be asked to authorize the cosigner for contract clearance."));
           } catch (e) {
@@ -4179,7 +4509,10 @@ body {
               }
             }
             showLoader();
-            await DDEcontract.methods.authorizeContract(result.value, "0x", true).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+            await DDEcontract.methods.authorizeContract(result.value, "0x", true).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
             Swal.fire(translateThis("Success!"));
           } catch (e) {
@@ -4398,7 +4731,10 @@ body {
             }
           }
         showLoader();
-        await DDEcontract.methods.adduserdata(JSON.stringify(myuserdata)).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+        await DDEcontract.methods.adduserdata(JSON.stringify(myuserdata)).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+        .on('transactionHash', function(hash){
+          storeTransactionHash(hash);
+        });
         hideLoader();
         await Swal.fire(translateThis("Data added!"));
       } catch (error) {
@@ -4501,7 +4837,10 @@ body {
                 }
               }
               showLoader();
-              await DDEcontract.methods.changeAffiliate(affiliate).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+              await DDEcontract.methods.changeAffiliate(affiliate).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+              .on('transactionHash', function(hash){
+                storeTransactionHash(hash);
+              });
               hideLoader();
               Swal.fire(translateThis("Success!"));
               referral = affiliate;
@@ -4548,7 +4887,10 @@ body {
               }
             }
             showLoader();
-            await DDEcontract.methods.changeCustomFee(value).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+            await DDEcontract.methods.changeCustomFee(value).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
             Swal.fire(translateThis("Success!"));
           } catch (e) {
@@ -6956,7 +7298,10 @@ body {
                       }
                     }
                     showLoader();
-                    await DDEcontract.methods.expireEscrow(listing.hash, theuser).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+                    await DDEcontract.methods.expireEscrow(listing.hash, theuser).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+                    .on('transactionHash', function(hash){
+                      storeTransactionHash(hash);
+                    });
                     hideLoader();
                     await Swal.fire(translateThis("Transaction result registered!"));
                     popupContainer.remove();
@@ -7003,7 +7348,10 @@ body {
                     }
                   }
                   showLoader();
-                  await DDEcontract.methods.requestExtension(listing.hash, theuser, listing.timelimit[1]).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+                  await DDEcontract.methods.requestExtension(listing.hash, theuser, listing.timelimit[1]).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+                  .on('transactionHash', function(hash){
+                    storeTransactionHash(hash);
+                  });
                   hideLoader();
                   await Swal.fire(translateThis("Time extended!"));
                   await loadUser();
@@ -7035,7 +7383,10 @@ body {
                     }
                   }
                   showLoader();
-                  await DDEcontract.methods.requestExtension(listing.hash, theuser, listing.timelimit[2]).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+                  await DDEcontract.methods.requestExtension(listing.hash, theuser, listing.timelimit[2]).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+                  .on('transactionHash', function(hash){
+                    storeTransactionHash(hash);
+                  });
                   hideLoader();
                   await Swal.fire(translateThis("Time extended!"));
                   await loadUser();
@@ -7058,24 +7409,25 @@ body {
           extendTime.onclick = async function() {
             try {
               const dialog = document.createElement("div");
+              dialog.classList.add('transaction-confirm-popup');
               dialog.innerHTML = `
-                <div>` + translateThis('Please enter the number of days you wish to extend:') + `<br></div>
+                <div class="transaction-popup-heading">` + translateThis('Please enter the number of days you wish to extend:') + `<br></div>
                   <input id="new-time" type="number" min="1"></input><br><br>
                 <div>
-                  <button id="confirm-btn">` + translateThis('Confirm') + `</button>&nbsp;&nbsp;
+                  <button id="confirm-btn">` + translateThis('Confirm') + `</button>
                   <button id="cancel-btn">` + translateThis('Cancel') + `</button>
-                </div>
+                </div>  
               `;
-              dialog.style.display = "block";
-              dialog.style.position = "fixed";
-              dialog.style.zIndex = 999;
-              dialog.style.backgroundColor = "white";
-              dialog.style.padding = "20px";
-              dialog.style.borderRadius = "10px";
-              dialog.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.3)";
-              dialog.style.top = "50%";
-              dialog.style.left = "50%";
-              dialog.style.transform = "translate(-50%, -50%)";
+              // dialog.style.display = "block";
+              // dialog.style.position = "fixed";
+              // dialog.style.zIndex = 999;
+              // dialog.style.backgroundColor = "white";
+              // dialog.style.padding = "20px";
+              // dialog.style.borderRadius = "10px";
+              // dialog.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.3)";
+              // dialog.style.top = "50%";
+              // dialog.style.left = "50%";
+              // dialog.style.transform = "translate(-50%, -50%)";
 
               document.body.appendChild(dialog);
 
@@ -7097,7 +7449,10 @@ body {
                   }
                 }
                 showLoader();
-                await DDEcontract.methods.requestExtension(listing.hash, theuser, newtime).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+                await DDEcontract.methods.requestExtension(listing.hash, theuser, newtime).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+                .on('transactionHash', function(hash){
+                  storeTransactionHash(hash);
+                });
                 hideLoader();
                 await Swal.fire(translateThis("Time extension requested!"));
                 await loadUser();
@@ -7138,7 +7493,10 @@ body {
                 }
               }
               showLoader();
-              await DDEcontract.methods.cancelEscrow(listing.hash, theuser).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+              await DDEcontract.methods.cancelEscrow(listing.hash, theuser).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+              .on('transactionHash', function(hash){
+                storeTransactionHash(hash);
+              });
               hideLoader();
               if (listing.status[1] == 1) {
                 await Swal.fire(translateThis("Contract cancellation request sent!"));
@@ -7182,7 +7540,10 @@ body {
                     }
               }
               showLoader();
-              await DDEcontract.methods.completeEscrow(listing.hash, theuser).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+              await DDEcontract.methods.completeEscrow(listing.hash, theuser).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+              .on('transactionHash', function(hash){
+                storeTransactionHash(hash);
+              });
               hideLoader();
               if (listing.status[1] == 1) {
                 await Swal.fire(translateThis("Contract completion request sent!"));
@@ -7379,6 +7740,7 @@ body {
       messageButton.classList.add('message-button');
       messageButton.style.fontSize = "20px";
       messageButton.style.marginLeft = "10px";
+      // messageButton.style.display = "none";
 
       const messageCountIndicator = document.createElement('span');
       messageCountIndicator.classList.add('message-count-indicator');
@@ -7423,13 +7785,16 @@ body {
         const isContractActive = (listing.status[0] < 4 && listing.status[1] < 4);
         const isLoggedIn = (myaccounts !== "");
 
-        messageButton.onclick = async function() {
-          messageCountIndicator.style.display = 'none';
-          if (isStatusValid && isContractActive && isLoggedIn) {
+        if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
             messageButton.style.display = 'inline-flex';
-            await fetchMessages(listing.hash, theuser);
           } else {
             messageButton.style.display = 'none';
+          }
+
+        messageButton.onclick = async function() {
+          if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
+            const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + listing.hash + 'lastMessageIndex') || 0;
+            await fetchMessages(listing.hash, theuser, lastMessageIndex);
           }
 
           if(theuser == listing.sender) {
@@ -7550,22 +7915,33 @@ body {
             storedMessage = "ENC:" + cryptico.encrypt(message + "#*#*#" + timestamp + padding, userpubkey).cipher;
           }
           setActionActive(myaccounts+"sendMessage"+finalMessage, true);
-          showLoader();
           var mslen = parseInt(DOMPurify.sanitize(await DDEcontract.methods.getMessageLength(hash, listingSender).call())) + 1;
-          const sendResult = await DDEcontract.methods.sendMessage(hash, listingSender, finalMessage).send({ from: myaccounts });
+          if(accountprivkey != "") {
+            const gasEstimate = 150000;
+            var res = await confirmTransaction(gasEstimate, gasEstimate, tokens[0].address);
+            if(!res) {
+              return;
+            }
+          }
+
+          showLoader();
+          const sendResult = await DDEcontract.methods.sendMessage(hash, myaccounts, finalMessage).send({ from: myaccounts, ...gasOptions[gasSetting]})
+          .on('transactionHash', function(hash){
+            storeTransactionHash(hash);
+          });
           if (sendResult) {
               const newMessage = {
-                  message: storedMessage,
-                  sender: listingSender,
-                  timestamp: new Date().getTime(),
-                  index: mslen + ":" + listingSender
+                message: storedMessage,
+                sender: myaccounts,
+                timestamp: new Date().getTime()
               };
               if (!existingMessages.some(msg => msg.timestamp === newMessage.timestamp && msg.message === newMessage.message)) {
                   existingMessages.push(newMessage);
-                  localStorage.setItem(myaccounts + DDEaddy + hash + 'messages', JSON.stringify(existingMessages));
+                  localStorage.setItem(myaccounts + DDEaddy + hash + recipient + 'messages', JSON.stringify(existingMessages));
               }
           }
           hideLoader();
+          setActionActive('sendMessage', false);
           Swal.fire({
             icon: 'success',
             title: translateThis('Message Sent'),
@@ -7867,7 +8243,10 @@ body {
             }
             setActionActive(myaccounts+"depositWETH"+value, true);
             showLoader();
-            await DDEcontract.methods.depositWETH().send({ "from": myaccounts, "value": value, ...gasOptions[gasSetting] });
+            await DDEcontract.methods.depositWETH().send({ "from": myaccounts, "value": value, ...gasOptions[gasSetting] })
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
             await Swal.fire(translateThis("Deposit success!"));
             await loadUser();
@@ -7894,7 +8273,10 @@ body {
               }
             }
             showLoader();
-            await DDEcontract.methods.deposit(tokenAddress, value).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+            await DDEcontract.methods.deposit(tokenAddress, value).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
             await Swal.fire(translateThis("Deposit success!"));
             await loadUser();
@@ -7918,7 +8300,10 @@ body {
         var allowance = DOMPurify.sanitize(await tokenContract.methods.allowance(myaccounts, DDEaddy).call());
         if (web3.utils.toBN(allowance).lt(web3.utils.toBN(value))) {
           await Swal.fire(translateThis("Waiting for approval..."));
-          await tokenContract.methods.approve(DDEaddy, web3.utils.toHex(web3.utils.toBN(2).pow(web3.utils.toBN(256)).sub(web3.utils.toBN(1)))).send({"from":myaccounts,...gasOptions[gasSetting]});
+          await tokenContract.methods.approve(DDEaddy, web3.utils.toHex(web3.utils.toBN(2).pow(web3.utils.toBN(256)).sub(web3.utils.toBN(1)))).send({"from":myaccounts,...gasOptions[gasSetting]})
+          .on('transactionHash', function(hash){
+            storeTransactionHash(hash);
+          });
         }
       }
     }
@@ -7994,7 +8379,10 @@ body {
           setActionActive(myaccounts+"withdraw"+tokenAddress+value, true);
           if(accountprivkey == "") {
             showLoader();
-            await DDEcontract.methods.withdraw(tokenAddress, value, destination).send({"from":myaccounts,...gasOptions[gasSetting]});
+            await DDEcontract.methods.withdraw(tokenAddress, value, destination).send({"from":myaccounts,...gasOptions[gasSetting]})
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
           } else {
             if(web3.utils.toBN(value).lte(web3.utils.toBN(balances[tokenAddress].amount))) {
@@ -8004,7 +8392,10 @@ body {
                 return;
               }
               showLoader();              
-              await DDEcontract.methods.withdraw(tokenAddress, value, destination).send({"from":myaccounts,...gasOptions[gasSetting]});
+              await DDEcontract.methods.withdraw(tokenAddress, value, destination).send({"from":myaccounts,...gasOptions[gasSetting]})
+              .on('transactionHash', function(hash){
+                storeTransactionHash(hash);
+              });
               hideLoader();
             } else {
               const gasEstimate = 120000;
@@ -8027,7 +8418,10 @@ body {
                 myval = difference.toString();
               }
               showLoader();
-              await DDEcontract.methods.depositAndWithdrawal(tokenAddress, difference.toString(), tokenAddress, value, destination).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]});
+              await DDEcontract.methods.depositAndWithdrawal(tokenAddress, difference.toString(), tokenAddress, value, destination).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]})
+              .on('transactionHash', function(hash){
+                storeTransactionHash(hash);
+              });
               hideLoader();
             }
           }
@@ -8875,7 +9269,10 @@ body {
             if(accountprivkey == "") {
               showLoader();
               await DDEcontract.methods.createContract(
-                [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,...gasOptions[gasSetting]});
+                [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,...gasOptions[gasSetting]})
+                .on('transactionHash', function(hash){
+                  storeTransactionHash(hash);
+                });
               hideLoader();
             } else {
               mytotal = mytotal.toString();
@@ -8887,7 +9284,10 @@ body {
                 }
                 showLoader();
                 await DDEcontract.methods.createContract(
-                  [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,...gasOptions[gasSetting]});
+                  [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,...gasOptions[gasSetting]})
+                  .on('transactionHash', function(hash){
+                    storeTransactionHash(hash);
+                  });
                   hideLoader();
               } else {
                 const gasEstimate = 750000;
@@ -8910,7 +9310,10 @@ body {
                   myval = difference.toString();
                 }
                 showLoader();
-                await DDEcontract.methods.depositAndCreateContract(data.token, difference.toString(), [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]});
+                await DDEcontract.methods.depositAndCreateContract(data.token, difference.toString(), [data.sender, data.recipient, data.token, "0x0000000000000000000000000000000000000000", data.amount.toString(), data.depositSender.toString(), data.depositRecipient.toString(), [data.quantity[0].toString(), data.quantity[1].toString()], "0", [data.timelimit.toString(), expiration.toString(), "0"], [style.toString(), "0"], data.message], data2.referred, myterms).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]})
+                .on('transactionHash', function(hash){
+                  storeTransactionHash(hash);
+                });
                 hideLoader();
               }
             }
@@ -9253,9 +9656,13 @@ body {
                     quantity.toString(),
                     accepttimelimit.toString(),
                     referral
-                  ).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+                  ).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+                  .on('transactionHash', function(hash){
+                    storeTransactionHash(hash);
+                  });
                   hideLoader();
                 } else {
+                  console.log("I am here with 500000");
                   mytotal = mytotal.toString();
                   if(web3.utils.toBN(mytotal).lte(web3.utils.toBN(balances[mylisting.token].amount))) {
                     const gasEstimate = 500000;
@@ -9264,9 +9671,13 @@ body {
                       return;
                     }
                     showLoader();
-                    await DDEcontract.methods.acceptOffer(mylisting.hash, quantity.toString(), accepttimelimit.toString(), referral).send({"from":myaccounts,...gasOptions[gasSetting]});
+                    await DDEcontract.methods.acceptOffer(mylisting.hash, quantity.toString(), accepttimelimit.toString(), referral).send({"from":myaccounts,...gasOptions[gasSetting]})
+                    .on('transactionHash', function(hash){
+                      storeTransactionHash(hash);
+                    });
                     hideLoader();
                   } else {
+                    console.log("I am here with 550000");
                     const gasEstimate = 550000;
                     var res =  await confirmTransaction(gasEstimate, mytotal, mylisting.token);;
                     if(!res) {
@@ -9285,7 +9696,10 @@ body {
                       myval = difference.toString();
                     }
                     showLoader();
-                    await DDEcontract.methods.depositAndAcceptOffer(mylisting.token, difference.toString(), mylisting.hash, quantity.toString(), accepttimelimit.toString(), referral).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]});
+                    await DDEcontract.methods.depositAndAcceptOffer(mylisting.token, difference.toString(), mylisting.hash, quantity.toString(), accepttimelimit.toString(), referral).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]})
+                    .on('transactionHash', function(hash){
+                      storeTransactionHash(hash);
+                    });
                     hideLoader();
                   }
                 }
@@ -9389,7 +9803,10 @@ body {
                 quantity.toString(),
                 accepttimelimit.toString(),
                 referral
-              ).send({"from":myaccounts,...gasOptions[gasSetting]});
+              ).send({"from":myaccounts,...gasOptions[gasSetting]})
+              .on('transactionHash', function(hash){
+                storeTransactionHash(hash);
+              });
               hideLoader();
             } else {
               mytotal = mytotal.toString();
@@ -9400,7 +9817,10 @@ body {
                   return;
                 }
                 showLoader();
-                await DDEcontract.methods.acceptOffer(mylisting.hash, quantity.toString(), accepttimelimit.toString(), referral).send({"from":myaccounts,...gasOptions[gasSetting]});
+                await DDEcontract.methods.acceptOffer(mylisting.hash, quantity.toString(), accepttimelimit.toString(), referral).send({"from":myaccounts,...gasOptions[gasSetting]})
+                .on('transactionHash', function(hash){
+                  storeTransactionHash(hash);
+                });
                 hideLoader();
               } else {
                 const gasEstimate = 550000;
@@ -9423,7 +9843,10 @@ body {
                   myval = difference.toString();
                 }
                 showLoader();
-                await DDEcontract.methods.depositAndAcceptOffer(mylisting.token, difference.toString(), mylisting.hash, quantity.toString(), accepttimelimit.toString(), referral).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]});
+                await DDEcontract.methods.depositAndAcceptOffer(mylisting.token, difference.toString(), mylisting.hash, quantity.toString(), accepttimelimit.toString(), referral).send({"from":myaccounts,"value":myval,...gasOptions[gasSetting]})
+                .on('transactionHash', function(hash){
+                  storeTransactionHash(hash);
+                });
                 hideLoader();
               }
             }
@@ -9516,7 +9939,10 @@ body {
             await DDEcontract.methods.cancelPrivateOffer(
               listing.hash,
               myaccounts
-            ).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+            ).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
             await Swal.fire(translateThis("Contract removed!"));
             await loadUser();
@@ -9544,7 +9970,10 @@ body {
             await DDEcontract.methods.removeMarketOffer(
               listing.hash,
               myaccounts
-            ).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+            ).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
             await Swal.fire(translateThis("Contract removed!"));
             await loadUser();
@@ -9560,7 +9989,10 @@ body {
             await DDEcontract.methods.cancelPrivateOffer(
               listing.hash,
               myaccounts
-            ).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+            ).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
             await Swal.fire(translateThis("Contract removed!"));
             await loadUser();
@@ -9654,7 +10086,10 @@ body {
           await DDEcontract.methods.updateQuantity(
             listing.hash,
             [quantity.toString(), quantity1.toString()]
-              ).send({"from":myaccounts,...gasOptions[gasSetting]});
+              ).send({"from":myaccounts,...gasOptions[gasSetting]})
+              .on('transactionHash', function(hash){
+                storeTransactionHash(hash);
+              });
             hideLoader();
           dialog.remove();
           await Swal.fire(translateThis("Quantity updated!"));
@@ -9701,7 +10136,10 @@ body {
               }
             }
             showLoader();
-            await DDEcontract.methods.changeReferralFee(listing.hash, value).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+            await DDEcontract.methods.changeReferralFee(listing.hash, value).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+            .on('transactionHash', function(hash){
+              storeTransactionHash(hash);
+            });
             hideLoader();
             Swal.fire(translateThis("Success!"));
             await loadUser();
@@ -9717,7 +10155,10 @@ body {
     }
 
     async function postData(myuserdata) {
-      await DDEcontract.methods.adduserdata(JSON.stringify(myuserdata)).send({"from":myaccounts,...gasOptions[gasSetting]});
+      await DDEcontract.methods.adduserdata(JSON.stringify(myuserdata)).send({"from":myaccounts,...gasOptions[gasSetting]})
+      .on('transactionHash', function(hash){
+        storeTransactionHash(hash);
+      });
       await Swal.fire(translateThis("Data added!"));
     }
 
@@ -9734,7 +10175,10 @@ body {
           }
         }
         showLoader();
-        await DDEcontract.methods.adddata(data).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+        await DDEcontract.methods.adddata(data).send({ "from": myaccounts, ...gasOptions[gasSetting] })
+        .on('transactionHash', function(hash){
+          storeTransactionHash(hash);
+        });
         hideLoader();
         await Swal.fire(translateThis("Data added!"));
       } catch (error) {
@@ -9825,6 +10269,7 @@ body {
     });
     //End Dark/Light Mode
     setInterval(loadUser, 90000);
+    setInterval(checkTransactionStatus, 30000);
     document.getElementById("loadingStatus").innerHTML = loader;
     locked = true;
     loadMarkets(0, maxContextLoad[0]).then(() => {
