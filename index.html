@@ -3087,7 +3087,7 @@ body {
     }
 
     async function increaseGas(txHash) {
-      const originalTx = await web3.eth.getTransaction(txHash);
+      const originalTx =  JSON.parse(DOMPurify.sanitize(JSON.stringify(await web3.eth.getTransaction(txHash))));
       if (!originalTx) {
         return;
       }
@@ -3096,7 +3096,7 @@ body {
         return;
       }
 
-      const currentGasPrice = await web3.eth.getGasPrice();
+      const currentGasPrice = DOMPurify.sanitize(await web3.eth.getGasPrice());
       const nonce = originalTx.nonce;
       const gasLimit = originalTx.gas;
 
@@ -3118,7 +3118,7 @@ body {
         const newGasLimit = formValues[1];
         const estimatedCost = web3.utils.toBN(newGasPrice).mul(web3.utils.toBN(newGasLimit));
 
-        const balance = await web3.eth.getBalance(originalTx.from);
+        const balance = DOMPurify.sanitize(await web3.eth.getBalance(originalTx.from));
         if (web3.utils.toBN(balance).lt(estimatedCost)) {
           await Swal.fire(`${translateThis('Not enough funds')}`, `${translateThis('Your balance is too low to cover the gas fees for this transaction.')}`, 'error');
           return;
@@ -3150,8 +3150,9 @@ body {
             const signedTx = await web3.eth.accounts.signTransaction(newTx, accountprivkey);
             const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
             .on('transactionHash', function(hash){
-              console.log("Transaction Updated Hash", hash);
-              updatePendingTransactionHash(txHash, hash);
+              const sanitizedHash = DOMPurify.sanitize(hash);
+              console.log("Transaction Updated Hash", sanitizedHash);
+              updatePendingTransactionHash(txHash, sanitizedHash);
             });
             console.log('Transaction sent with new gas settings, txHash:', receipt.transactionHash);
           } catch (error) {
@@ -3173,7 +3174,7 @@ body {
     }
 
     async function cancelTransaction(txHash) {
-      const originalTx = await web3.eth.getTransaction(txHash);
+      const originalTx = JSON.parse(DOMPurify.sanitize(JSON.stringify(await web3.eth.getTransaction(txHash))));
       if (!originalTx) {
         return;
       }
@@ -3183,12 +3184,12 @@ body {
         return;
       }
 
-      const currentGasPrice = await web3.eth.getGasPrice();
+      const currentGasPrice = DOMPurify.sanitize(await web3.eth.getGasPrice());
       const increasedGasPrice = web3.utils.toBN(currentGasPrice).mul(web3.utils.toBN(2)); // Increase gas price by 2x for faster cancellation
       const gasLimit = originalTx.gas;
       const estimatedCost = web3.utils.toBN(increasedGasPrice).mul(web3.utils.toBN(gasLimit));
 
-      const balance = await web3.eth.getBalance(originalTx.from);
+      const balance = DOMPurify.sanitize(await web3.eth.getBalance(originalTx.from));
       if (web3.utils.toBN(balance).lt(estimatedCost)) {
         await Swal.fire(`${translateThis('Not enough funds')}`, `${translateThis('Your balance is too low to cover the gas fees for this cancellation.')}`, 'error');
         return;
@@ -3219,7 +3220,8 @@ body {
           const signedTx = await web3.eth.accounts.signTransaction(cancelTx, accountprivkey);
           web3.eth.sendSignedTransaction(signedTx.rawTransaction)
           .on('transactionHash', function(newHash){
-            updatePendingTransactionHash(txHash, newHash);
+            const sanitizedHash = DOMPurify.sanitize(newHash);
+            updatePendingTransactionHash(txHash, sanitizedHash);
           });
         } catch (error) {
           console.error('Error sending transaction:', error);
@@ -3229,8 +3231,9 @@ body {
     }
 
     function storeTransactionHash(hash) {
+      const sanitizedHash = DOMPurify.sanitize(hash);
       if(accountprivkey !== ""){
-        pendingTransactions.push(hash);
+        pendingTransactions.push(sanitizedHash);
         localStorage.setItem(myaccounts + DDEaddy + 'pendingTransactions', JSON.stringify(pendingTransactions));
       }
     }
@@ -3244,13 +3247,14 @@ body {
       let updatedTransactions = [];
 
       for (let hash of pendingTransactions) {
-        const receipt = await web3.eth.getTransactionReceipt(hash);
+        const receipt = DOMPurify.sanitize(await web3.eth.getTransactionReceipt(hash));
         if (!receipt) {
-          const transaction = await web3.eth.getTransaction(hash);
+          const transaction = DOMPurify.sanitize(await web3.eth.getTransaction(hash));
           if (transaction === null) {
             console.log(`Transaction with hash ${hash} not found, likely dropped or replaced.`);
+            showTransactionManagementUI();
           } else {
-            showTransactionManagementUI(hash);
+            showTransactionManagementUI();
             updatedTransactions.push(hash); 
           }
         } else {
@@ -3260,7 +3264,7 @@ body {
       localStorage.setItem(myaccounts + DDEaddy + 'pendingTransactions', JSON.stringify(updatedTransactions));
     }
 
-    function showTransactionManagementUI(hash) {
+    function showTransactionManagementUI() {
       const pendingTransactions = getPendingTransactions();
       const dropdown = document.getElementById('pending-transactions-dropdown');
       const indicator = document.getElementById('pending-transactions-indicator');
