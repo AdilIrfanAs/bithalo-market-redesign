@@ -492,3 +492,6 @@
   "Estimated gas cost for cancellation:": true,
   "Increased gas price:": true,
 }
+{
+  "Send": true
+}
