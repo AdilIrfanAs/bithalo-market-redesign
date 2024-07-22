@@ -3790,8 +3790,8 @@ body {
         gasOptions[0] = {
           gasLimit: 1500000,
           gasPrice: null,
-          maxPriorityFeePerGas: window.web3.utils.toWei('0.5', 'gwei'), // Max priority fee of 1.5 Gwei
-          maxFeePerGas: window.web3.utils.toWei('0.1', 'gwei'), // Max base fee of 1.5 Gwei
+          maxPriorityFeePerGas: window.web3.utils.toWei('1.5', 'gwei'), // Max priority fee of 1.5 Gwei
+          maxFeePerGas: window.web3.utils.toWei('1.6', 'gwei'), // Max base fee of 1.5 Gwei
         };
         gasOptions[1] = {
           gasLimit: 1500000,
@@ -7903,9 +7903,9 @@ body {
       const sendButton = messagesContainer.querySelector('button');      
 
       sendButton.onclick = async () => {
+        const message = input.value;
+        let finalMessage = message;
         try {
-          const message = input.value;
-          let finalMessage = message;
           let storedMessage = message; // Message to store locally in plaintext
           const timestamp = new Date().getTime();
           const padding = Crypto.SHA256(timestamp).substring(0, 16);
