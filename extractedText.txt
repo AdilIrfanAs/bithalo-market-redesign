@@ -496,4 +496,8 @@
   "Send": true,
   "New Private Offer": true,
   "You have a new private offer": true,
+  "Title:": true,
+  "Location:": true,
+  "Contract Title:": true,
+  "Contract Location:": true  
 }
