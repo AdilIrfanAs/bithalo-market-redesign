@@ -2431,6 +2431,15 @@ body {
     display: none; /* Initially hidden */
   }
 
+  .loader-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001; /* High z-index to overlay on top of other content */
+    display: none; /* Initially hidden */
+  }
+
   .message-header {
     display: flex;
     justify-content: space-between;
@@ -5933,6 +5942,9 @@ body {
               notify = 1;
             }
           } else {
+            if(offerData2.status[0] == 0 && offerData2.status[1] == 1) {
+              offerData2.newPrivateOffer = true;
+            }
             notifications[offerHash2] = myhash;
             notify = 1;
             updateNotifications(notifications[offerHash2], myhash, offerHash2, offerData2, mode);
@@ -6418,9 +6430,10 @@ body {
         var notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications")) || {};
         var oldOfferData = notifications[offerHash] ? notifications[offerHash].listing : null;
 
-        if (oldHash !== newHash || newOfferData.newMessage == true) {
+        if (oldHash !== newHash || newOfferData.newMessage == true || newOfferData.newPrivateOffer == true) {
           let message = generateNotificationMessage(oldOfferData, newOfferData);
           newOfferData.newMessage = false;
+          newOfferData.newPrivateOffer = false;
           notifications[offerHash] = {
             isRead: false,
             message: message,
@@ -6440,7 +6453,14 @@ body {
     }
 
     function generateNotificationMessage(oldOfferData, newOfferData) {
-      if (!oldOfferData) return [translateThis("New Offer"), translateThis("A new offer has been posted.")];
+      if (!oldOfferData){
+        if(newOfferData.newPrivateOffer){
+          return [translateThis("New Private Offer"), translateThis("You have a new private offer")];
+        } else {
+          return [translateThis("New Offer"), translateThis("A new offer has been posted.")];
+        }
+      }
+      
 
       let title = translateThis("Contract Update");
       let details = [];
@@ -6845,7 +6865,7 @@ body {
       if(mode == 4 && listing.sender != myaccounts && listing.recipient != myaccounts) {
         theuser = listing.originalUser;
       }
-      if(notifyFavorites == "0" && mode == 0) {
+      if(notifyFavorites == "0" && mode == 0 && myaccounts != "") {
         await Swal.fire({
           icon: 'info',
           title: translateThis('Welcome'),
@@ -7878,27 +7898,46 @@ body {
         const isContractActive = (listing.status[0] < 4 && listing.status[1] < 4);
         const isLoggedIn = (myaccounts !== "");
 
+        var senderAddress;
+        var recipientAddress;
+        if(theuser == listing.sender) {
+          recipientAddress = listing.recipient;
+          senderAddress = listing.sender;
+        } else {
+          senderAddress = listing.recipient;
+          recipientAddress = listing.sender;
+        }
+
         if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
             messageButton.style.display = 'inline-flex';
+            const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + listing.hash + 'lastMessageIndex') || 0;
+            const loaderPopup = document.createElement('div');
+            loaderPopup.className = 'loader-popup';
+            loaderPopup.innerHTML = loader;
+            const messagePopup = document.querySelector('.popup-container');
+            messagePopup.appendChild(loaderPopup);
+            loaderPopup.style.display = 'block';
+            await fetchMessages(listing.hash, recipientAddress, lastMessageIndex);
+            loaderPopup.remove();
           } else {
             messageButton.style.display = 'none';
           }
 
         messageButton.onclick = async function() {
-          var senderAddress;
-          var recipientAddress;
-          if(theuser == listing.sender) {
-            recipientAddress = listing.recipient;
-            senderAddress = listing.sender;
-          } else {
-            senderAddress = listing.recipient;
-            recipientAddress = listing.sender;
-          }
+          // var senderAddress;
+          // var recipientAddress;
+          // if(theuser == listing.sender) {
+          //   recipientAddress = listing.recipient;
+          //   senderAddress = listing.sender;
+          // } else {
+          //   senderAddress = listing.recipient;
+          //   recipientAddress = listing.sender;
+          // }
 
-          if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
-            const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + listing.hash + 'lastMessageIndex') || 0;
-            await fetchMessages(listing.hash, recipientAddress, lastMessageIndex);
-          }
+          // if (isStatusValid && isParticipant && isContractActive && isLoggedIn) {
+          //   const lastMessageIndex = localStorage.getItem(myaccounts + DDEaddy + listing.hash + 'lastMessageIndex') || 0;
+          //   await fetchMessages(listing.hash, recipientAddress, lastMessageIndex);
+          // }
 
           const { supportsEncryption: recipientSupportsEncryption, publicKey: recipientPublicKey } = await userSupportsEncryption(recipientAddress);
           const { supportsEncryption: senderSupportsEncryption } = await userSupportsEncryption(senderAddress);
@@ -7980,12 +8019,21 @@ body {
       }
     }
 
-   
+
     async function handleSendMessage(hash, senderAddress, recipient, encrypt = false, recipientPublicKey = null) {
+      
+      const loaderPopup = document.createElement('div');
+      loaderPopup.className = 'loader-popup';
+      loaderPopup.innerHTML = loader;
+      const messagePopup = document.querySelector('.popup-container');
+      messagePopup.appendChild(loaderPopup);
+      loaderPopup.style.display = 'block';
+
       const existingMessages = await fetchMessages(hash, senderAddress);
+      loaderPopup.remove();
       const messagesContainer = createMessagePopup(existingMessages, senderAddress, recipient);      
 
-      const messagePopup = document.querySelector('.popup-container');
+      // const messagePopup = document.querySelector('.popup-container');
       messagePopup.appendChild(messagesContainer);
       messagesContainer.style.display = 'block';
 
@@ -8133,11 +8181,13 @@ body {
       // Close button functionality
       popup.querySelector('.close-btn').onclick = function() {
           popup.remove();
+          const indicator = document.querySelector('.message-count-indicator');
+          indicator.style.display = 'none';
+          indicator.textContent = '';
       };
 
       return popup;
     }
-
 
     async function fetchMessages(hash, user) {
       var startIndex = localStorage.getItem(myaccounts + DDEaddy + hash + user + 'lastMessageIndex') || 0;

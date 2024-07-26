@@ -493,5 +493,7 @@
   "Increased gas price:": true,
 }
 {
-  "Send": true
+  "Send": true,
+  "New Private Offer": true,
+  "You have a new private offer": true,
 }
