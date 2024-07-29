@@ -499,5 +499,7 @@
   "Title:": true,
   "Location:": true,
   "Contract Title:": true,
-  "Contract Location:": true  
+  "Contract Location:": true,
+  "Please enter the contract title": true,
 }
+

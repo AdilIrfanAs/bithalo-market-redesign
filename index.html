@@ -2547,15 +2547,15 @@ body {
     <div id="loader-modal" class="loader-modal" style="display: none;">
       <div id="loader-content" class="loader-content">
         <div class="loader"></div>
-        <p id="loader-text">Waiting for confirmation...</p>
-        <button onclick="minimizeLoader()" class="btn-filled">Minimize</button>
+        <p id="loader-text" t-id ="55">Waiting for confirmation...</p>
+        <button onclick="minimizeLoader()" t-id="58" class="btn-filled">Minimize</button>
       </div>
-      <div id="loader-minimized" class="loader-minimized" style="display: none;" onclick="maximizeLoader()">
+      <div id="loader-minimized" t-id="56" class="loader-minimized" style="display: none;" onclick="maximizeLoader()">
         Transaction in progress...
       </div>
     </div>
 
-    <div id="pending-transactions-indicator" class="pending-transactions-indicator" style="display: none;" onclick="togglePendingTransactionsDropdown()">
+    <div id="pending-transactions-indicator" t-id="57" class="pending-transactions-indicator" style="display: none;" onclick="togglePendingTransactionsDropdown()">
       Pending Transactions
       <div id="pending-transactions-dropdown" class="pending-transactions-dropdown" style="display: none;">
           <!-- Dynamic content for pending transactions will be loaded here -->
@@ -6484,7 +6484,7 @@ body {
       // Check for changes in the status
       if (oldOfferData.status.join(',') !== newOfferData.status.join(',')) {
         let statusKey = newOfferData.status.join(',');
-        let statusMessage = combinedStatusDescriptions[statusKey] || "Status updated";
+        let statusMessage = translateThis(combinedStatusDescriptions[statusKey]) || translateThis("Status updated");
         title = translateThis("Notification on Contract");
         details.push(translateThis(statusMessage));
       }
@@ -8108,7 +8108,7 @@ body {
               };
               if (!existingMessages.some(msg => msg.timestamp === newMessage.timestamp && msg.message === newMessage.message)) {
                   existingMessages.push(newMessage);
-                  localStorage.setItem(myaccounts + DDEaddy + hash + recipient + 'messages', JSON.stringify(existingMessages));
+                  localStorage.setItem(myaccounts + DDEaddy + hash + 'messages', JSON.stringify(existingMessages));
                   localStorage.setItem(myaccounts + DDEaddy + hash + senderAddress + 'lastMessageIndex', mslen.toString());
               }
           }
@@ -8122,6 +8122,9 @@ body {
 
           input.value = '';
           messagesContainer.remove();
+          const indicator = document.querySelector('.message-count-indicator');
+          indicator.style.display = 'none';
+          indicator.textContent = '';
         } catch (error) {
           hideLoader();
           console.error(error);
@@ -9234,8 +9237,6 @@ body {
           var counterPartyInput = document.getElementById("counterPartyInput").value;
           var sender = "0x0000000000000000000000000000000000000000";
           var recipient = "0x0000000000000000000000000000000000000000";
-          const title = document.getElementById("contractTitle").value;
-          const location = document.getElementById("contractLocation").value;
           const currentBlockNumber = await web3.eth.getBlockNumber();
           const currentBlock = await web3.eth.getBlock(currentBlockNumber);
           const blockTimestamp = DOMPurify.sanitize(currentBlock.timestamp);
@@ -9264,6 +9265,8 @@ body {
           var depositRecipient = document.getElementById("recipient-deposit-input").value;
           var timeLimit = document.getElementById("timeLimit").value;
           var contactinfo = document.getElementById("contactInfo").value;
+          var title = document.getElementById("contractTitle").value;
+          var location = document.getElementById("contractLocation").value;
           var message = JSON.stringify({
             message: document.getElementById("contractDetails").value,
             contact: contactinfo,
@@ -9299,6 +9302,10 @@ body {
           }
           if (document.getElementById("contractDetails").value === "") {
             await Swal.fire(translateThis("Please enter the description"));
+            return false;
+          }
+          if (title === "") {
+            await Swal.fire(translateThis("Please enter the contract title"));
             return false;
           }
           var sender2 = (senderReceiver === "receiver" ? sender : recipient);

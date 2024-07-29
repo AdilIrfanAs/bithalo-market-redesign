@@ -55,6 +55,10 @@ languages['ar']={
   "52":{"#ar": "التوقيع المشترك"},
   "53": {"#ar": "تسجيل الدخول / الاتصال"},
   "54": {"#ar": "إزالة الموقع المشترك"},
+  "55":{"#ar": "في انتظار التأكيد..."},
+  "56":{"#ar": "المعاملة قيد التنفيذ..."},
+  "57":{"#ar": "المعاملات المعلقة"},
+  "58":{"#ar": "تصغير"},
   "Not connected.": "غير متصل.",
   "Connected.": "متصل.",
   "Please unlock Metamask so it can connect.": "يرجى فتح Metamask لتمكين الاتصال.",
@@ -508,6 +512,14 @@ languages['ar']={
   "Confirm Cancellation": "تأكيد الإلغاء",
   "Estimated gas cost for cancellation:": "تكلفة الغاز المقدرة للإلغاء:",
   "Increased gas price:": "زيادة سعر الغاز:",
+  "Send": "إرسال",
+  "New Private Offer": "عرض خاص جديد",
+  "You have a new private offer": "لديك عرض خاص جديد",
+  "Title:": "العنوان:",
+  "Location:": "الموقع:",
+  "Contract Title:": "عنوان العقد:",
+  "Contract Location:": "موقع العقد:",
+  "Please enter the contract title": "يرجى إدخال عنوان العقد",
 };
 
 
@@ -566,6 +578,10 @@ languages['ch']={
   "52":{"#ch": "共同签署"},
   "53":{"#ch": "登录/连接"},
   "54":{"#ch": "移除共同签名人"},
+  "55":{"#ch": "等待确认..."},
+  "56":{"#ch": "交易进行中..."},
+  "57":{"#ch": "待处理交易"},
+  "58":{"#ch": "最小化"},
   "Not connected.": "未连接。",
   "Connected.": "已连接。",
   "Please unlock Metamask so it can connect.": "请解锁 Metamask 以便连接。",
@@ -1019,6 +1035,14 @@ languages['ch']={
   "Confirm Cancellation": "确认取消",
   "Estimated gas cost for cancellation:": "取消的预计燃气费用：",
   "Increased gas price:": "增加的燃气价格：",
+  "Send": "发送",
+  "New Private Offer": "新的私人报价",
+  "You have a new private offer": "您有一个新的私人报价",
+  "Title:": "标题：",
+  "Location:": "位置：",
+  "Contract Title:": "合同标题：",
+  "Contract Location:": "合同位置：",
+  "Please enter the contract title": "请输入合同标题",
 };
 
 languages['en']={
@@ -1076,6 +1100,10 @@ languages['en']={
   "52":{"#en":"Cosign"},
   "53":{"#en": "Login/Connect"},
   "54":{"#en": "Remove Cosigner"},
+  "55":{"#en": "Waiting for confirmation..."},
+  "56":{"#en": "Transaction in progress..."},
+  "57":{"#en": "Pending Transactions"},
+  "58":{"#en": "Minimize"}
 };
 
 languages['fr']={
@@ -1133,6 +1161,10 @@ languages['fr']={
   "52": {"#fr": "Cosigner"},
   "53": {"#fr": "Connexion/Connecter"},
   "54": {"#fr": "Supprimer le cosignataire"},
+  "55":{"#fr": "En attente de confirmation..."},
+  "56":{"#fr": "Transaction en cours..."},
+  "57":{"#fr": "Transactions en attente"},
+  "58":{"#fr": "Réduire"},
   "Not connected.": "Non connecté.",
   "Connected.": "Connecté.",
   "Please unlock Metamask so it can connect.": "Veuillez déverrouiller Metamask afin qu'il puisse se connecter.",
@@ -1586,6 +1618,14 @@ languages['fr']={
   "Confirm Cancellation": "Confirmer l'annulation",
   "Estimated gas cost for cancellation:": "Coût estimé du gaz pour l'annulation :",
   "Increased gas price:": "Augmentation du prix du gaz :",
+  "Send": "Envoyer",
+  "New Private Offer": "Nouvelle offre privée",
+  "You have a new private offer": "Vous avez une nouvelle offre privée",
+  "Title:": "Titre :",
+  "Location:": "Emplacement :",
+  "Contract Title:": "Titre du contrat :",
+  "Contract Location:": "Emplacement du contrat :",
+  "Please enter the contract title": "Veuillez entrer le titre du contrat",
 };
 
 languages['ge']={
@@ -1643,6 +1683,10 @@ languages['ge']={
   "52": {"#ge": "Mitunterschreiben"},
   "53": {"#ge": "Anmelden/Verbinden"},
   "54": {"#ge": "Mitunterzeichner entfernen"},
+  "55":{"#ge": "Warten auf Bestätigung..."},
+  "56":{"#ge": "Transaktion in Bearbeitung..."},
+  "57":{"#ge": "Ausstehende Transaktionen"},
+  "58":{"#ge": "Minimieren"},
   "Not connected.": "Nicht verbunden.",
   "Connected.": "Verbunden.",
   "Please unlock Metamask so it can connect.": "Bitte entsperren Sie Metamask, damit es sich verbinden kann.",
@@ -2095,6 +2139,14 @@ languages['ge']={
   "Confirm Cancellation": "Stornierung bestätigen",
   "Estimated gas cost for cancellation:": "Geschätzte Gaskosten für die Stornierung:",
   "Increased gas price:": "Erhöhter Gaspreis:",
+  "Send": "Senden",
+  "New Private Offer": "Neues privates Angebot",
+  "You have a new private offer": "Sie haben ein neues privates Angebot",
+  "Title:": "Titel:",
+  "Location:": "Ort:",
+  "Contract Title:": "Vertragstitel:",
+  "Contract Location:": "Vertragsort:",
+  "Please enter the contract title": "Bitte geben Sie den Vertragstitel ein",
 };
 
 languages['it']={
@@ -2152,6 +2204,10 @@ languages['it']={
   "52": {"#it": "Cosignare"},
   "53": {"#it": "Accedi/Connetti"},
   "54": {"#it": "Rimuovi controsignatario"},
+  "55":{"#it": "In attesa di conferma..."},
+  "56":{"#it": "Transazione in corso..."},
+  "57":{"#it": "Transazioni in sospeso"},
+  "58":{"#it": "Minimizza"},
   "Not connected.": "Non connesso.",
   "Connected.": "Connesso.",
   "Please unlock Metamask so it can connect.": "Sblocca Metamask in modo che possa connettersi.",
@@ -2605,6 +2661,14 @@ languages['it']={
   "Confirm Cancellation": "Conferma cancellazione",
   "Estimated gas cost for cancellation:": "Costo del gas stimato per la cancellazione:",
   "Increased gas price:": "Prezzo del gas aumentato:",
+  "Send": "Invia",
+  "New Private Offer": "Nuova offerta privata",
+  "You have a new private offer": "Hai una nuova offerta privata",
+  "Title:": "Titolo:",
+  "Location:": "Posizione:",
+  "Contract Title:": "Titolo del contratto:",
+  "Contract Location:": "Posizione del contratto:",
+  "Please enter the contract title": "Si prega di inserire il titolo del contratto",
 };
 
 languages['ja']={
@@ -2662,6 +2726,10 @@ languages['ja']={
   "52":{"#ja": "共同署名"},
   "53":{"#ja": "ログイン/接続"},
   "54":{"#ja": "連署者を削除"},
+  "55":{"#ja": "確認待ち..."},
+  "56":{"#ja": "取引進行中..."},
+  "57":{"#ja": "保留中の取引"},
+  "58":{"#ja": "最小化"},
   "Not connected.": "接続されていません。",
   "Connected.": "接続されました。",
   "Please unlock Metamask so it can connect.": "Metamaskをアンロックして接続してください。",
@@ -3115,6 +3183,14 @@ languages['ja']={
   "Confirm Cancellation": "キャンセルを確認",
   "Estimated gas cost for cancellation:": "キャンセルの推定ガスコスト：",
   "Increased gas price:": "増加したガス価格：",
+  "Send": "送信",
+  "New Private Offer": "新しいプライベートオファー",
+  "You have a new private offer": "新しいプライベートオファーがあります",
+  "Title:": "タイトル：",
+  "Location:": "場所：",
+  "Contract Title:": "契約タイトル：",
+  "Contract Location:": "契約場所：",
+  "Please enter the contract title": "契約タイトルを入力してください",
 };
 
 languages['ko']={
@@ -3172,6 +3248,10 @@ languages['ko']={
   "52": {"#ko": "공동 서명"},
   "53": {"#ko": "로그인/연결"},
   "54": {"#ko": "공동 서명자 제거"},
+  "55":{"#ko": "확인 대기 중..."},
+  "56":{"#ko": "거래 진행 중..."},
+  "57":{"#ko": "대기 중인 거래"},
+  "58":{"#ko": "최소화"},
   "Not connected.": "연결되지 않았습니다.",
   "Connected.": "연결되었습니다.",
   "Please unlock Metamask so it can connect.": "Metamask를 잠금 해제하여 연결하십시오.",
@@ -3625,6 +3705,14 @@ languages['ko']={
   "Confirm Cancellation": "취소 확인",
   "Estimated gas cost for cancellation:": "취소의 예상 가스 비용:",
   "Increased gas price:": "증가된 가스 가격:",
+  "Send": "보내다",
+  "New Private Offer": "새로운 비공개 제안",
+  "You have a new private offer": "새로운 비공개 제안이 있습니다",
+  "Title:": "제목:",
+  "Location:": "위치:",
+  "Contract Title:": "계약 제목:",
+  "Contract Location:": "계약 위치:",
+  "Please enter the contract title": "계약 제목을 입력하세요",
 };
 
 languages['po']={
@@ -3682,6 +3770,10 @@ languages['po']={
   "52": {"#po": "Cosignar"},
   "53": {"#po": "Login/Conectar"},
   "54": {"#po": "Remover Co-assinante"},
+  "55":{"#po": "Aguardando confirmação..."},
+  "56":{"#po": "Transação em andamento..."},
+  "57":{"#po": "Transações Pendentes"},
+  "58":{"#po": "Minimizar"},
   "Not connected.": "Não conectado.",
   "Connected.": "Conectado.",
   "Please unlock Metamask so it can connect.": "Desbloqueie o Metamask para que ele possa se conectar.",
@@ -4135,6 +4227,14 @@ languages['po']={
   "Confirm Cancellation": "Confirmar Cancelamento",
   "Estimated gas cost for cancellation:": "Custo estimado do gás para cancelamento:",
   "Increased gas price:": "Preço do gás aumentado:",
+  "Send": "Enviar",
+  "New Private Offer": "Nova oferta privada",
+  "You have a new private offer": "Você tem uma nova oferta privada",
+  "Title:": "Título:",
+  "Location:": "Localização:",
+  "Contract Title:": "Título do contrato:",
+  "Contract Location:": "Localização do contrato:",
+  "Please enter the contract title": "Por favor, insira o título do contrato",
 };
 
 languages['ru'] = {
@@ -4192,6 +4292,10 @@ languages['ru'] = {
   "52": {"#ru": "Совместно подписывать"},
   "53": {"#ru": "Войти/Подключить"},
   "54": {"#ru": "Удалить со-подписанта"},
+  "55":{"#ru": "Ожидание подтверждения..."},
+  "56":{"#ru": "Транзакция в процессе..."},
+  "57":{"#ru": "Ожидающие транзакции"},
+  "58":{"#ru": "Свернуть"},
   "Not connected.": "Не подключено.",
   "Connected.": "Подключено.",
   "Please unlock Metamask so it can connect.": "Пожалуйста, разблокируйте Metamask, чтобы установить соединение.",
@@ -4645,6 +4749,14 @@ languages['ru'] = {
   "Confirm Cancellation": "Подтвердить отмену",
   "Estimated gas cost for cancellation:": "Оценочная стоимость газа для отмены:",
   "Increased gas price:": "Увеличенная цена газа:",
+  "Send": "Отправить",
+  "New Private Offer": "Новое частное предложение",
+  "You have a new private offer": "У вас новое частное предложение",
+  "Title:": "Заголовок:",
+  "Location:": "Местоположение:",
+  "Contract Title:": "Название контракта:",
+  "Contract Location:": "Местоположение контракта:",
+  "Please enter the contract title": "Пожалуйста, введите название контракта",
 };
 
 languages['sp'] = {
@@ -4702,6 +4814,10 @@ languages['sp'] = {
   "52": {"#sp": "Cosignar"},
   "53": {"#sp": "Iniciar sesión/Conectar"},
   "54": {"#sp": "Eliminar Cofirmante"},
+  "55":{"#sp": "Esperando confirmación..."},
+  "56":{"#sp": "Transacción en progreso..."},
+  "57":{"#sp": "Transacciones Pendientes"},
+  "58":{"#sp": "Minimizar"},
   "Not connected.": "No conectado.",
   "Connected.": "Conectado.",
   "Please unlock Metamask so it can connect.": "Por favor, desbloquee Metamask para que pueda conectarse.",
@@ -5155,4 +5271,12 @@ languages['sp'] = {
   "Confirm Cancellation": "Confirmar cancelación",
   "Estimated gas cost for cancellation:": "Costo estimado del gas para la cancelación:",
   "Increased gas price:": "Precio del gas aumentado:",
+  "Send": "Enviar",
+  "New Private Offer": "Nueva oferta privada",
+  "You have a new private offer": "Tienes una nueva oferta privada",
+  "Title:": "Título:",
+  "Location:": "Ubicación:",
+  "Contract Title:": "Título del contrato:",
+  "Contract Location:": "Ubicación del contrato:",
+  "Please enter the contract title": "Por favor, ingrese el título del contrato",
 };
