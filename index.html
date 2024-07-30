@@ -490,10 +490,11 @@ h2 {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 .button-container button {
-  margin: 0 10px;
+  margin: 0 10px 10px;
   padding: 10px;
   border-radius: 5px;
   /* border: none; */
@@ -2497,7 +2498,7 @@ body {
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  width: 300px;
+  width: 320px;
   max-height: 400px;
   overflow-y: auto;
   display: none;
@@ -2860,6 +2861,9 @@ body {
       const selectedFlagImg = document.getElementById("selectedFlag");
       selectedFlagImg.src = languageSelect.options[languageSelect.selectedIndex].getElementsByTagName('img')[0].src;
       translateDocument(languageSelect.options[languageSelect.selectedIndex].value);
+      if(myaccounts == ''){
+        updateOffersContainer();
+      }
       await loadUser();
       await populateListings();
     });
@@ -3605,8 +3609,8 @@ body {
       document.getElementById("account").innerHTML = translateThis("Not connected.");
       document.getElementById("loginButton").style.display = 'block';
       document.getElementById("myContactInfo").value = '';
-      document.getElementById("myoffers").innerHTML = ""; // clear the container first
-      document.getElementById("mycontracts").innerHTML = ""; // clear the container first
+      document.getElementById("myoffers").innerHTML = '<p>Please login to view offers and contracts.</p>';
+      document.getElementById("mycontracts").innerHTML = '<p>Please login to view offers and contracts.</p>';
       document.getElementById('publicemail').innerHTML = "";
       document.getElementById('myPasswordInput').value = "";
       document.getElementById("myPasswordInput").disabled = true;
@@ -4122,6 +4126,7 @@ body {
         await waitLock();
         document.getElementById("loadingStatus").innerHTML = loader;
         currentViewContext = '';
+        currentPage = 1;
         marketOffers = {'indices':[], 'results':[]};
         locked = true;
         await loadMarkets(0, maxContextLoad[0]);
@@ -7461,6 +7466,7 @@ body {
           if(listing.timelimit[1] != 0 && skipthis != 1) {
             if(theuser != listing.sender) {
               const acceptTime = document.createElement('button');
+              acceptTime.classList.add('btn-gray');
               acceptTime.innerHTML = translateThis('Accept Time Extension Request');
               acceptTime.id = 'acceptTime';
               acceptTime.onclick = async function() {
@@ -7498,6 +7504,7 @@ body {
           if(listing.timelimit[2] != 0 && skipthis != 1) {
             if(theuser == listing.sender) {
               const acceptTime = document.createElement('button');
+              acceptTime.classList.add('btn-gray');
               acceptTime.innerHTML = translateThis('Accept Time Extension Request');
               acceptTime.id = 'acceptTime';
               acceptTime.onclick = async function() {
@@ -10465,6 +10472,11 @@ body {
       });
     }
 
+    function updateOffersContainer() {
+      document.getElementById("myoffers").innerHTML = '<p>' + translateThis('Please login to view offers and contracts.') + '</p>';
+      document.getElementById("mycontracts"). innerHTML = '<p>' + translateThis('Please login to view offers and contracts.') + '</p>';
+    }
+
     window.addEventListener("load", async function() {
       async function handleEthereum() {
         if (window.ethereum) {
@@ -10515,8 +10527,7 @@ body {
           document.head.insertAdjacentHTML("beforeend", "<style>.main.markets::after { content: ''; background: url('') center no-repeat; position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.25; z-index: -1; }</style>");
         }
       });
-      document.getElementById("myoffers").innerHTML = '<p>Please login to view offers and contracts.</p>';
-      document.getElementById("mycontracts"). innerHTML = '<p>Please login to view offers and contracts.</p>';
+
     });
     //End Dark/Light Mode
     setInterval(loadUser, 90000);
