@@ -4475,7 +4475,7 @@ body {
     }
 
     async function modifyCustodian() {
-      const dataLength = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, 3).call());
+      const dataLength = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(myaccounts, 4).call());
       let custodians = [];
       let custodianOptions = {};
 
