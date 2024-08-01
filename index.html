@@ -6886,7 +6886,8 @@ body {
       if(mode == 4 && listing.sender != myaccounts && listing.recipient != myaccounts) {
         theuser = listing.originalUser;
       }
-      if(notifyFavorites == "0" && mode == 0 && myaccounts != "") {
+      notifyFavorites = localStorage.getItem(myaccounts + DDEaddy + ":notifyFavorites");
+      if(notifyFavorites === "0" && mode == 0 && myaccounts != "") {
         await Swal.fire({
           icon: 'info',
           title: translateThis('Welcome'),
