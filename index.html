@@ -924,6 +924,12 @@ h2 {
   margin-bottom: 10px;
   font-size: 14px;
 }
+.offers-list-box listelement div img {
+  position: relative;
+  top: 7px;
+  margin-right: 8px;
+  border-radius: 50%;
+}
 .offer-popup-wrapper p {
   white-space: normal !important;
   word-break: break-all;
@@ -5817,10 +5823,21 @@ body {
           }
           const svgString = jdenticon.toSvg(offerHash, 25);
           const base64String = btoa(svgString);
-          const dataUrl = `data:image/svg+xml;base64,${base64String}`;
+          let dataUrl = `data:image/svg+xml;base64,${base64String}`;
           var offerHashDisp = offerHash;
           if(window.innerWidth < 550) {
             offerHashDisp = offerHashDisp.substring(0, 32) + '...';
+          }
+          let myimg = await getFile(offerData.image);
+          if (myimg && myimg.length > 0) {
+            const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+            for (let i = 0; i < myimg.length; i++) {
+              const mimeTypeMatch = myimg[i].match(/^data:(.*?);/);
+              if (mimeTypeMatch && imageMimeTypes.includes(mimeTypeMatch[1].toLowerCase())) {
+                dataUrl = myimg[i];
+                break;
+              }
+            }
           }
           li.innerHTML = `
             <div><bdo>` + translateThis('Order hash:') + `</bdo> <img src="${dataUrl}" width="25" height="25"></img> ${offerHashDisp}</div>
@@ -5915,10 +5932,23 @@ body {
           const counterpartyLabel2 = counterpartyAddress2;
           const svgString2 = jdenticon.toSvg(offerHash2, 25);
           const base64String2 = btoa(svgString2);
-          const dataUrl2 = `data:image/svg+xml;base64,${base64String2}`;
+          let dataUrl2 = `data:image/svg+xml;base64,${base64String2}`;
           var offerHashDisp2 = offerHash2;
           if(window.innerWidth < 550) {
             offerHashDisp2 = offerHashDisp2.substring(0, 32) + '...';
+          }
+
+          let myimg = await getFile(offerData2.image);
+
+          if (myimg && myimg.length > 0) {
+            const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+            for (let i = 0; i < myimg.length; i++) {
+              const mimeTypeMatch = myimg[i].match(/^data:(.*?);/);
+              if (mimeTypeMatch && imageMimeTypes.includes(mimeTypeMatch[1].toLowerCase())) {
+                dataUrl2 = myimg[i];
+                break;
+              }
+            }
           }
           li2.innerHTML = `
             <div><bdo>` + translateThis('Order hash:') + `</bdo> <img src="${dataUrl2}" width="25" height="25"></img> ${offerHashDisp2}</div>
@@ -6082,7 +6112,7 @@ body {
           const counterpartyLabel3 = counterpartyAddress3;
           const svgString3 = jdenticon.toSvg(offerHash3, 25);
           const base64String3 = btoa(svgString3);
-          const dataUrl3 = `data:image/svg+xml;base64,${base64String3}`;
+          let dataUrl3 = `data:image/svg+xml;base64,${base64String3}`;
 
           const currentBlockNumber = await web3.eth.getBlockNumber();
           const currentBlock = await web3.eth.getBlock(currentBlockNumber);
@@ -6091,6 +6121,19 @@ body {
           var offerHashDisp3 = offerHash3;
           if(window.innerWidth < 550) {
             offerHashDisp3 = offerHashDisp3.substring(0, 32) + '...';
+          }
+
+          let myimg = await getFile(offerData3.image);
+
+          if (myimg && myimg.length > 0) {
+            const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+            for (let i = 0; i < myimg.length; i++) {
+              const mimeTypeMatch = myimg[i].match(/^data:(.*?);/);
+              if (mimeTypeMatch && imageMimeTypes.includes(mimeTypeMatch[1].toLowerCase())) {
+                dataUrl3 = myimg[i];
+                break;
+              }
+            }
           }
           li3.innerHTML = `
             <div><bdo>` + translateThis('Order hash:') + `</bdo> <img src="${dataUrl3}" width="25" height="25"></img> ${offerHashDisp3}</div>
