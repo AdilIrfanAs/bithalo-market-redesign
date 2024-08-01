@@ -4520,9 +4520,9 @@ body {
             }
             showLoader();
             if(accountprivkey == ""){
-              await DDEcontract.methods.authorizeCustodian(result.value, false).send({ "from": myaccounts, ...gasOptions[gasSetting] });
+              await DDEcontract.methods.authorizeCustodian(result.value, false, false).send({ "from": myaccounts, ...gasOptions[gasSetting] });
             } else {
-              const txHash = await sendTransaction(DDEcontract.methods.authorizeCustodian(result.value, false), { "from": myaccounts, ...gasOptions[gasSetting] });
+              const txHash = await sendTransaction(DDEcontract.methods.authorizeCustodian(result.value, false, false), { "from": myaccounts, ...gasOptions[gasSetting] });
               await waitForTransactionConfirmation(txHash);
             }
             hideLoader();
@@ -6182,9 +6182,12 @@ body {
               notify = 1;              
             }
           } else {
+            if(offerData3.escrowInfo == "") {
+              offerData3.newContract = true;
+            }
             notifications[offerHash3] = myhash;
             notify = 1;
-            updateNotifications(notifications[offerHash3], myhash, offerHash3, offerHash3, 4);
+            updateNotifications(notifications[offerHash3], myhash, offerHash3, offerData3, 4);
           }          
           li3.onclick = function() {
             document.getElementById("contractsButton").style.backgroundColor = "#f2f2f2";
@@ -6445,10 +6448,11 @@ body {
         var notifications = JSON.parse(localStorage.getItem(myaccounts + DDEaddy + ":unifiedNotifications")) || {};
         var oldOfferData = notifications[offerHash] ? notifications[offerHash].listing : null;
 
-        if (oldHash !== newHash || newOfferData.newMessage == true || newOfferData.newPrivateOffer == true) {
+        if (oldHash !== newHash || newOfferData.newMessage == true || newOfferData.newPrivateOffer == true || newOfferData.newContract == true) {
           let message = generateNotificationMessage(oldOfferData, newOfferData);
           newOfferData.newMessage = false;
           newOfferData.newPrivateOffer = false;
+          newOfferData.newContract = false;
           notifications[offerHash] = {
             isRead: false,
             message: message,
@@ -6471,6 +6475,8 @@ body {
       if (!oldOfferData){
         if(newOfferData.newPrivateOffer){
           return [translateThis("New Private Offer"), translateThis("You have a new private offer")];
+        } else if(newOfferData.newContract) {
+          return [translateThis("New Escrow"), translateThis("You have a new escrow")];
         } else {
           return [translateThis("New Offer"), translateThis("A new offer has been posted.")];
         }

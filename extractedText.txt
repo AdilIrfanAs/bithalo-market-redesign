@@ -501,5 +501,6 @@
   "Contract Title:": true,
   "Contract Location:": true,
   "Please enter the contract title": true,
+  "New Escrow": true,
+  "You have a new escrow": true,
 }
-

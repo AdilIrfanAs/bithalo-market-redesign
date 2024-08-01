@@ -520,6 +520,8 @@ languages['ar']={
   "Contract Title:": "عنوان العقد:",
   "Contract Location:": "موقع العقد:",
   "Please enter the contract title": "يرجى إدخال عنوان العقد",
+  "New Escrow": "ضمان جديد",
+  "You have a new escrow": "لديك ضمان جديد",
 };
 
 
@@ -1043,6 +1045,8 @@ languages['ch']={
   "Contract Title:": "合同标题：",
   "Contract Location:": "合同位置：",
   "Please enter the contract title": "请输入合同标题",
+  "New Escrow": "新的托管",
+  "You have a new escrow": "您有一个新的托管",
 };
 
 languages['en']={
@@ -1626,6 +1630,8 @@ languages['fr']={
   "Contract Title:": "Titre du contrat :",
   "Contract Location:": "Emplacement du contrat :",
   "Please enter the contract title": "Veuillez entrer le titre du contrat",
+  "New Escrow": "Nouveau séquestre",
+  "You have a new escrow": "Vous avez un nouveau séquestre",
 };
 
 languages['ge']={
@@ -2147,6 +2153,8 @@ languages['ge']={
   "Contract Title:": "Vertragstitel:",
   "Contract Location:": "Vertragsort:",
   "Please enter the contract title": "Bitte geben Sie den Vertragstitel ein",
+  "New Escrow": "Neues Treuhandkonto",
+  "You have a new escrow": "Sie haben ein neues Treuhandkonto",
 };
 
 languages['it']={
@@ -2669,6 +2677,8 @@ languages['it']={
   "Contract Title:": "Titolo del contratto:",
   "Contract Location:": "Posizione del contratto:",
   "Please enter the contract title": "Si prega di inserire il titolo del contratto",
+  "New Escrow": "Nuovo deposito a garanzia",
+  "You have a new escrow": "Hai un nuovo deposito a garanzia",
 };
 
 languages['ja']={
@@ -3191,6 +3201,8 @@ languages['ja']={
   "Contract Title:": "契約タイトル：",
   "Contract Location:": "契約場所：",
   "Please enter the contract title": "契約タイトルを入力してください",
+  "New Escrow": "新しいエスクロー",
+  "You have a new escrow": "新しいエスクローがあります",
 };
 
 languages['ko']={
@@ -3713,6 +3725,8 @@ languages['ko']={
   "Contract Title:": "계약 제목:",
   "Contract Location:": "계약 위치:",
   "Please enter the contract title": "계약 제목을 입력하세요",
+  "New Escrow": "새로운 에스크로",
+  "You have a new escrow": "새로운 에스크로가 있습니다",
 };
 
 languages['po']={
@@ -4235,6 +4249,8 @@ languages['po']={
   "Contract Title:": "Título do contrato:",
   "Contract Location:": "Localização do contrato:",
   "Please enter the contract title": "Por favor, insira o título do contrato",
+  "New Escrow": "Novo depósito em garantia",
+  "You have a new escrow": "Você tem um novo depósito em garantia",
 };
 
 languages['ru'] = {
@@ -4757,6 +4773,8 @@ languages['ru'] = {
   "Contract Title:": "Название контракта:",
   "Contract Location:": "Местоположение контракта:",
   "Please enter the contract title": "Пожалуйста, введите название контракта",
+  "New Escrow": "Новый эскроу",
+  "You have a new escrow": "У вас новый эскроу",
 };
 
 languages['sp'] = {
@@ -5279,4 +5297,6 @@ languages['sp'] = {
   "Contract Title:": "Título del contrato:",
   "Contract Location:": "Ubicación del contrato:",
   "Please enter the contract title": "Por favor, ingrese el título del contrato",
+  "New Escrow": "Nuevo depósito en garantía",
+  "You have a new escrow": "Tienes un nuevo depósito en garantía",
 };
