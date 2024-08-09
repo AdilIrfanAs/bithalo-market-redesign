@@ -504,3 +504,11 @@
   "New Escrow": true,
   "You have a new escrow": true,
 }
+{
+  "Inappropriate Content Detected": true,
+  "The message contains inappropriate content. Please revise your message.": true,
+  "Moderation Error": true,
+  "There was an error moderating the image. Please try again later.": true,
+  "The uploaded image contains inappropriate content. Please upload a different image.": true,
+  "There was an error moderating the message. Please try again later.": true
+}

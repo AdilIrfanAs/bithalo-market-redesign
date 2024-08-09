@@ -522,6 +522,12 @@ languages['ar']={
   "Please enter the contract title": "يرجى إدخال عنوان العقد",
   "New Escrow": "ضمان جديد",
   "You have a new escrow": "لديك ضمان جديد",
+  "Inappropriate Content Detected": "تم اكتشاف محتوى غير لائق",
+  "The message contains inappropriate content. Please revise your message.": "تحتوي الرسالة على محتوى غير لائق. يرجى مراجعة رسالتك.",
+  "Moderation Error": "خطأ في الإشراف",
+  "There was an error moderating the image. Please try again later.": "حدث خطأ أثناء الإشراف على الصورة. يرجى المحاولة مرة أخرى لاحقًا.",
+  "The uploaded image contains inappropriate content. Please upload a different image.": "تحتوي الصورة المرفوعة على محتوى غير لائق. يرجى تحميل صورة مختلفة.",
+  "There was an error moderating the message. Please try again later.": "حدث خطأ أثناء الإشراف على الرسالة. يرجى المحاولة مرة أخرى لاحقًا.",
 };
 
 
@@ -1047,6 +1053,12 @@ languages['ch']={
   "Please enter the contract title": "请输入合同标题",
   "New Escrow": "新的托管",
   "You have a new escrow": "您有一个新的托管",
+  "Inappropriate Content Detected": "检测到不适当的内容",
+  "The message contains inappropriate content. Please revise your message.": "消息包含不适当的内容。请修改您的消息。",
+  "Moderation Error": "审核错误",
+  "There was an error moderating the image. Please try again later.": "审核图片时出错。请稍后再试。",
+  "The uploaded image contains inappropriate content. Please upload a different image.": "上传的图片包含不适当的内容。请上传不同的图片。",
+  "There was an error moderating the message. Please try again later.": "审核消息时出错。请稍后再试。",
 };
 
 languages['en']={
@@ -1632,6 +1644,12 @@ languages['fr']={
   "Please enter the contract title": "Veuillez entrer le titre du contrat",
   "New Escrow": "Nouveau séquestre",
   "You have a new escrow": "Vous avez un nouveau séquestre",
+  "Inappropriate Content Detected": "Contenu inapproprié détecté",
+  "The message contains inappropriate content. Please revise your message.": "Le message contient un contenu inapproprié. Veuillez réviser votre message.",
+  "Moderation Error": "Erreur de modération",
+  "There was an error moderating the image. Please try again later.": "Une erreur s'est produite lors de la modération de l'image. Veuillez réessayer plus tard.",
+  "The uploaded image contains inappropriate content. Please upload a different image.": "L'image téléchargée contient un contenu inapproprié. Veuillez télécharger une image différente.",
+  "There was an error moderating the message. Please try again later.": "Une erreur s'est produite lors de la modération du message. Veuillez réessayer plus tard.",
 };
 
 languages['ge']={
@@ -2155,6 +2173,12 @@ languages['ge']={
   "Please enter the contract title": "Bitte geben Sie den Vertragstitel ein",
   "New Escrow": "Neues Treuhandkonto",
   "You have a new escrow": "Sie haben ein neues Treuhandkonto",
+  "Inappropriate Content Detected": "Unangemessener Inhalt erkannt",
+  "The message contains inappropriate content. Please revise your message.": "Die Nachricht enthält unangemessenen Inhalt. Bitte überarbeiten Sie Ihre Nachricht.",
+  "Moderation Error": "Moderationsfehler",
+  "There was an error moderating the image. Please try again later.": "Beim Moderieren des Bildes ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+  "The uploaded image contains inappropriate content. Please upload a different image.": "Das hochgeladene Bild enthält unangemessenen Inhalt. Bitte laden Sie ein anderes Bild hoch.",
+  "There was an error moderating the message. Please try again later.": "Beim Moderieren der Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
 };
 
 languages['it']={
@@ -2679,6 +2703,12 @@ languages['it']={
   "Please enter the contract title": "Si prega di inserire il titolo del contratto",
   "New Escrow": "Nuovo deposito a garanzia",
   "You have a new escrow": "Hai un nuovo deposito a garanzia",
+  "Inappropriate Content Detected": "Contenuto inappropriato rilevato",
+  "The message contains inappropriate content. Please revise your message.": "Il messaggio contiene contenuti inappropriati. Si prega di rivedere il messaggio.",
+  "Moderation Error": "Errore di moderazione",
+  "There was an error moderating the image. Please try again later.": "Si è verificato un errore durante la moderazione dell'immagine. Si prega di riprovare più tardi.",
+  "The uploaded image contains inappropriate content. Please upload a different image.": "L'immagine caricata contiene contenuti inappropriati. Si prega di caricare un'immagine diversa.",
+  "There was an error moderating the message. Please try again later.": "Si è verificato un errore durante la moderazione del messaggio. Si prega di riprovare più tardi.",
 };
 
 languages['ja']={
@@ -3203,6 +3233,12 @@ languages['ja']={
   "Please enter the contract title": "契約タイトルを入力してください",
   "New Escrow": "新しいエスクロー",
   "You have a new escrow": "新しいエスクローがあります",
+  "Inappropriate Content Detected": "不適切なコンテンツが検出されました",
+  "The message contains inappropriate content. Please revise your message.": "メッセージに不適切なコンテンツが含まれています。メッセージを修正してください。",
+  "Moderation Error": "モデレーションエラー",
+  "There was an error moderating the image. Please try again later.": "画像のモデレーション中にエラーが発生しました。後で再試行してください。",
+  "The uploaded image contains inappropriate content. Please upload a different image.": "アップロードされた画像に不適切なコンテンツが含まれています。別の画像をアップロードしてください。",
+  "There was an error moderating the message. Please try again later.": "メッセージのモデレーション中にエラーが発生しました。後で再試行してください。",
 };
 
 languages['ko']={
@@ -3727,6 +3763,12 @@ languages['ko']={
   "Please enter the contract title": "계약 제목을 입력하세요",
   "New Escrow": "새로운 에스크로",
   "You have a new escrow": "새로운 에스크로가 있습니다",
+  "Inappropriate Content Detected": "부적절한 콘텐츠 감지됨",
+  "The message contains inappropriate content. Please revise your message.": "메시지에 부적절한 콘텐츠가 포함되어 있습니다. 메시지를 수정해 주세요.",
+  "Moderation Error": "조정 오류",
+  "There was an error moderating the image. Please try again later.": "이미지를 조정하는 중에 오류가 발생했습니다. 나중에 다시 시도해 주세요.",
+  "The uploaded image contains inappropriate content. Please upload a different image.": "업로드된 이미지에 부적절한 콘텐츠가 포함되어 있습니다. 다른 이미지를 업로드해 주세요.",
+  "There was an error moderating the message. Please try again later.": "메시지를 조정하는 중에 오류가 발생했습니다. 나중에 다시 시도해 주세요.",
 };
 
 languages['po']={
@@ -4251,6 +4293,12 @@ languages['po']={
   "Please enter the contract title": "Por favor, insira o título do contrato",
   "New Escrow": "Novo depósito em garantia",
   "You have a new escrow": "Você tem um novo depósito em garantia",
+  "Inappropriate Content Detected": "Conteúdo inapropriado detectado",
+  "The message contains inappropriate content. Please revise your message.": "A mensagem contém conteúdo inapropriado. Por favor, revise sua mensagem.",
+  "Moderation Error": "Erro de moderação",
+  "There was an error moderating the image. Please try again later.": "Ocorreu um erro ao moderar a imagem. Por favor, tente novamente mais tarde.",
+  "The uploaded image contains inappropriate content. Please upload a different image.": "A imagem carregada contém conteúdo inapropriado. Por favor, carregue uma imagem diferente.",
+  "There was an error moderating the message. Please try again later.": "Ocorreu um erro ao moderar a mensagem. Por favor, tente novamente mais tarde.",
 };
 
 languages['ru'] = {
@@ -4775,6 +4823,12 @@ languages['ru'] = {
   "Please enter the contract title": "Пожалуйста, введите название контракта",
   "New Escrow": "Новый эскроу",
   "You have a new escrow": "У вас новый эскроу",
+  "Inappropriate Content Detected": "Обнаружен неподобающий контент",
+  "The message contains inappropriate content. Please revise your message.": "Сообщение содержит неподобающий контент. Пожалуйста, пересмотрите ваше сообщение.",
+  "Moderation Error": "Ошибка модерации",
+  "There was an error moderating the image. Please try again later.": "Произошла ошибка при модерации изображения. Пожалуйста, попробуйте позже.",
+  "The uploaded image contains inappropriate content. Please upload a different image.": "Загруженное изображение содержит неподобающий контент. Пожалуйста, загрузите другое изображение.",
+  "There was an error moderating the message. Please try again later.": "Произошла ошибка при модерации сообщения. Пожалуйста, попробуйте позже.",
 };
 
 languages['sp'] = {
@@ -5299,4 +5353,10 @@ languages['sp'] = {
   "Please enter the contract title": "Por favor, ingrese el título del contrato",
   "New Escrow": "Nuevo depósito en garantía",
   "You have a new escrow": "Tienes un nuevo depósito en garantía",
+  "Inappropriate Content Detected": "Contenido inapropiado detectado",
+  "The message contains inappropriate content. Please revise your message.": "El mensaje contiene contenido inapropiado. Por favor, revise su mensaje.",
+  "Moderation Error": "Error de moderación",
+  "There was an error moderating the image. Please try again later.": "Hubo un error al moderar la imagen. Por favor, inténtelo de nuevo más tarde.",
+  "The uploaded image contains inappropriate content. Please upload a different image.": "La imagen subida contiene contenido inapropiado. Por favor, suba una imagen diferente.",
+  "There was an error moderating the message. Please try again later.": "Hubo un error al moderar el mensaje. Por favor, inténtelo de nuevo más tarde.",
 };

@@ -5185,6 +5185,51 @@ body {
       return result;
     };
 
+    var sightengineApiUser = '596064440';
+    var sightengineApiSecret = 'ikEQE32VBYAGeSNiUCsTfFoWFsn8vBwY';
+
+    async function moderateImage(file) {
+      const url = 'https://api.sightengine.com/1.0/check.json';
+      const formData = new FormData();
+      formData.append('media', file);
+      formData.append('models', 'nudity-2.1,weapon,alcohol,recreational_drug,medical,properties,type,quality,celebrities,offensive,faces,scam,text-content,face-attributes,gore-2.0,text,qr-content,tobacco,genai,violence,self-harm,money,gambling');
+      formData.append('api_user', sightengineApiUser);
+      formData.append('api_secret', sightengineApiSecret);
+
+      try {
+        const response = await axios.post(url, formData, {
+          headers: formData.getHeaders ? formData.getHeaders() : { 'Content-Type': 'multipart/form-data' }
+        });
+        return response.data;
+      } catch (error) {
+        console.error("Error moderating image:", error);
+        return null;
+      }
+    }
+
+    async function moderateText(text) {
+      const url = 'https://api.sightengine.com/1.0/text/check.json';
+      const formData = new FormData();
+      formData.append('text', text);
+      formData.append('lang', 'en');
+      formData.append('models', 'general,self-harm');
+      formData.append('mode', 'ml');
+      formData.append('api_user', sightengineApiUser);
+      formData.append('api_secret', sightengineApiSecret);
+
+      try {
+        const response = await axios.post(url, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        return response.data;
+      } catch (error) {
+        console.error("Error moderating text:", error);
+        return null;
+      }
+    }
+
     async function checkMarketUpdate() {
       const timethis = 900000; // 15 minutes in milliseconds
       const lastTimestamp = localStorage.getItem('lastTimestamp');
@@ -8120,12 +8165,35 @@ body {
       messagesContainer.style.display = 'block';
 
       const input = messagesContainer.querySelector('textarea');
-      const sendButton = messagesContainer.querySelector('button');      
+      const sendButton = messagesContainer.querySelector('button');
 
       sendButton.onclick = async () => {
         const message = input.value;
         let finalMessage = message;
         var sendResult;
+
+        // Moderate the text message
+        messagePopup.appendChild(loaderPopup);
+        loaderPopup.style.display = 'block';
+        const moderationResult = JSON.parse(DOMPurify.sanitize(JSON.stringify(await moderateText(message))));
+        loaderPopup.style.display = 'none';
+
+        if (moderationResult === null) {
+          await Swal.fire({
+            icon: 'error',
+            title: translateThis('Moderation Error'),
+            text: translateThis('There was an error moderating the message. Please try again later.'),
+          });
+          return;
+        }
+        if (moderationResult && (moderationResult.moderation_classes.sexual > 0.01 || moderationResult.moderation_classes.discriminatory > 0.01 || moderationResult.moderation_classes.insulting > 0.01 || moderationResult.moderation_classes.violent > 0.01 || moderationResult.moderation_classes.toxic > 0.01 || moderationResult.moderation_classes.self_harm > 0.01)) {
+          await Swal.fire({
+            icon: 'error',
+            title: translateThis('Inappropriate Content Detected'),
+            text: translateThis('The message contains inappropriate content. Please revise your message.'),
+          });
+          return;
+        }
         try {
           let storedMessage = message; // Message to store locally in plaintext
           const timestamp = new Date().getTime();
@@ -9095,39 +9163,63 @@ body {
                   continue;
               }
 
-              // Check if the file type is valid
-              if (validImageTypes.includes(fileType) || validTextType.includes(fileType) || isValidDoc || validDocTypes.includes(fileType) || isZipFile) {
-                  if (validImageTypes.includes(fileType)) {
-                      const myimage = await resizeImage(file);
-                      if (myimage) {
-                          image.push(myimage);
-                          selectedFiles.push(file);
-                      } else {
-                          console.warn(`File ${file.name} is not a valid image`);
-                      }
-                  } else {
-                      const base64File = await readFileAsDataURL(file);
-                      image.push(base64File);
-                      selectedFiles.push(file);
-                      if (!validTextType.includes(fileType)) {
-                          await Swal.fire({
-                              icon: 'warning',
-                              title: translateThis('Security Warning'),
-                              text: translateThis('Text file attachments are preferred due to security reasons. You are uploading a DOC/PDF/ZIP file. Please make sure you trust any files being sent before proceeding.'),
-                          });
-                      }
-                  }
-              } else {
-                  // Handle unsupported file types
-                  await Swal.fire({
-                      icon: 'error',
-                      title: translateThis('Unsupported File Type'),
-                      text: translateThis('Only image, text, and specific document files are allowed. Please select a different file.'),
-                  });
+          // Check if the file type is valid
+          if (validImageTypes.includes(fileType) || validTextType.includes(fileType) || isValidDoc || validDocTypes.includes(fileType) || isZipFile) {
+            if (validImageTypes.includes(fileType)) {
+              const loaderPopup = document.createElement('div');
+              loaderPopup.className = 'loader-popup';
+              loaderPopup.innerHTML = loader;
+              form.appendChild(loaderPopup);
+              loaderPopup.style.display = 'block';
+              const moderationResult = JSON.parse(DOMPurify.sanitize(JSON.stringify(await moderateImage(file))));
+              loaderPopup.style.display = 'none';
+              if (moderationResult === null) {
+                await Swal.fire({
+                  icon: 'error',
+                  title: translateThis('Moderation Error'),
+                  text: translateThis('There was an error moderating the image. Please try again later.'),
+                });
+                continue;
               }
+              if (moderationResult && (moderationResult.nudity.sexual_activity > 0.01 || moderationResult.nudity.sexual_display > 0.01 || moderationResult.nudity.erotica > 0.01 || moderationResult.nudity.very_suggestive > 0.01 || moderationResult.nudity.suggestive > 0.01 || moderationResult.nudity.mildly_suggestive > 0.03 || moderationResult.weapon.classes.firearm > 0.01 || moderationResult.alcohol.prob > 0.01 || moderationResult.recreational_drug.prob > 0.01 || moderationResult.offensive.prob > 0.01 || moderationResult.gore.prob > 0.01)) {
+                await Swal.fire({
+                  icon: 'error',
+                  title: translateThis('Inappropriate Content Detected'),
+                  text: translateThis('The uploaded image contains inappropriate content. Please upload a different image.'),
+                });
+                continue;
+              } else {
+                const myimage = await resizeImage(file);
+                if (myimage) {
+                  image.push(myimage);
+                  selectedFiles.push(file);
+                } else {
+                  console.warn(`File ${file.name} is not a valid image`);
+                }
+              }
+            } else {
+              const base64File = await readFileAsDataURL(file);
+              image.push(base64File);
+              selectedFiles.push(file);
+              if (!validTextType.includes(fileType)) {
+                await Swal.fire({
+                  icon: 'warning',
+                  title: translateThis('Security Warning'),
+                  text: translateThis('Text file attachments are preferred due to security reasons. You are uploading a DOC/PDF/ZIP file. Please make sure you trust any files being sent before proceeding.'),
+                });
+              }
+            }
+          } else {
+            // Handle unsupported file types
+            await Swal.fire({
+              icon: 'error',
+              title: translateThis('Unsupported File Type'),
+              text: translateThis('Only image, text, and specific document files are allowed. Please select a different file.'),
+            });
           }
+        }
 
-          updateFilesDisplay();
+        updateFilesDisplay();
       });
 
       function updateFilesDisplay() {
