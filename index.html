@@ -5370,11 +5370,13 @@ body {
     async function getCheckedHashesFromBlockchain(userAddress, DDEcontract) {
       try {
         const mylen = DOMPurify.sanitize(await DDEcontract.methods.getArrayLength(userAddress, 3).call());
-        const lastEntry = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(userAddress, mylen - 1).call()));
-        if (lastEntry?.ipfsLink) {
-          const ipfsHash = lastEntry.ipfsLink;
-          const ipfsData = await retrieveFromIPFS(ipfsHash);
-          return JSON.parse(DOMPurify.sanitize(ipfsData));
+        if(mylen > 0) {
+          const lastEntry = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(userAddress, mylen - 1).call()));
+          if (lastEntry?.ipfsLink) {
+            const ipfsHash = lastEntry.ipfsLink;
+            const ipfsData = await retrieveFromIPFS(ipfsHash);
+            return JSON.parse(DOMPurify.sanitize(ipfsData));
+          }
         }
         return {};
       } catch (error) {
