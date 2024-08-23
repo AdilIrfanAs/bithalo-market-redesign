@@ -529,6 +529,7 @@ languages['ar']={
   "The uploaded image contains inappropriate content. Please upload a different image.": "تحتوي الصورة المرفوعة على محتوى غير لائق. يرجى تحميل صورة مختلفة.",
   "There was an error moderating the message. Please try again later.": "حدث خطأ أثناء الإشراف على الرسالة. يرجى المحاولة مرة أخرى لاحقًا.",
   "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "تم الإبلاغ عن عنوانك أو وصفك على أنه غير لائق. يرجى المحاولة مرة أخرى بعنوان أو وصف مختلف.",
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": "أنت عقدة. ستقوم تلقائيًا بالتحقق من العروض الجديدة باستخدام الذكاء الاصطناعي ونشر النتائج في المعاملات على blockchain. يرجى التأكد من وجود أموال دائمًا في حسابك لمراقبة الطلبات الجديدة.",
 };
 
 
@@ -1061,6 +1062,7 @@ languages['ch']={
   "The uploaded image contains inappropriate content. Please upload a different image.": "上传的图片包含不适当的内容。请上传不同的图片。",
   "There was an error moderating the message. Please try again later.": "审核消息时出错。请稍后再试。",
   "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "您的标题或描述被标记为不适当。请尝试使用不同的标题或描述。",
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": "您是一个节点。您将自动使用人工智能检查新报价，并将结果发布到区块链的交易中。请确保您的帐户中始终有资金以监控新订单。",
 };
 
 languages['en']={
@@ -1653,6 +1655,7 @@ languages['fr']={
   "The uploaded image contains inappropriate content. Please upload a different image.": "L'image téléchargée contient un contenu inapproprié. Veuillez télécharger une image différente.",
   "There was an error moderating the message. Please try again later.": "Une erreur s'est produite lors de la modération du message. Veuillez réessayer plus tard.",
   "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "Votre titre ou description a été signalé comme inapproprié. Veuillez réessayer avec un titre ou une description différente.",
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": "Vous êtes un nœud. Vous vérifierez automatiquement les nouvelles offres avec l'intelligence artificielle et publierez les résultats dans les transactions sur la blockchain. Veuillez vous assurer qu'il y a toujours des fonds sur votre compte pour surveiller les nouvelles commandes.",
 };
 
 languages['ge']={
@@ -2183,6 +2186,7 @@ languages['ge']={
   "The uploaded image contains inappropriate content. Please upload a different image.": "Das hochgeladene Bild enthält unangemessenen Inhalt. Bitte laden Sie ein anderes Bild hoch.",
   "There was an error moderating the message. Please try again later.": "Beim Moderieren der Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
   "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "Ihr Titel oder Ihre Beschreibung wurde als unangemessen markiert. Bitte versuchen Sie es erneut mit einem anderen Titel oder einer anderen Beschreibung.",
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": "Sie sind ein Knoten. Sie werden automatisch neue Angebote mit künstlicher Intelligenz überprüfen und die Ergebnisse in Transaktionen auf der Blockchain veröffentlichen. Bitte stellen Sie sicher, dass immer genügend Geld auf Ihrem Konto vorhanden ist, um die neuen Bestellungen zu überwachen.",
 };
 
 languages['it']={
@@ -2714,6 +2718,7 @@ languages['it']={
   "The uploaded image contains inappropriate content. Please upload a different image.": "L'immagine caricata contiene contenuti inappropriati. Si prega di caricare un'immagine diversa.",
   "There was an error moderating the message. Please try again later.": "Si è verificato un errore durante la moderazione del messaggio. Si prega di riprovare più tardi.",
   "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "Il tuo titolo o descrizione è stato segnalato come inappropriato. Si prega di riprovare con un titolo o una descrizione diversa.",
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": "Sei un nodo. Controlli automaticamente le nuove offerte con intelligenza artificiale e pubblichi i risultati nelle transazioni sulla blockchain. Assicurati che ci siano sempre fondi nel tuo account per monitorare i nuovi ordini.",
 };
 
 languages['ja']={
@@ -3245,6 +3250,7 @@ languages['ja']={
   "The uploaded image contains inappropriate content. Please upload a different image.": "アップロードされた画像に不適切なコンテンツが含まれています。別の画像をアップロードしてください。",
   "There was an error moderating the message. Please try again later.": "メッセージのモデレーション中にエラーが発生しました。後で再試行してください。",
   "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "あなたのタイトルまたは説明が不適切としてフラグが立てられました。別のタイトルまたは説明で再試行してください。",
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": "あなたはノードです。人工知能を使用して新しいオファーを自動的にチェックし、結果をブロックチェーンのトランザクションに投稿します。新しい注文を監視するために、アカウントに常に資金があることを確認してください。",
 };
 
 languages['ko']={
@@ -3776,6 +3782,7 @@ languages['ko']={
   "The uploaded image contains inappropriate content. Please upload a different image.": "업로드된 이미지에 부적절한 콘텐츠가 포함되어 있습니다. 다른 이미지를 업로드해 주세요.",
   "There was an error moderating the message. Please try again later.": "메시지를 조정하는 중에 오류가 발생했습니다. 나중에 다시 시도해 주세요.",
   "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "제목 또는 설명이 부적절한 것으로 표시되었습니다. 다른 제목 또는 설명으로 다시 시도해 주세요.",
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": "당신은 노드입니다. 인공지능을 사용하여 새로운 제안을 자동으로 확인하고 결과를 블록체인 거래에 게시합니다. 새로운 주문을 모니터링하기 위해 항상 계좌에 자금이 있는지 확인하십시오.",
 };
 
 languages['po']={
@@ -4307,6 +4314,7 @@ languages['po']={
   "The uploaded image contains inappropriate content. Please upload a different image.": "A imagem carregada contém conteúdo inapropriado. Por favor, carregue uma imagem diferente.",
   "There was an error moderating the message. Please try again later.": "Ocorreu um erro ao moderar a mensagem. Por favor, tente novamente mais tarde.",
   "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "Seu título ou descrição foi marcado como inapropriado. Por favor, tente novamente com um título ou descrição diferente.",
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": "Você é um nó. Você verificará automaticamente novas ofertas com inteligência artificial e publicará os resultados em transações na blockchain. Certifique-se de que sempre haja fundos em sua conta para monitorar os novos pedidos.",
 };
 
 languages['ru'] = {
@@ -4838,6 +4846,7 @@ languages['ru'] = {
   "The uploaded image contains inappropriate content. Please upload a different image.": "Загруженное изображение содержит неподобающий контент. Пожалуйста, загрузите другое изображение.",
   "There was an error moderating the message. Please try again later.": "Произошла ошибка при модерации сообщения. Пожалуйста, попробуйте позже.",
   "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "Ваш заголовок или описание были помечены как неподходящие. Пожалуйста, попробуйте снова с другим заголовком или описанием.",
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": "Вы узел. Вы автоматически будете проверять новые предложения с помощью искусственного интеллекта и публиковать результаты в транзакциях в блокчейне. Пожалуйста, убедитесь, что на вашем счете всегда есть средства для мониторинга новых заказов.",
 };
 
 languages['sp'] = {
@@ -5368,5 +5377,6 @@ languages['sp'] = {
   "There was an error moderating the image. Please try again later.": "Hubo un error al moderar la imagen. Por favor, inténtelo de nuevo más tarde.",
   "The uploaded image contains inappropriate content. Please upload a different image.": "La imagen subida contiene contenido inapropiado. Por favor, suba una imagen diferente.",
   "There was an error moderating the message. Please try again later.": "Hubo un error al moderar el mensaje. Por favor, inténtelo de nuevo más tarde.",
-  "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "Tu título o descripción ha sido marcado como inapropiado. Por favor, intenta con un título o descripción diferente."
+  "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": "Tu título o descripción ha sido marcado como inapropiado. Por favor, intenta con un título o descripción diferente.",
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": "Eres un nodo. Comprobarás automáticamente nuevas ofertas con inteligencia artificial y publicarás los resultados en transacciones en la blockchain. Asegúrate de que siempre haya fondos en tu cuenta para monitorear los nuevos pedidos.",
 };

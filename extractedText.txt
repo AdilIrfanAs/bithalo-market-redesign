@@ -513,5 +513,6 @@
   "There was an error moderating the message. Please try again later.": true
 }
 {
-  "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": true
+  "Your title or description has been flagged as inappropriate. Please try again with a different title or description.": true,
+  "You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.": true,
 }

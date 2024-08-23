@@ -2778,6 +2778,7 @@ body {
           <button onclick="setCustomFee()" t-id="49">Set custom referral fee</button>
         </div>
       </div>
+      <div id="nodeStatus" class="account-form-wrapper" style="font-weight: bold;"></div>
     </div>
     <div class="main about about-us">
       <!-- ss-container tag can be used for custom scrollers but it's not totally cross platform -->
@@ -5338,6 +5339,7 @@ body {
     async function checkIfNode() {
       if (accountprivkey !== "" && nodeList.includes(myaccounts)) {
         console.log("You are a node. You will automatically check new offers with AI and post the results.");
+        document.getElementById("nodeStatus").innerText = translateThis("You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.");
         startMonitoringProcess();
       }
     }
