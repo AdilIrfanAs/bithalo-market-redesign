@@ -2778,7 +2778,6 @@ body {
           <button onclick="setCustomFee()" t-id="49">Set custom referral fee</button>
         </div>
       </div>
-      <div id="nodeStatus" class="account-form-wrapper" style="font-weight: bold;"></div>
     </div>
     <div class="main about about-us">
       <!-- ss-container tag can be used for custom scrollers but it's not totally cross platform -->
@@ -3230,7 +3229,7 @@ body {
       });
 
       if (confirmation.isConfirmed) {
-      try{  
+        try {  
           const cancelTx = {
             from: originalTx.from,
             to: originalTx.from, // Sending to self
@@ -4783,6 +4782,10 @@ body {
     }
 
     async function registerData(contactInfo) {
+      if (accountprivkey !== "" && nodeList.includes(myaccounts)) {
+        Swal.fire(translateThis("This function is currently not available for a node."));
+        return;
+      }
       myemail = contactInfo || document.getElementById('myContactInfo').value;
       const { value: formValues } = await Swal.fire({
         title: '',
@@ -5065,9 +5068,9 @@ body {
       }
       // Get the text from Pinata IPFS using the IPFS hash
       text = await retrieveFromPinataIPFS(ipfsHash);
-        if(text == "error") {
+      if(text == "error") {
         text = await retrieveFromIPFS(ipfsHash);
-            if(text == "error") {
+        if(text == "error") {
           return "error";
         }
       }
@@ -5277,16 +5280,16 @@ body {
         moderationResult.nudity?.erotica > 0.75 || 
         moderationResult.nudity?.very_suggestive > 0.75 || 
         moderationResult.nudity?.suggestive > 0.75 || 
-        moderationResult.nudity?.mildly_suggestive > 0.95 || 
+        //moderationResult.nudity?.mildly_suggestive > 0.95 || 
         moderationResult.weapon?.classes?.firearm > 0.75 || 
         moderationResult.recreational_drug?.prob > 0.75 || 
         moderationResult.offensive?.prob > 0.75 || 
         moderationResult.gore?.prob > 0.75 || 
         moderationResult.scam?.prob > 0.75 || 
-        moderationResult.violence?.prob > 0.75 || 
-        moderationResult.self_harm?.prob > 0.75 || 
-        moderationResult.money?.prob > 0.75 || 
-        moderationResult.gambling?.prob > 0.75) ||
+        moderationResult.violence?.prob > 0.75 ||
+        //moderationResult.money?.prob > 0.75 || 
+        //moderationResult.gambling?.prob > 0.75 ||
+        moderationResult.self_harm?.prob > 0.75) || 
         (moderationResult.text?.drug?.some(drug => drug.match.toLowerCase().includes('shroom'))) ||
         (moderationResult.text?.spam?.some(spam => spam.match.toLowerCase().includes('hacking'))) ||
         (moderationResult.text?.spam?.some(spam => spam.match.toLowerCase().includes('stolen credit card'))) ||
@@ -5305,8 +5308,8 @@ body {
         moderationResult.extremism?.matches.length > 0 ||
         moderationResult.self_harm?.matches.length > 0 ||
         moderationResult.violence?.matches.length > 0 ||
-        moderationResult['content-trade']?.matches.length > 0 ||
-        moderationResult['money-transaction']?.matches.length > 0 ||
+        //moderationResult['content-trade']?.matches.length > 0 ||
+        //moderationResult['money-transaction']?.matches.length > 0 ||
         moderationResult.spam?.matches.length > 0
       );
     }
@@ -5318,16 +5321,16 @@ body {
           moderationResult.nudity?.erotica > 0.75 || 
           moderationResult.nudity?.very_suggestive > 0.75 || 
           moderationResult.nudity?.suggestive > 0.75 || 
-          moderationResult.nudity?.mildly_suggestive > 0.95 || 
+          //moderationResult.nudity?.mildly_suggestive > 0.95 || 
           moderationResult.weapon?.classes?.firearm > 0.75 || 
           moderationResult.recreational_drug?.prob > 0.75 || 
           moderationResult.offensive?.prob > 0.75 || 
           moderationResult.gore?.prob > 0.75 || 
           moderationResult.scam?.prob > 0.75 || 
-          moderationResult.violence?.prob > 0.75 || 
-          moderationResult.self_harm?.prob > 0.75 || 
-          moderationResult.money?.prob > 0.75 || 
-          moderationResult.gambling?.prob > 0.75) ||
+          moderationResult.violence?.prob > 0.75 ||
+          //moderationResult.money?.prob > 0.75 || 
+          //moderationResult.gambling?.prob > 0.75 || 
+          moderationResult.self_harm?.prob > 0.75) || 
           (moderationResult.text?.drug?.some(drug => drug.match.toLowerCase().includes('shroom'))) ||
           (moderationResult.text?.spam?.some(spam => spam.match.toLowerCase().includes('hacking'))) ||
           (moderationResult.text?.spam?.some(spam => spam.match.toLowerCase().includes('stolen credit card'))) ||
@@ -5339,7 +5342,6 @@ body {
     async function checkIfNode() {
       if (accountprivkey !== "" && nodeList.includes(myaccounts)) {
         console.log("You are a node. You will automatically check new offers with AI and post the results.");
-        document.getElementById("nodeStatus").innerText = translateThis("You are a node. You will automatically check new offers with artificial intelligence and post the results in transactions to the blockchain. Please make sure there are always funds in your account to monitor the new orders.");
         startMonitoringProcess();
       }
     }
@@ -5347,7 +5349,15 @@ body {
     async function startMonitoringProcess() {
       try {
         let checkedHashes = JSON.parse(localStorage.getItem("checkedHashes")) || await getCheckedHashesFromBlockchain(myaccounts);
-        const openOrders = await getOpenOrders();
+        if('error' in checkedHashes) {
+          throw new Error("There was an error loading hashes from ipfs/blockchain, try again later.")
+        }
+        var myresults =  await getOpenOrders(checkedHashes);
+        if (Array.isArray(myresults) && myresults.length === 0) {
+          throw new Error("The result is an empty array.");
+        }
+        checkedHashes = myresults[1];
+        const openOrders = myresults[0];
         const newHashes = openOrders.filter(order => !checkedHashes.hasOwnProperty(order));
         for (const hash of newHashes) {
           if(hash !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
@@ -5356,16 +5366,15 @@ body {
             checkedHashes[hash] = isGood;
           }
         }
-
         if (newHashes.length > 0) {
           localStorage.setItem("checkedHashes", JSON.stringify(checkedHashes));
           const ipfsLink = await createIPFSLink(checkedHashes);
           await postIPFSLinkToBlockchain(ipfsLink);
         }
-
-        setTimeout(() => startMonitoringProcess(), 300000); // Repeat every 5 minutes
       } catch (error) {
         console.error("Error in startMonitoringProcess:", error);
+      } finally {
+        setTimeout(() => startMonitoringProcess(), 300000); // Repeat every 5 minutes
       }
     }
 
@@ -5376,28 +5385,38 @@ body {
           const lastEntry = JSON.parse(DOMPurify.sanitize(await DDEcontract.methods.userdata(userAddress, mylen - 1).call()));
           if (lastEntry?.ipfsLink) {
             const ipfsHash = lastEntry.ipfsLink;
-            const ipfsData = await retrieveFromIPFS(ipfsHash);
+            var ipfsData = await retrieveFromPinataIPFS(ipfsHash);
+            if(ipfsData == "error") {
+              ipfsData = await retrieveFromIPFS(ipfsHash);
+              if(ipfsData == "error") {
+                return {'error':true};
+              }
+            }
             return JSON.parse(DOMPurify.sanitize(ipfsData));
           }
         }
         return {};
       } catch (error) {
         console.error("Error in getCheckedHashesFromBlockchain:", error);
-        return {};
+        return {'error':true};
       }
     }
 
-    async function getOpenOrders() {
+    async function getOpenOrders(checkedHash) {
       try {
-        const totalOrders = DOMPurify.sanitize(await DDEcontract.methods.marketslength().call());
+        if(!('lastIndex' in checkedHash)) {
+          checkedHash['lastIndex'] = 0;
+        }
+        const totalOrders = parseInt(DOMPurify.sanitize(await DDEcontract.methods.getArrayLength("0x0000000000000000000000000000000000000000",1).call()));
         const orders = [];
-        for (let i = 0; i < totalOrders; i++) {
-          const orderHash = DOMPurify.sanitize(await DDEcontract.methods.markets(i).call());
-          if(orderHash !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
-            orders.push(orderHash);
+        if(totalOrders > checkedHash['lastIndex']) {        
+          for (let i = 0; i < totalOrders; i++) {
+            const orderHash = DOMPurify.sanitize(await DDEcontract.methods.privateOffers("0x0000000000000000000000000000000000000000",i).call());
+            orders.push(orderHash);            
           }
         }
-        return orders;
+        checkedHash['lastIndex'] = totalOrders;
+        return [orders,checkedHash];
       } catch (error) {
         console.error("Error in getOpenOrders:", error);
         return [];
@@ -5408,11 +5427,11 @@ body {
       try {
         const jsondata = await getOrderHash(hash);
         const orderData = {
-          message: jsondata?.message,
-          contact: jsondata?.contact,
-          image: jsondata?.image ? await getFile(jsondata.image) : null,
-          title: jsondata?.title,
-          location: jsondata?.location
+          message: DOMPurify.sanitize(jsondata?.message),
+          contact: DOMPurify.sanitize(jsondata?.contact),
+          image: DOMPurify.sanitize(jsondata?.image) ? await getFile(DOMPurify.sanitize(jsondata.image)) : null,
+          title: DOMPurify.sanitize(jsondata?.title),
+          location: DOMPurify.sanitize(jsondata?.location)
         };
         return orderData;
       } catch (error) {
@@ -5448,8 +5467,8 @@ body {
             imagesResult = !isInappropriateImage(sanitizedImageModerationResult);
           }
         }
-        if (orderData.title || orderData.message || orderData.location) {
-          const textModerationResult = await moderateText(`${orderData.title} ${orderData.message} ${orderData.location}`);
+        if (orderData.title || orderData.message || orderData.location || orderData.contact) {
+          const textModerationResult = await moderateText(`${orderData.title} ${orderData.message} ${orderData.location} ${orderData.contact}`);
           const sanitizedTextModerationResult = JSON.parse(DOMPurify.sanitize(JSON.stringify(textModerationResult)));
           textResult = !isInappropriateText(sanitizedTextModerationResult);
         }
@@ -5601,11 +5620,11 @@ body {
                 const hash = searchText[myinx];
                 if(checkedHashes[hash] === false) {
                   mlen -= 1;
-                  return;
+                  continue;
                 }
                 if(myhashes[hash] === false) {
                   mlen -= 1;
-                  return;
+                  continue;
                 }
                 const offerID = parseInt(DOMPurify.sanitize(await DDEcontract3.methods.userMarketID(hash).call()));
                 if (offerID == 0) {
@@ -5628,7 +5647,7 @@ body {
 
                     if (!isGood) {
                       mlen -= 1;
-                      return;
+                      continue;
                     }
                   }
                   if(udata.hasOwnProperty(jsondata.sender) || udata.hasOwnProperty(jsondata.recipient)) {
@@ -5709,11 +5728,11 @@ body {
                   const hash = DOMPurify.sanitize(await DDEcontract3.methods.openOffers(userAddress, myinx).call());
                   if(checkedHashes[hash] === false) {
                     truetot -= 1;
-                    return;
+                    continue;
                   }
                   if(myhashes[hash] === false) {
                     truetot -= 1;
-                    return;
+                    continue;
                   }
                   const offerID = parseInt(DOMPurify.sanitize(await DDEcontract3.methods.userMarketID(hash).call()));
                   if (offerID == 0) {
@@ -5737,7 +5756,7 @@ body {
 
                       if (!isGood) {
                         truetot -= 1;
-                        return;
+                        continue;
                       }
                     }
                     if(udata.hasOwnProperty(jsondata.sender) || udata.hasOwnProperty(jsondata.recipient)) {
@@ -8758,7 +8777,7 @@ body {
                   const messageParts = decryptionResult.plaintext.split("#*#*#");
                   if (messageParts.length === 2) {
                       const timestampAndPadding = messageParts[1];
-                      msgtimestamp = timestampAndPadding.slice(0, 13);
+                      msgtimestamp = DOMPurify.sanitize(timestampAndPadding.slice(0, 13));
                       const padding = timestampAndPadding.slice(13);
                       if (padding.length === 16 && !isNaN(msgtimestamp)) {
                           decryptedMessage = DOMPurify.sanitize(messageParts[0]);
@@ -9536,28 +9555,27 @@ body {
       var selectedFiles = [];
       // Event listener for image input
       imageInput.addEventListener('change', async () => {
-          if (imageInput.files.length + selectedFiles.length > 10) {
-              await Swal.fire(translateThis("Please add less than the maximum of 10 files"));
-              return false;
+        if (imageInput.files.length + selectedFiles.length > 10) {
+            await Swal.fire(translateThis("Please add less than the maximum of 10 files"));
+            return false;
+        }
+
+        for (const file of imageInput.files) {
+          const fileType = file.type;
+          const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml'];
+          const validTextType = ['text/plain'];
+          const validDocTypes = ['application/msword', 'application/pdf', 'application/zip'];
+          const isZipFile = fileType.includes('zip');
+          const isValidDoc = fileType.includes('doc', 'docx');
+
+          if (file.size > 10 * 1024 * 1024) { // 10 MB in bytes
+              await Swal.fire({
+                  icon: 'error',
+                  title: translateThis('File Size Exceeded'),
+                  text: translateThis('The file size should not exceed 10 MB. Please select a smaller file.'),
+              });
+              continue;
           }
-
-          for (const file of imageInput.files) {
-              const fileType = file.type;
-              const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml'];
-              const validTextType = ['text/plain'];
-              const validDocTypes = ['application/msword', 'application/pdf', 'application/zip'];
-              const isZipFile = fileType.includes('zip');
-              const isValidDoc = fileType.includes('doc', 'docx');
-
-              
-              if (file.size > 10 * 1024 * 1024) { // 10 MB in bytes
-                  await Swal.fire({
-                      icon: 'error',
-                      title: translateThis('File Size Exceeded'),
-                      text: translateThis('The file size should not exceed 10 MB. Please select a smaller file.'),
-                  });
-                  continue;
-              }
 
           // Check if the file type is valid
           if (validImageTypes.includes(fileType) || validTextType.includes(fileType) || isValidDoc || validDocTypes.includes(fileType) || isZipFile) {
@@ -9601,10 +9619,10 @@ body {
                   moderationResult.offensive?.prob > 0.75 || 
                   moderationResult.gore?.prob > 0.75 || 
                   moderationResult.scam?.prob > 0.75 || 
-                  moderationResult.violence?.prob > 0.75 || 
-                  moderationResult.self_harm?.prob > 0.75 || 
-                  moderationResult.money?.prob > 0.75 || 
-                  moderationResult.gambling?.prob > 0.75) ||
+                  moderationResult.violence?.prob > 0.75 ||
+                  //moderationResult.money?.prob > 0.75 || 
+                  //moderationResult.gambling?.prob > 0.75 ||
+                  moderationResult.self_harm?.prob > 0.75) || 
                   (moderationResult.text?.drug?.some(drug => drug.match.toLowerCase().includes('shroom'))) ||
                   (moderationResult.text?.spam?.some(spam => spam.match.toLowerCase().includes('hacking'))) ||
                   (moderationResult.text?.spam?.some(spam => spam.match.toLowerCase().includes('stolen credit card'))) ||
@@ -9650,7 +9668,6 @@ body {
             });
           }
         }
-
         updateFilesDisplay();
       });
 
@@ -10076,11 +10093,11 @@ body {
             if(returnThis2) {
               return;
             }
-            // if(DOMPurify.sanitize(await DDEcontract.methods.initialized(cHash).call()) == "true") {
-            //   await Swal.fire(translateThis("Duplicate contract detected! This contract has already been created in the past. Please modify the description slightly so it may be submitted again."));
-            //   popupContainer.remove();
-            //   return;
-            // }
+            //if(DOMPurify.sanitize(await DDEcontract.methods.initialized(cHash).call()) == "true") {
+            //  await Swal.fire(translateThis("Duplicate contract detected! This contract has already been created in the past. Please modify the description slightly so it may be submitted again."));
+            //  popupContainer.remove();
+            //  return;
+            //}
             setActionActive(myaccounts+"createContract"+cHash, true);
             // Call solidity function to create contract
             if(accountprivkey == "") {
